@@ -42,7 +42,7 @@ En esta fase se están preparando entrevistas y preguntas dirigidas a la empresa
 
 ## Integrantes
 
-- Alex Gritos — Coordinador
+- Alex Britos — Coordinador
 - Nahuel Alba — Subcoordinador
 - Jonathan López
 - Santiago Vilar
