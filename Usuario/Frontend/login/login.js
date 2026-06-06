@@ -1,12 +1,60 @@
-  setTimeout(() => {
+// ===== LOADER =====
+setTimeout(() => {
+    const loader = document.getElementById("loader");
 
-  const loader = document.getElementById("loader");
+    loader.style.opacity = "0";
 
-  loader.style.opacity = "0";
+    setTimeout(() => {
+        loader.style.display = "none";
+    }, 1000);
 
-  setTimeout(() => {
-    loader.style.display = "none";
-    document.getElementById("main").style.display = "flex";
-  }, 1000);
+}, 3000);
 
-}, 3000); // 3 segundos
+
+// ===== REGISTRO =====
+function register() {
+    const user = document.getElementById("user").value.trim();
+    const pass = document.getElementById("pass").value.trim();
+
+    if (!user || !pass) {
+        alert("Completa todos los campos");
+        return;
+    }
+
+    localStorage.setItem(user, pass);
+
+    alert("Usuario registrado correctamente");
+
+    document.getElementById("user").value = "";
+    document.getElementById("pass").value = "";
+}
+
+
+// ===== LOGIN =====
+function login() {
+    const user = document.getElementById("user").value.trim();
+    const pass = document.getElementById("pass").value.trim();
+
+    if (!user || !pass) {
+        alert("Completa todos los campos");
+        return;
+    }
+
+    const passGuardada = localStorage.getItem(user);
+
+    if (passGuardada === pass) {
+        localStorage.setItem("usuarioActivo", user);
+
+        // Ir a la página principal
+        window.location.href = "../inicio/inicio.html";
+    } else {
+        alert("Usuario o contraseña incorrectos");
+    }
+}
+
+
+// ===== LOGOUT =====
+function logout() {
+    localStorage.removeItem("usuarioActivo");
+    window.location.href = "../login/login.html";
+}

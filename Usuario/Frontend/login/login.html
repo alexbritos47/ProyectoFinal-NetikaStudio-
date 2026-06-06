@@ -2,37 +2,34 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Club Ciclista Maragato</title>
+  <title>Club Ciclista Maragato</title>
   <link rel="stylesheet" href="login.css">
 </head>
 
 <body>
 
-  <!-- ===== CARGADOR ===== -->
-  <div id="loader">
-    <div class="loader-wheel"></div>
-    <h1>Club Ciclista Maragato</h1>
-    <p>Cargando experiencia...</p>
-  </div>
+<!-- ===== LOADER ===== -->
+<div id="loader">
+  <div class="loader-wheel"></div>
+  <h1>Club Ciclista Maragato</h1>
+  <p>Cargando experiencia...</p>
+</div>
 
+<!-- ===== LOGIN ===== -->
+<div class="login" id="loginBox">
+  <input type="text" id="user" placeholder="Usuario"><br>
+  <input type="password" id="pass" placeholder="Contraseña"><br>
 
+  <input type="button" value="Ingresar" onclick="login()">
+  <input type="button" value="Registrarse" onclick="register()">
+</div>
 
-
-  <!-- ===== CONTENIDO ===== -->
- <div class="body"></div>
-		<div class="grad"></div>
-		<div class="header">
-			<div>Club<span>Ciclista Maragato</span></div>
-		</div>
-		<br>
-		<div class="login">
-				<input type="text" placeholder="Usuario" name="user"><br>
-				<input type="password" placeholder="Contraseña" name="password"><br>
-				<input type="button" value="Ingresar">
-                <img class="background-inicial" src="img/backround inicio.jpg" alt="Background Image">
-		</div>
-
+<!-- ===== APP ===== -->
+<div id="app" style="display:none; text-align:center;">
+  <h1>Bienvenido</h1>
+  <p id="welcome"></p>
+  <button onclick="logout()">Cerrar sesión</button>
+</div>
 
 
 
@@ -40,10 +37,6 @@
 
 
 
-
-
-  <!-- Conecta el JavaScript -->
-  <script src="login.js"></script>
-
+<script src="login.js"></script>
 </body>
 </html>
