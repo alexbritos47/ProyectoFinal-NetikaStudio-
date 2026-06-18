@@ -95,7 +95,6 @@ nav.main-nav {
   border-top: 0.5px solid #d6eaf8;
 }
 
-/* Botones auth */
 .auth-links {
   display: flex;
   align-items: center;
@@ -127,7 +126,6 @@ nav.main-nav {
   color: #fff;
 }
 
-
 .Bienvenida {
   margin: 2rem;
   font-size: 24px;
@@ -147,15 +145,14 @@ nav.main-nav {
   font-size: 20px;
   color: #333;
   text-align: center;
-  line-height: 1.5; 
-  }
+  line-height: 1.5;
+}
 
-
-  .beneficios {
-    margin: 2rem;
-    font-size: 50px;
-    color: #1a3a6b;
-    text-align: center;
-    text-shadow: 0 0 12px rgba(41, 170, 225, 0.6), 0 0 24px rgba(41, 170, 225, 0.35);
-    letter-spacing: 1px;
-  }
+.beneficios {
+  margin: 2rem;
+  font-size: 50px;
+  color: #1a3a6b;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(41, 170, 225, 0.6), 0 0 24px rgba(41, 170, 225, 0.35);
+  letter-spacing: 1px;
+}
