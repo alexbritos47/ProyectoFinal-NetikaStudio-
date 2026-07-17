@@ -8,21 +8,72 @@ setTimeout(() => {
 }, 3000);
 
 
+// ===== CAMBIO DE VISTAS =====
+function mostrarRegistro() {
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("registerBox").style.display = "flex";
+}
+
+function mostrarLogin() {
+  document.getElementById("registerBox").style.display = "none";
+  document.getElementById("loginBox").style.display = "block";
+}
+
+
 // ===== REGISTRO =====
 function register() {
-  const user = document.getElementById("user").value.trim();
-  const pass = document.getElementById("pass").value.trim();
+  const nombre = document.getElementById("nombre").value.trim();
+  const apellido = document.getElementById("apellido").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const user = document.getElementById("regUser").value.trim();
+  const pass = document.getElementById("regPass").value.trim();
 
-  if (!user || !pass) {
-    alert("Completa todos los campos");
+  if (!nombre || !apellido || !email || !user || !pass) {
+    Swal.fire({
+      icon: "warning",
+      title: "Faltan datos",
+      text: "Completa todos los campos",
+      background: "#111827",
+      color: "#fff"
+    });
     return;
   }
 
-  localStorage.setItem(user, pass);
-  alert("Usuario registrado correctamente");
+  if (localStorage.getItem(user)) {
+    Swal.fire({
+      icon: "error",
+      title: "Usuario existente",
+      text: "Ese usuario ya existe",
+      background: "#111827",
+      color: "#fff"
+    });
+    return;
+  }
 
-  document.getElementById("user").value = "";
-  document.getElementById("pass").value = "";
+  const datosUsuario = {
+    nombre,
+    apellido,
+    email,
+    pass
+  };
+
+  localStorage.setItem(user, JSON.stringify(datosUsuario));
+
+  Swal.fire({
+    icon: "success",
+    title: "¡Registro exitoso!",
+    html: `Guardá tus datos:<br><br><b>Usuario:</b> ${user}<br><b>Contraseña:</b> ${pass}`,
+    background: "#111827",
+    color: "#fff"
+  });
+
+  document.getElementById("nombre").value = "";
+  document.getElementById("apellido").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("regUser").value = "";
+  document.getElementById("regPass").value = "";
+
+  mostrarLogin();
 }
 
 
@@ -32,18 +83,34 @@ function login() {
   const pass = document.getElementById("pass").value.trim();
 
   if (!user || !pass) {
-    alert("Completa todos los campos");
+    Swal.fire({
+      icon: "warning",
+      title: "Faltan datos",
+      text: "Completa todos los campos",
+      background: "#111827",
+      color: "#fff"
+    });
     return;
   }
 
-  const passGuardada = localStorage.getItem(user);
+  const datosGuardados = localStorage.getItem(user);
 
-  if (passGuardada === pass) {
-    sessionStorage.setItem("usuarioActivo", user);
-    window.location.href = "../inicio/inicio.html";
-  } else {
-    alert("Usuario o contraseña incorrectos");
+  if (datosGuardados) {
+    const datosUsuario = JSON.parse(datosGuardados);
+    if (datosUsuario.pass === pass) {
+      sessionStorage.setItem("usuarioActivo", user);
+      window.location.href = "../inicio/inicio.html";
+      return;
+    }
   }
+
+  Swal.fire({
+    icon: "error",
+    title: "Error",
+    text: "Usuario o contraseña incorrectos",
+    background: "#111827",
+    color: "#fff"
+  });
 }
 
 
