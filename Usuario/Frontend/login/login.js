@@ -99,7 +99,7 @@ function login() {
     const datosUsuario = JSON.parse(datosGuardados);
     if (datosUsuario.pass === pass) {
       sessionStorage.setItem("usuarioActivo", user);
-      window.location.href = "../inicio/inicio.html";
+      window.location.href = "../../../inicio/inicio.html";
       return;
     }
   }
@@ -117,5 +117,5 @@ function login() {
 // ===== LOGOUT =====
 function logout() {
   sessionStorage.removeItem("usuarioActivo");
-  window.location.href = "../inicio/inicio.html";
+  window.location.href = "../../../inicio/inicio.html";
 }

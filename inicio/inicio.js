@@ -12,10 +12,10 @@ if (usuario) {
     </ul>
   `;
 } else {
-  navSocio.innerHTML = `<a href="../login/login.html">Hacerse socio</a>`;
+  navSocio.innerHTML = `<a href="../Usuario/Frontend/login/login.html">Hacerse socio</a>`;
 }
 
 function logout() {
   sessionStorage.removeItem("usuarioActivo");
-  location.reload();
+  window.location.href = "../Usuario/Frontend/login/login.html";
 }
