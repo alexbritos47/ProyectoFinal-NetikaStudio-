@@ -1,5 +1,4 @@
-# ProyectoFinal-NetikaStudio- 
-
+# ProyectoFinal-NetikaStudio-
 
 # Sistema de Gestión de Cuotas - Club Ciclista Maragato
 
@@ -7,46 +6,45 @@
 
 Proyecto educativo desarrollado con el objetivo de analizar, diseñar y desarrollar una solución digital para la gestión administrativa del Club Ciclista Maragato.
 
-La plataforma buscará optimizar el control de socios, cuotas sociales, cobranzas e informes internos mediante un sistema centralizado.
+La plataforma busca optimizar el control de socios, cuotas sociales, cobranzas e informes internos mediante un sistema centralizado.
 
 ---
 
 ## Estado del proyecto
 
-Actualmente el proyecto se encuentra en etapa de relevamiento y análisis de requerimientos.
+Actualmente el proyecto se encuentra en la etapa de desarrollo.
 
-En esta fase se están preparando entrevistas y preguntas dirigidas a la empresa para comprender sus necesidades, problemas actuales y objetivos del sistema.
+Ya se realizó el relevamiento de información y la entrevista con el cliente, lo que permitió conocer sus necesidades, objetivos y el funcionamiento actual del sistema de gestión. Con esta información, el equipo se encuentra desarrollando la solución propuesta, incorporando los requerimientos definidos para avanzar hacia la finalización del proyecto.
 
 ---
 
 ## Objetivos
 
-- Comprender el funcionamiento actual de la empresa
-- Identificar problemas y necesidades
-- Diseñar una solución digital adecuada
-- Mejorar la organización y trazabilidad de la información
-- Facilitar la gestión de cuotas y socios
+* Comprender el funcionamiento actual de la empresa
+* Identificar problemas y necesidades
+* Diseñar una solución digital adecuada
+* Mejorar la organización y trazabilidad de la información
+* Facilitar la gestión de cuotas y socios
 
 ---
 
 ## Próximas etapas
 
-- Relevamiento de información
-- Análisis de requerimientos
-- Diseño del sistema
-- Desarrollo
-- Pruebas
-- Implementación
+* Continuar con el desarrollo del sistema
+* Realizar pruebas de funcionamiento
+* Corregir posibles errores
+* Finalizar la implementación
+* Presentación y entrega del proyecto
 
 ---
 
 ## Integrantes
 
-- Alex Britos — Coordinador
-- Nahuel Alba — Subcoordinador
-- Jonathan López
-- Santiago Vilar
-- Bruno Méndez
+* Alex Britos — Coordinador
+* Nahuel Alba — Subcoordinador
+* Jonathan López
+* Santiago Vilar
+* Bruno Méndez
 
 ---
 
