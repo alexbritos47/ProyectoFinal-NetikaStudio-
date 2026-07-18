@@ -1,0 +1,169 @@
+:root{
+  --verde: #2f6d3b;
+  --verde-oscuro: #1f4a28;
+  --verde-claro: #eaf3ea;
+  --amarillo: #d9a441;
+  --rojo: #b8452f;
+  --gris-texto: #3a3a38;
+  --gris-suave: #8a8a86;
+  --borde: #dedad2;
+  --fondo: #f7f5f0;
+  --blanco: #ffffff;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--fondo);
+  color: var(--gris-texto);
+}
+header{
+  background: linear-gradient(120deg, var(--verde-oscuro), var(--verde));
+  color: var(--blanco);
+  padding: 24px 20px;
+}
+header .marca{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+header .marca span.icono{
+  font-size: 28px;
+}
+header h1{
+  margin:0;
+  font-size: 20px;
+  font-weight: 600;
+}
+header p{
+  margin: 2px 0 0;
+  font-size: 13px;
+  opacity: 0.85;
+}
+main{
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.resumen{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.tarjeta{
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.tarjeta .num{
+  font-size: 22px;
+  font-weight: 700;
+}
+.tarjeta .label{
+  font-size: 12px;
+  color: var(--gris-suave);
+  margin-top: 2px;
+}
+.tarjeta.pendiente .num{ color: var(--amarillo); }
+.tarjeta.paga .num{ color: var(--verde); }
+.tarjeta.impaga .num{ color: var(--rojo); }
+
+.filtros{
+  display:flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.filtros button{
+  border: 1px solid var(--borde);
+  background: var(--blanco);
+  color: var(--gris-texto);
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.filtros button.activo{
+  background: var(--verde);
+  border-color: var(--verde);
+  color: var(--blanco);
+}
+
+table{
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  overflow: hidden;
+}
+thead tr{
+  background: var(--verde-claro);
+}
+th, td{
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 13.5px;
+}
+th{
+  color: var(--verde-oscuro);
+  font-weight: 600;
+}
+tbody tr{
+  border-top: 1px solid var(--borde);
+}
+.monto{
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.estado{
+  display:inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.estado.pendiente{ background:#fbeed2; color:#8a6414; }
+.estado.paga{ background:#dcefe0; color: var(--verde-oscuro); }
+.estado.impaga{ background:#f6dcd6; color: var(--rojo); }
+
+.accion{
+  font-size: 12.5px;
+  color: var(--verde);
+  text-decoration: none;
+  font-weight: 600;
+}
+.accion:hover{ text-decoration: underline; }
+
+.vacio{
+  text-align:center;
+  padding: 30px;
+  color: var(--gris-suave);
+  font-size: 13px;
+}
+
+footer{
+  max-width: 900px;
+  margin: 30px auto 10px;
+  padding: 0 20px;
+  font-size: 11.5px;
+  color: var(--gris-suave);
+}
+
+@media (max-width: 560px){
+  .resumen{ grid-template-columns: 1fr 1fr; }
+  thead{ display:none; }
+  table, tbody, tr, td{ display:block; width:100%; }
+  tbody tr{ padding: 10px 12px; border-top: 6px solid var(--fondo); }
+  td{ padding: 4px 0; }
+  td::before{
+    content: attr(data-label);
+    display:block;
+    font-size: 11px;
+    color: var(--gris-suave);
+  }
+}

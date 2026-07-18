@@ -6,8 +6,8 @@ if (usuario) {
   navSocio.innerHTML = `
     <a href="#">✔ Soy socio</a>
     <ul class="dropdown-menu">
-      <li><a href="#">Mis facturas</a></li>
-      <li><a href="#">Mis pagos</a></li>
+      <li><a href="../Usuario/Frontend/login/misfacturas/facturas.html">Mis facturas</a></li>
+      <li><a href="../Usuario/Frontend/pagos.html">Mis pagos</a></li>
       <li><a href="#" onclick="logout()">Cerrar sesión</a></li>
     </ul>
   `;
