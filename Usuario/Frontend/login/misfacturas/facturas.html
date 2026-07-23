@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis facturas — Unión Ciclista Maragata</title>
+<link rel="stylesheet" href="facturas.css">
+</head>
+<body>
+
+<header>
+  <div class="marca">
+
+    <div>
+      <h1>Unión Ciclista Maragata</h1>
+      <p>Mis facturas</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="resumen">
+    <div class="tarjeta pendiente">
+      <div class="num" id="totalPendiente">-</div>
+      <div class="label">Pendientes de pago</div>
+    </div>
+    <div class="tarjeta paga">
+      <div class="num" id="totalPaga">-</div>
+      <div class="label">Pagas</div>
+    </div>
+    <div class="tarjeta impaga">
+      <div class="num" id="totalImpaga">-</div>
+      <div class="label">No pagas / vencidas</div>
+    </div>
+  </section>
+
+  <div class="filtros">
+    <button data-filtro="todas" class="activo">Todas</button>
+    <button data-filtro="pendiente">Pendientes</button>
+    <button data-filtro="paga">Pagas</button>
+    <button data-filtro="impaga">No pagas</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Concepto</th>
+        <th>Vencimiento</th>
+        <th>Monto</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="cuerpoTabla"></tbody>
+  </table>
+
+  <div class="vacio" id="mensajeVacio" style="display:none;">
+    No hay facturas para mostrar en este filtro.
+  </div>
+
+</main>
+
+
+
+<script src="facturas.js"></script>
+</body>
+</html>
