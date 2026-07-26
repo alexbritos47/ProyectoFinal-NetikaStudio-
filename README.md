@@ -1,4 +1,4 @@
-# ProyectoFinal-NetikaStudio-
+# ProyectoFinal-NetikaStudio
 
 # Sistema de Gestión de Cuotas - Club Ciclista Maragato
 
