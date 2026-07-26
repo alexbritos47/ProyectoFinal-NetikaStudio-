@@ -6,16 +6,16 @@ if (usuario) {
   navSocio.innerHTML = `
     <a href="#">✔ Soy socio</a>
     <ul class="dropdown-menu">
-      <li><a href="../Usuario/Frontend/login/misfacturas/facturas.html">Mis facturas</a></li>
-      <li><a href="../Usuario/Frontend/pagos.html">Mis pagos</a></li>
+      <li><a href="../misfacturas/facturas.html">Mis facturas</a></li>
+      <li><a href="../pagos.html">Mis pagos</a></li>
       <li><a href="#" onclick="logout()">Cerrar sesión</a></li>
     </ul>
   `;
 } else {
-  navSocio.innerHTML = `<a href="../Usuario/Frontend/login/login.html">Hacerse socio</a>`;
+  navSocio.innerHTML = `<a href="../login/login.html">Hacerse socio</a>`;
 }
 
 function logout() {
   sessionStorage.removeItem("usuarioActivo");
-  window.location.href = "../Usuario/Frontend/login/login.html";
+  window.location.href = "../login/login.html";
 }
