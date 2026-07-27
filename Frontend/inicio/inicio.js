@@ -7,7 +7,6 @@ if (usuario) {
     <a href="#">✔ Soy socio</a>
     <ul class="dropdown-menu">
       <li><a href="../misfacturas/facturas.html">Mis facturas</a></li>
-      <li><a href="../pagos.html">Mis pagos</a></li>
       <li><a href="#" onclick="logout()">Cerrar sesión</a></li>
     </ul>
   `;
