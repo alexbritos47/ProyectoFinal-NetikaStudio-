@@ -14,13 +14,6 @@ nav.main-nav {
   border-bottom: 3px solid #29aae1;
 }
 
-.logo {
-  color: #fff;
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: 1px;
-}
-
 .nav-links {
   list-style: none;
   display: flex;
@@ -155,4 +148,228 @@ nav.main-nav {
   text-align: center;
   text-shadow: 0 0 12px rgba(41, 170, 225, 0.6), 0 0 24px rgba(41, 170, 225, 0.35);
   letter-spacing: 1px;
+}
+
+/* Centrar elemento con la clase .logo */
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+/* ===== Beneficios / Carruseles ===== */
+
+.beneficios-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  margin: 2rem;
+  padding-bottom: 1rem;
+}
+
+.beneficio-item {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.beneficio-titulo {
+  font-size: 24px;
+  color: #1a3a6b;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 2px solid #29aae1;
+  background: #000;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.45s ease-in-out;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  display: block;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(26, 58, 107, 0.7);
+  color: #fff;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s;
+}
+
+.carousel-btn:hover {
+  background: #29aae1;
+}
+
+.carousel-prev {
+  left: 12px;
+}
+
+.carousel-next {
+  right: 12px;
+}
+
+.carousel-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.carousel-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: background 0.18s;
+}
+
+.carousel-dot.active {
+  background: #29aae1;
+}
+
+/* ===== Sobre Nosotros ===== */
+
+.sobre-nosotros {
+  background: #f4f9fd;
+  border-top: 3px solid #29aae1;
+  border-bottom: 3px solid #29aae1;
+  padding: 3rem 2rem;
+  margin-top: 3rem;
+}
+
+.sobre-nosotros-titulo {
+  font-size: 40px;
+  color: #1a3a6b;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 12px rgba(41, 170, 225, 0.4);
+  letter-spacing: 1px;
+}
+
+.sobre-nosotros-contenido {
+  max-width: 850px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sobre-nosotros-contenido p {
+  font-size: 18px;
+  color: #333;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* ===== Footer ===== */
+
+.footer {
+  background: #1a3a6b;
+  border-top: 3px solid #29aae1;
+  padding: 2rem;
+  margin-top: 0;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.btn-contacto {
+  display: inline-block;
+  padding: 0.6rem 1.6rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 15px;
+  background: #29aae1;
+  color: #fff;
+  transition: opacity 0.15s;
+}
+
+.btn-contacto:hover {
+  opacity: 0.85;
+}
+
+.footer-redes {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.social-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.social-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+.social-whatsapp {
+  background: #25d366;
+}
+
+.social-facebook {
+  background: #1877f2;
+}
+
+.social-instagram {
+  background: radial-gradient(circle at 30% 110%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+}
+
+.footer-copy {
+  text-align: center;
+  color: #d6eaf8;
+  font-size: 13px;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .carousel-slide img {
+    height: 240px;
+  }
 }

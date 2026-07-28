@@ -5,18 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>usuario</title>
     <link rel="stylesheet" href="inicio.css">
+    <style>
+    
+    </style>
 </head>
 <body>
    
    <nav class="main-nav">
-    <div class="logo">Logo</div>
+    
     <ul class="nav-links">
         <li><a href="#">Beneficios</a></li>
         <li id="nav-socio"></li>
-        <li><a href="#">Sobre nosotros</a></li>
+        <li><a href="#sobre-nosotros">Sobre nosotros</a></li>
         <li><a href="#">Contactos</a></li>
+        <li><a href="../perfil/perfil.html">Mi perfil</a></li>
     </ul>
 </nav>
+
+<div class="logo"><img src="../login/img/logoucm.png" alt="Logo"></div>
+
 
 <h1 class="Bienvenida">Bienvenido al Club Ciclista Maragato</h1>
 
@@ -28,6 +35,108 @@ Sumarte significa tener voz, voto y pertenencia real. Es construir juntos un clu
 Tu participación hace la diferencia .</h3>
 
 <h1 class="beneficios">Beneficios</h1>
+
+<section class="beneficios-lista">
+
+    <div class="beneficio-item">
+        <h2 class="beneficio-titulo">Salón Comunal</h2>
+        <div class="carousel" data-carousel>
+            <div class="carousel-track">
+                <div class="carousel-slide"><img src="https://picsum.photos/seed/salon1/900/500" alt="Salón comunal 1"></div>
+                <div class="carousel-slide"><img src="https://picsum.photos/seed/salon2/900/500" alt="Salón comunal 2"></div>
+                <div class="carousel-slide"><img src="https://picsum.photos/seed/salon3/900/500" alt="Salón comunal 3"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Anterior">&#10094;</button>
+            <button class="carousel-btn carousel-next" aria-label="Siguiente">&#10095;</button>
+            <div class="carousel-dots"></div>
+        </div>
+    </div>
+
+    <div class="beneficio-item">
+        <h2 class="beneficio-titulo">Zumba y Ritmos Variados</h2>
+        <div class="carousel" data-carousel>
+            <div class="carousel-track">
+                <div class="carousel-slide"><img src="https://picsum.photos/seed/zumba1/900/500" alt="Zumba 1"></div>
+                <div class="carousel-slide"><img src="https://picsum.photos/seed/zumba2/900/500" alt="Zumba 2"></div>
+                <div class="carousel-slide"><img src="https://picsum.photos/seed/zumba3/900/500" alt="Zumba 3"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Anterior">&#10094;</button>
+            <button class="carousel-btn carousel-next" aria-label="Siguiente">&#10095;</button>
+            <div class="carousel-dots"></div>
+        </div>
+    </div>
+
+    <div class="beneficio-item">
+        <h2 class="beneficio-titulo">Deportes Variados dentro del Predio</h2>
+        <div class="carousel" data-carousel>
+            <div class="carousel-track">
+                <div class="carousel-slide"><img src="https://picsum.photos/seed/deportes1/900/500" alt="Deportes 1"></div>
+                <div class="carousel-slide"><img src="https://picsum.photos/seed/deportes2/900/500" alt="Deportes 2"></div>
+                <div class="carousel-slide"><img src="https://picsum.photos/seed/deportes3/900/500" alt="Deportes 3"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Anterior">&#10094;</button>
+            <button class="carousel-btn carousel-next" aria-label="Siguiente">&#10095;</button>
+            <div class="carousel-dots"></div>
+        </div>
+    </div>
+
+    <div class="beneficio-item">
+        <h2 class="beneficio-titulo">Gimnasio</h2>
+        <div class="carousel" data-carousel>
+            <div class="carousel-track">
+                <div class="carousel-slide"><img src="https://picsum.photos/seed/gimnasio1/900/500" alt="Gimnasio 1"></div>
+                <div class="carousel-slide"><img src="https://picsum.photos/seed/gimnasio2/900/500" alt="Gimnasio 2"></div>
+                <div class="carousel-slide"><img src="https://picsum.photos/seed/gimnasio3/900/500" alt="Gimnasio 3"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Anterior">&#10094;</button>
+            <button class="carousel-btn carousel-next" aria-label="Siguiente">&#10095;</button>
+            <div class="carousel-dots"></div>
+        </div>
+    </div>
+
+</section>
+
+<section id="sobre-nosotros" class="sobre-nosotros">
+    <h1 class="sobre-nosotros-titulo">Sobre Nosotros</h1>
+    <div class="sobre-nosotros-contenido">
+        <p>
+            Somos el <strong>Club Social y Deportivo Unión Ciclista Maragata</strong>, una institución nacida de la
+            pasión por el ciclismo y el deseo de generar un espacio de encuentro para toda la comunidad.
+            A lo largo de los años hemos crecido más allá del ciclismo, transformándonos en un club social y
+            deportivo que abre sus puertas a personas de todas las edades e intereses.
+        </p>
+        <p>
+            Nuestra misión es promover la actividad física, el deporte y la vida social a través de nuestras
+            instalaciones y actividades: desde nuestro gimnasio y clases de zumba, hasta el uso de nuestro
+            predio para distintas disciplinas deportivas y nuestro salón comunal para eventos y reuniones.
+        </p>
+        <p>
+            Creemos en una gestión cercana, transparente y participativa, donde cada socio tiene voz y voto en
+            las decisiones del club. Te invitamos a sumarte a esta gran familia y a ser parte del crecimiento
+            de la Unión Ciclista Maragata.
+        </p>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-contacto">
+            <a href="#sobre-nosotros" class="btn-contacto">Contacto</a>
+        </div>
+        <div class="footer-redes">
+            <a href="https://wa.me/" target="_blank" rel="noopener" class="social-btn social-whatsapp" aria-label="WhatsApp">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.14c-.24.68-1.4 1.3-1.93 1.38-.49.08-1.11.11-1.79-.11-.41-.13-.94-.3-1.62-.59-2.85-1.23-4.71-4.1-4.85-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.09.99-2.37.26-.28.57-.35.76-.35.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 2 .88 2.14.07.14.12.31.02.5-.09.19-.14.31-.28.47-.14.16-.29.36-.42.48-.14.14-.28.29-.12.57.16.28.71 1.17 1.52 1.9 1.05.94 1.93 1.23 2.21 1.37.28.14.44.12.6-.07.16-.19.68-.79.86-1.06.18-.28.36-.23.6-.14.24.09 1.53.72 1.79.85.26.13.43.19.5.3.07.11.07.63-.17 1.31z"/></svg>
+            </a>
+            <a href="https://facebook.com/" target="_blank" rel="noopener" class="social-btn social-facebook" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M13.5 21v-7.5h2.52l.38-2.93h-2.9V8.71c0-.85.24-1.43 1.46-1.43h1.56V4.65c-.27-.04-1.2-.12-2.28-.12-2.26 0-3.8 1.38-3.8 3.91v2.13H8v2.93h2.44V21h3.06z"/></svg>
+            </a>
+            <a href="https://instagram.com/" target="_blank" rel="noopener" class="social-btn social-instagram" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.24 2.22.41.56.21.96.47 1.38.89.42.42.68.82.89 1.38.17.42.36 1.05.41 2.22.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.8-.41 2.22-.21.56-.47.96-.89 1.38-.42.42-.82.68-1.38.89-.42.17-1.05.36-2.22.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.24-2.22-.41-.56-.21-.96-.47-1.38-.89-.42-.42-.68-.82-.89-1.38-.17-.42-.36-1.05-.41-2.22-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.24-1.8.41-2.22.21-.56.47-.96.89-1.38.42-.42.82-.68 1.38-.89.42-.17 1.05-.36 2.22-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07c-1.28.06-2.15.26-2.91.56-.79.31-1.46.72-2.13 1.39C1.24 2.69.83 3.36.52 4.15c-.3.76-.5 1.63-.56 2.91C-.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.15.56 2.91.31.79.72 1.46 1.39 2.13.67.67 1.34 1.08 2.13 1.39.76.3 1.63.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.28-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.13-1.39.67-.67 1.08-1.34 1.39-2.13.3-.76.5-1.63.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.39-2.13C21.31 1.24 20.64.83 19.85.52c-.76-.3-1.63-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zm0 10.16A4 4 0 1 1 12 8a4 4 0 0 1 0 8zm6.41-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
+            </a>
+        </div>
+    </div>
+    <p class="footer-copy">&copy; 2026 Club Social y Deportivo Unión Ciclista Maragata</p>
+</footer>
 
 <script src="inicio.js"></script>
 
