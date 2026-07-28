@@ -1,13 +1,13 @@
 :root{
-  --verde: #2f6d3b;
-  --verde-oscuro: #1f4a28;
-  --verde-claro: #eaf3ea;
-  --amarillo: #d9a441;
-  --rojo: #b8452f;
-  --gris-texto: #3a3a38;
-  --gris-suave: #8a8a86;
-  --borde: #dedad2;
-  --fondo: #f7f5f0;
+  --negro: #14181c;
+  --azul-oscuro: #0d3b66;
+  --azul: #1a5fb4;
+  --celeste: #4fa8d8;
+  --celeste-claro: #e8f2fa;
+  --gris-texto: #2e3336;
+  --gris-suave: #7a8288;
+  --borde: #d7dde2;
+  --fondo: #f4f6f8;
   --blanco: #ffffff;
 }
 *{box-sizing:border-box;}
@@ -18,7 +18,7 @@ body{
   color: var(--gris-texto);
 }
 header{
-  background: linear-gradient(120deg, var(--verde-oscuro), var(--verde));
+  background: linear-gradient(120deg, var(--negro), var(--azul-oscuro));
   color: var(--blanco);
   padding: 24px 20px;
 }
@@ -68,9 +68,9 @@ main{
   color: var(--gris-suave);
   margin-top: 2px;
 }
-.tarjeta.pendiente .num{ color: var(--amarillo); }
-.tarjeta.paga .num{ color: var(--verde); }
-.tarjeta.impaga .num{ color: var(--rojo); }
+.tarjeta.pendiente .num{ color: var(--celeste); }
+.tarjeta.paga .num{ color: var(--azul); }
+.tarjeta.impaga .num{ color: var(--negro); }
 
 .filtros{
   display:flex;
@@ -88,8 +88,8 @@ main{
   cursor: pointer;
 }
 .filtros button.activo{
-  background: var(--verde);
-  border-color: var(--verde);
+  background: var(--azul);
+  border-color: var(--azul);
   color: var(--blanco);
 }
 
@@ -102,7 +102,7 @@ table{
   overflow: hidden;
 }
 thead tr{
-  background: var(--verde-claro);
+  background: var(--celeste-claro);
 }
 th, td{
   text-align: left;
@@ -110,7 +110,7 @@ th, td{
   font-size: 13.5px;
 }
 th{
-  color: var(--verde-oscuro);
+  color: var(--azul-oscuro);
   font-weight: 600;
 }
 tbody tr{
@@ -127,17 +127,41 @@ tbody tr{
   font-size: 12px;
   font-weight: 600;
 }
-.estado.pendiente{ background:#fbeed2; color:#8a6414; }
-.estado.paga{ background:#dcefe0; color: var(--verde-oscuro); }
-.estado.impaga{ background:#f6dcd6; color: var(--rojo); }
+.estado.pendiente{ background:#e3f0f9; color:#2c6da6; }
+.estado.paga{ background:#dbe7f5; color: var(--azul-oscuro); }
+.estado.impaga{ background:#dfe2e4; color: var(--negro); }
 
 .accion{
   font-size: 12.5px;
-  color: var(--verde);
+  color: var(--azul);
   text-decoration: none;
   font-weight: 600;
 }
 .accion:hover{ text-decoration: underline; }
+
+.volver-inicio{
+  display: inline-block;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #14181c, #1a5fb4);
+  color: var(--blanco);
+  border: 1px solid #0a0d10;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.volver-inicio:hover{
+  background: linear-gradient(135deg, #0a0d10, #14181c);
+  transform: translateY(-1px);
+}
+.volver-inicio:active{
+  transform: translateY(0);
+}
 
 .vacio{
   text-align:center;
