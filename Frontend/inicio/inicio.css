@@ -14,13 +14,6 @@ nav.main-nav {
   border-bottom: 3px solid #29aae1;
 }
 
-.logo {
-  color: #fff;
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: 1px;
-}
-
 .nav-links {
   list-style: none;
   display: flex;
@@ -156,3 +149,13 @@ nav.main-nav {
   text-shadow: 0 0 12px rgba(41, 170, 225, 0.6), 0 0 24px rgba(41, 170, 225, 0.35);
   letter-spacing: 1px;
 }
+
+/* Centrar elemento con la clase .logo */
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+
