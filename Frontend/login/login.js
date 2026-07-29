@@ -24,17 +24,19 @@ function mostrarLogin() {
 function register() {
   const nombre = document.getElementById("nombre").value.trim();
   const apellido = document.getElementById("apellido").value.trim();
+  const cedula = document.getElementById("cedula").value.trim();
   const email = document.getElementById("email").value.trim();
   const user = document.getElementById("regUser").value.trim();
   const pass = document.getElementById("regPass").value.trim();
 
-  if (!nombre || !apellido || !email || !user || !pass) {
+  if (!nombre || !apellido || !cedula || !email || !user || !pass) {
     Swal.fire({
       icon: "warning",
       title: "Faltan datos",
       text: "Completa todos los campos",
       background: "#111827",
-      color: "#fff"
+      color: "#fff",
+      confirmButtonColor: "#29aae1"
     });
     return;
   }
@@ -45,7 +47,8 @@ function register() {
       title: "Usuario existente",
       text: "Ese usuario ya existe",
       background: "#111827",
-      color: "#fff"
+      color: "#fff",
+      confirmButtonColor: "#29aae1"
     });
     return;
   }
@@ -53,6 +56,7 @@ function register() {
   const datosUsuario = {
     nombre,
     apellido,
+    cedula,
     email,
     pass
   };
@@ -64,11 +68,13 @@ function register() {
     title: "¡Registro exitoso!",
     html: `Guardá tus datos:<br><br><b>Usuario:</b> ${user}<br><b>Contraseña:</b> ${pass}`,
     background: "#111827",
-    color: "#fff"
+    color: "#fff",
+    confirmButtonColor: "#29aae1"
   });
 
   document.getElementById("nombre").value = "";
   document.getElementById("apellido").value = "";
+  document.getElementById("cedula").value = "";
   document.getElementById("email").value = "";
   document.getElementById("regUser").value = "";
   document.getElementById("regPass").value = "";
@@ -88,7 +94,8 @@ function login() {
       title: "Faltan datos",
       text: "Completa todos los campos",
       background: "#111827",
-      color: "#fff"
+      color: "#fff",
+      confirmButtonColor: "#29aae1"
     });
     return;
   }
@@ -109,7 +116,8 @@ function login() {
     title: "Error",
     text: "Usuario o contraseña incorrectos",
     background: "#111827",
-    color: "#fff"
+    color: "#fff",
+    confirmButtonColor: "#29aae1"
   });
 }
 
