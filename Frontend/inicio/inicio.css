@@ -2,6 +2,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  
+}
+
+body {
+  background: linear-gradient(to bottom, #1a3a6b, #a3d5f7);
 }
 
 nav.main-nav {
@@ -136,22 +141,24 @@ nav.main-nav {
 
 .Bienvenida {
   margin: 2rem;
-  font-size: 24px;
-  color: #1a3a6b;
+  font-size: 50px;
+  color: #ffffff;
   text-align: center;
+   text-shadow: 0 0 12px rgba(41, 170, 225, 0.6), 0 0 24px rgba(41, 170, 225, 0.35);
 }
 
 .titulodescripcion {
   margin: 0 2rem;
   font-size: 18px;
-  color: #1a3a6b;
+  color: #ffffff;
   text-align: center;
+  line-height: 1.6;
 }
 
 .descripcion {
   margin: 1rem 2rem;
   font-size: 20px;
-  color: #333;
+  color: #ffffff;
   text-align: center;
   line-height: 1.5;
 }
@@ -159,7 +166,7 @@ nav.main-nav {
 .beneficios {
   margin: 2rem;
   font-size: 50px;
-  color: #1a3a6b;
+  color: #ffffff;
   text-align: center;
   text-shadow: 0 0 12px rgba(41, 170, 225, 0.6), 0 0 24px rgba(41, 170, 225, 0.35);
   letter-spacing: 1px;
@@ -191,7 +198,7 @@ nav.main-nav {
 
 .beneficio-titulo {
   font-size: 24px;
-  color: #1a3a6b;
+  color: #ffffff;
   text-align: center;
   margin-bottom: 1rem;
 }
