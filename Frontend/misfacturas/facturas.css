@@ -1,15 +1,4 @@
-:root{
-  --negro: #14181c;
-  --azul-oscuro: #0d3b66;
-  --azul: #1a5fb4;
-  --celeste: #4fa8d8;
-  --celeste-claro: #e8f2fa;
-  --gris-texto: #2e3336;
-  --gris-suave: #7a8288;
-  --borde: #d7dde2;
-  --fondo: #f4f6f8;
-  --blanco: #ffffff;
-}
+
 *{box-sizing:border-box;}
 body{
   margin:0;
@@ -203,24 +192,25 @@ tbody tr{
 .accion:hover{ text-decoration: underline; }
 
 .volver-inicio{
-  display: inline-block;
-  padding: 10px 18px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #14181c, #1a5fb4);
-  color: var(--blanco);
-  border: 1px solid #0a0d10;
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 1.1rem;
+  color: #d6eaf8;
   text-decoration: none;
   font-size: 14px;
-  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  background: rgba(41, 170, 225, 0.14);
+  border-radius: 999px;
+  transition: background 0.18s, color 0.18s, transform 0.18s;
+  white-space: nowrap;
 }
 .volver-inicio:hover{
-  background: linear-gradient(135deg, #0a0d10, #14181c);
+  background: #29aae1;
+  color: #fff;
   transform: translateY(-1px);
-}
-.volver-inicio:active{
-  transform: translateY(0);
 }
 
 .vacio{
