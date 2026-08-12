@@ -23,6 +23,9 @@ function logout() {
 
 function initCarousels() {
   const carousels = document.querySelectorAll("[data-carousel]");
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
 
   carousels.forEach((carousel) => {
     const track = carousel.querySelector(".carousel-track");
@@ -32,11 +35,40 @@ function initCarousels() {
     const dotsContainer = carousel.querySelector(".carousel-dots");
 
     let currentIndex = 0;
+    let autoplay = null;
+    let isPaused = false;
+
+    // Botón de pausa/play manual (WCAG 2.2.2 - Pause, Stop, Hide)
+    const pauseBtn = document.createElement("button");
+    pauseBtn.className = "carousel-pause";
+    pauseBtn.type = "button";
+    updatePauseBtnLabel();
+    carousel.insertBefore(pauseBtn, track.nextSibling);
+
+    pauseBtn.addEventListener("click", () => {
+      isPaused = !isPaused;
+      if (isPaused) {
+        stopAutoplay();
+      } else {
+        startAutoplay();
+      }
+      updatePauseBtnLabel();
+    });
+
+    function updatePauseBtnLabel() {
+      pauseBtn.setAttribute(
+        "aria-label",
+        isPaused ? "Reanudar carrusel automático" : "Pausar carrusel automático"
+      );
+      pauseBtn.textContent = isPaused ? "▶" : "⏸";
+    }
 
     slides.forEach((_, i) => {
       const dot = document.createElement("button");
       dot.className = "carousel-dot" + (i === 0 ? " active" : "");
+      dot.type = "button";
       dot.setAttribute("aria-label", "Ir a la imagen " + (i + 1));
+      if (i === 0) dot.setAttribute("aria-current", "true");
       dot.addEventListener("click", () => goToSlide(i));
       dotsContainer.appendChild(dot);
     });
@@ -45,7 +77,15 @@ function initCarousels() {
 
     function updateCarousel() {
       track.style.transform = `translateX(-${currentIndex * 100}%)`;
-      dots.forEach((dot, i) => dot.classList.toggle("active", i === currentIndex));
+      dots.forEach((dot, i) => {
+        const active = i === currentIndex;
+        dot.classList.toggle("active", active);
+        if (active) {
+          dot.setAttribute("aria-current", "true");
+        } else {
+          dot.removeAttribute("aria-current");
+        }
+      });
     }
 
     function goToSlide(index) {
@@ -56,13 +96,31 @@ function initCarousels() {
     prevBtn.addEventListener("click", () => goToSlide(currentIndex - 1));
     nextBtn.addEventListener("click", () => goToSlide(currentIndex + 1));
 
-    // Autoplay
-    let autoplay = setInterval(() => goToSlide(currentIndex + 1), 5000);
-
-    carousel.addEventListener("mouseenter", () => clearInterval(autoplay));
-    carousel.addEventListener("mouseleave", () => {
+    function startAutoplay() {
+      if (isPaused || prefersReducedMotion) return;
+      stopAutoplay();
       autoplay = setInterval(() => goToSlide(currentIndex + 1), 5000);
+    }
+
+    function stopAutoplay() {
+      clearInterval(autoplay);
+      autoplay = null;
+    }
+
+    // Pausa con mouse
+    carousel.addEventListener("mouseenter", stopAutoplay);
+    carousel.addEventListener("mouseleave", startAutoplay);
+
+    // Pausa con foco de teclado (antes faltaba: WCAG 2.2.2)
+    carousel.addEventListener("focusin", stopAutoplay);
+    carousel.addEventListener("focusout", (e) => {
+      // Solo reanudar si el foco salió del carrusel por completo
+      if (!carousel.contains(e.relatedTarget)) {
+        startAutoplay();
+      }
     });
+
+    startAutoplay();
   });
 }
 
