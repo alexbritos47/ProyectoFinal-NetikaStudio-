@@ -12,11 +12,16 @@
 
    <nav class="main-nav">
     <div class="nav-logo"><img src="../login/img/logoucm.png" alt="Logo Club Ciclista Maragato"></div>
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-principal">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
     <ul class="nav-personal">
         <li id="nav-socio"></li>
         <li><a href="../perfil/perfil.html">Mi perfil</a></li>
     </ul>
-    <ul class="nav-links">
+    <ul class="nav-links" id="menu-principal">
         <li><a href="#beneficios">Beneficios</a></li>
         <li><a href="#sobre-nosotros">Sobre nosotros</a></li>
         <li><a href="#contactos">Contactos</a></li>
@@ -169,6 +174,17 @@
 </footer>
 
 <script src="inicio.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const navToggle = document.querySelector('.nav-toggle');
+  const mainNav = document.querySelector('nav.main-nav');
+
+  navToggle.addEventListener('click', () => {
+    const abierto = mainNav.classList.toggle('nav-open');
+    navToggle.setAttribute('aria-expanded', abierto);
+  });
+});
+</script>
 
 </body>
 </html>
