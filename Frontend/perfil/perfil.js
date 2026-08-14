@@ -15,18 +15,7 @@ document.addEventListener(
         // COMPROBAR SESIÓN
         // ==========================================
 
-        if (!usuarioGuardado) {
-
-            alert(
-                "No hay una sesión iniciada."
-            );
-
-            window.location.href =
-                "login.html";
-
-            return;
-        }
-
+       
 
         // ==========================================
         // LEER DATOS
