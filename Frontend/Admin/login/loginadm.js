@@ -31,7 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionStorage.setItem('sesionActiva', 'true');
     sessionStorage.setItem('usuario', usuario);
     sessionStorage.setItem('rol', 'admin');
-    window.location.href = '../inicio/inicio.html';
+    // El panel de socios queda en esta misma carpeta (Admin/login/).
+    window.location.href = 'sociosadmin.html';
   }
 
   async function login() {

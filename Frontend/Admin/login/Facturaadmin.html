@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facturas · Panel Admin · Club Ciclista Maragato</title>
+  <link rel="stylesheet" href="../../cssglobal/global.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="pagina-facturaadmin">
+
+  <nav class="navbar-admin">
+    <div class="marca-admin">
+      <div class="logo-icon">CCM</div>
+      <div>
+        <h1>Club Ciclista Maragato</h1>
+        <p>Panel de administración</p>
+      </div>
+    </div>
+    <div class="nav-admin-links">
+      <a href="sociosadmin.html">Socios</a>
+      <a href="Facturaadmin.html" class="activo">Facturas</a>
+      <a href="perfiladmin.html">Mi perfil</a>
+    </div>
+    <button class="btn-logout-admin" id="btnLogout">Cerrar sesión</button>
+  </nav>
+
+  <main>
+    <div class="resumen">
+      <div class="tarjeta pendiente">
+        <div class="num" id="cantPendientes">0</div>
+        <div class="label">Pendientes</div>
+      </div>
+      <div class="tarjeta paga">
+        <div class="num" id="cantPagas">0</div>
+        <div class="label">Pagas</div>
+      </div>
+      <div class="tarjeta impaga">
+        <div class="num" id="cantImpagas">0</div>
+        <div class="label">Impagas / vencidas</div>
+      </div>
+    </div>
+
+    <div class="filtros">
+      <div class="filtros-izq">
+        <button class="activo" data-filtro="todas">Todas</button>
+        <button data-filtro="pendiente">Pendientes</button>
+        <button data-filtro="paga">Pagas</button>
+        <button data-filtro="impaga">Impagas</button>
+      </div>
+      <div class="buscador-factura">
+        <input type="text" id="buscarFactura" placeholder="Buscar por socio...">
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Socio</th>
+          <th>N° factura</th>
+          <th>Monto</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="tablaFacturas"></tbody>
+    </table>
+    <p class="vacio" id="mensajeVacioFacturas" style="display:none;">No hay facturas para este filtro.</p>
+  </main>
+
+  <div class="toast-admin" id="toastAdmin">
+    <div class="toast-icono">✓</div>
+    <div class="toast-texto">
+      <strong id="toastTitulo">Pago registrado</strong>
+      <span id="toastDetalle"></span>
+    </div>
+  </div>
+
+  <script src="Facturaadmin.js"></script>
+</body>
+</html>

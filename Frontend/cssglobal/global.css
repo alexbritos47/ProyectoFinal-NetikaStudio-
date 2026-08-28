@@ -471,3 +471,236 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
   .pagina-perfil .datos-grid { grid-template-columns: 1fr; }
   .pagina-perfil .perfil-titulo h2 { font-size: 23px; }
 }
+
+
+/* ============================================================
+   ESTILOS ADMIN — agregar al final de tu CSS global
+   (usa las mismas variables --c-900/--c-500/--c-300/--c-100 ya definidas)
+   ============================================================ */
+
+/* ---------- NAVBAR COMPARTIDA DE ADMIN ---------- */
+.navbar-admin {
+  width: 100%; min-height: 74px; background: linear-gradient(120deg, var(--c-900), rgb(18, 92, 195));
+  display: flex; align-items: center; justify-content: space-between; padding: 12px 5%; color: var(--c-100);
+  box-shadow: var(--sombra-md); flex-wrap: wrap; gap: 12px;
+}
+.navbar-admin .marca-admin { display: flex; align-items: center; gap: 12px; }
+.navbar-admin .marca-admin .logo-icon {
+  width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--c-100);
+  color: var(--c-900); border-radius: 50%; font-weight: 800; font-size: 12px; box-shadow: var(--sombra-sm);
+}
+.navbar-admin .marca-admin h1 { font-size: 17px; font-weight: 700; font-family: 'Poppins', sans-serif; }
+.navbar-admin .marca-admin p { font-size: 11px; opacity: .8; }
+.navbar-admin .nav-admin-links { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.navbar-admin .nav-admin-links a {
+  color: rgba(227,242,253,.85); font-size: 13.5px; font-weight: 600; padding: 9px 15px; border-radius: 999px;
+  transition: background var(--transicion), color var(--transicion);
+}
+.navbar-admin .nav-admin-links a:hover { background: rgba(227,242,253,.14); color: var(--c-100); }
+.navbar-admin .nav-admin-links a.activo { background: var(--c-100); color: var(--c-900); }
+.navbar-admin .btn-logout-admin {
+  background: rgba(227,242,253,.15); border: 1px solid rgba(227,242,253,.4); color: var(--c-100);
+  padding: 9px 16px; border-radius: 999px; cursor: pointer; font-size: 13.5px; font-weight: 600; transition: .2s;
+}
+.navbar-admin .btn-logout-admin:hover { background: var(--c-100); color: var(--c-900); }
+
+/* ---------- TOAST DE NOTIFICACIÓN (pago registrado, etc.) ---------- */
+.toast-admin {
+  position: fixed; top: 20px; right: 20px; z-index: 999; display: flex; align-items: center; gap: 12px;
+  background: var(--c-900); color: var(--c-100); padding: 14px 20px; border-radius: var(--radio-md);
+  box-shadow: var(--sombra-lg); border-left: 4px solid var(--c-500); transform: translateX(130%);
+  transition: transform .35s cubic-bezier(.4,0,.2,1); max-width: 320px; font-size: 13.5px;
+}
+.toast-admin.mostrar { transform: translateX(0); }
+.toast-admin .toast-icono {
+  width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%; background: var(--c-500); color: var(--c-100);
+  display: flex; align-items: center; justify-content: center; font-weight: 800;
+}
+.toast-admin .toast-texto strong { display: block; margin-bottom: 2px; }
+.toast-admin .toast-texto span { color: rgba(227,242,253,.75); font-size: 12px; }
+
+/* ============================================================
+   PÁGINA: panel-admin  (body.pagina-sociosadmin)
+   ============================================================ */
+body.pagina-sociosadmin { font-family: 'Inter', Arial, sans-serif; background: var(--c-100); color: var(--texto); min-height: 100vh; }
+.pagina-sociosadmin main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+.pagina-sociosadmin .resumen-admin { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 26px; }
+.pagina-sociosadmin .tarjeta-admin {
+  background: var(--c-100); border: 1px solid var(--c-300); border-radius: var(--radio-md);
+  padding: 16px 18px; box-shadow: var(--sombra-sm); transition: transform var(--transicion), box-shadow var(--transicion);
+}
+.pagina-sociosadmin .tarjeta-admin:hover { transform: translateY(-3px); box-shadow: var(--sombra-md); }
+.pagina-sociosadmin .tarjeta-admin .num { font-size: 26px; font-weight: 800; font-family: 'Poppins', sans-serif; color: var(--c-900); }
+.pagina-sociosadmin .tarjeta-admin .label { font-size: 12px; color: var(--texto-suave); margin-top: 3px; font-weight: 500; }
+.pagina-sociosadmin .tarjeta-admin.alerta .num { color: var(--c-500); }
+
+.pagina-sociosadmin .toolbar-admin { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.pagina-sociosadmin .buscador-admin { position: relative; flex: 1; min-width: 220px; }
+.pagina-sociosadmin .buscador-admin input {
+  width: 100%; padding: 11px 16px 11px 38px; border-radius: 999px; border: 1px solid var(--c-300);
+  background: var(--c-100); font-size: 14px; color: var(--texto); transition: border var(--transicion), box-shadow var(--transicion);
+}
+.pagina-sociosadmin .buscador-admin input:focus { outline: none; border-color: var(--c-500); box-shadow: var(--sombra-foco); }
+.pagina-sociosadmin .buscador-admin::before {
+  content: '⌕'; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--texto-tenue); font-size: 16px;
+}
+.pagina-sociosadmin .btn-agregar-socio {
+  background: var(--c-500); color: var(--c-100); border: none; padding: 11px 20px; border-radius: 999px;
+  font-weight: 700; font-size: 14px; cursor: pointer; white-space: nowrap; transition: transform var(--transicion), box-shadow var(--transicion);
+  box-shadow: 0 8px 18px rgba(33,150,243,.3);
+}
+.pagina-sociosadmin .btn-agregar-socio:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(33,150,243,.4); }
+
+.pagina-sociosadmin table { width: 100%; border-collapse: collapse; background: var(--c-100); border: 1px solid var(--c-300); border-radius: var(--radio-md); overflow: hidden; box-shadow: var(--sombra-sm); }
+.pagina-sociosadmin thead tr { background: var(--c-300); }
+.pagina-sociosadmin th, .pagina-sociosadmin td { text-align: left; padding: 12px 14px; font-size: 13.5px; }
+.pagina-sociosadmin th { color: var(--c-900); font-weight: 700; text-transform: uppercase; letter-spacing: .4px; font-size: 11.5px; }
+.pagina-sociosadmin tbody tr { border-top: 1px solid var(--c-300); transition: background var(--transicion); }
+.pagina-sociosadmin tbody tr:hover { background: rgba(144,202,249,.18); }
+.pagina-sociosadmin .socio-nombre { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--c-900); }
+.pagina-sociosadmin .socio-avatar {
+  width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--c-500), var(--c-900));
+  color: var(--c-100); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0;
+}
+.pagina-sociosadmin .estado-admin { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+.pagina-sociosadmin .estado-admin.al-dia { background: rgba(144,202,249,.35); color: var(--c-900); }
+.pagina-sociosadmin .estado-admin.pendiente { background: rgba(33,150,243,.16); color: var(--c-500); }
+.pagina-sociosadmin .acciones-fila { display: flex; gap: 8px; }
+.pagina-sociosadmin .btn-fila {
+  border: 1px solid var(--c-300); background: var(--c-100); color: var(--texto); padding: 6px 12px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; cursor: pointer; transition: all var(--transicion);
+}
+.pagina-sociosadmin .btn-fila:hover { border-color: var(--c-500); color: var(--c-900); }
+.pagina-sociosadmin .btn-fila.eliminar:hover { border-color: var(--c-900); background: var(--c-900); color: var(--c-100); }
+.pagina-sociosadmin .vacio { text-align: center; padding: 32px; color: var(--texto-suave); font-size: 13px; }
+
+/* modal agregar socio */
+.pagina-sociosadmin .modal-fondo {
+  position: fixed; inset: 0; background: rgba(13,71,161,.55); display: none; align-items: center; justify-content: center; z-index: 500; padding: 20px;
+}
+.pagina-sociosadmin .modal-fondo.abierto { display: flex; }
+.pagina-sociosadmin .modal-caja {
+  background: var(--c-100); border-radius: var(--radio-lg); padding: 28px; width: 100%; max-width: 400px;
+  box-shadow: var(--sombra-lg); display: flex; flex-direction: column; gap: 14px;
+}
+.pagina-sociosadmin .modal-caja h3 { color: var(--c-900); font-family: 'Poppins', sans-serif; font-size: 20px; margin-bottom: 4px; }
+.pagina-sociosadmin .modal-caja label { font-size: 12.5px; font-weight: 700; color: var(--c-900); text-transform: uppercase; letter-spacing: .3px; margin-bottom: 5px; display: block; }
+.pagina-sociosadmin .modal-caja input {
+  width: 100%; padding: 10px 13px; border-radius: 8px; border: 1px solid var(--c-300); background: rgba(144,202,249,.12);
+  font-size: 14px; color: var(--texto); transition: border var(--transicion);
+}
+.pagina-sociosadmin .modal-caja input:focus { outline: none; border-color: var(--c-500); }
+.pagina-sociosadmin .modal-botones { display: flex; gap: 10px; margin-top: 6px; }
+.pagina-sociosadmin .modal-botones button {
+  flex: 1; padding: 11px; border-radius: 999px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; transition: .2s;
+}
+.pagina-sociosadmin .modal-botones .btn-cancelar { background: var(--c-300); color: var(--c-900); }
+.pagina-sociosadmin .modal-botones .btn-confirmar { background: var(--c-500); color: var(--c-100); }
+.pagina-sociosadmin .modal-botones button:hover { transform: translateY(-1px); }
+
+@media (max-width: 700px) {
+  .pagina-sociosadmin .resumen-admin { grid-template-columns: 1fr 1fr; }
+  .pagina-sociosadmin thead { display: none; }
+  .pagina-sociosadmin table, .pagina-sociosadmin tbody, .pagina-sociosadmin tr, .pagina-sociosadmin td { display: block; width: 100%; }
+  .pagina-sociosadmin tbody tr { padding: 12px 14px; border-top: 8px solid var(--c-100); background: var(--c-100); border-radius: var(--radio-sm); margin-bottom: 8px; }
+  .pagina-sociosadmin td { padding: 6px 0; border: none; }
+  .pagina-sociosadmin td::before { content: attr(data-label); display: block; font-size: 11px; color: var(--texto-tenue); font-weight: 600; text-transform: uppercase; }
+}
+
+/* ============================================================
+   PÁGINA: facturas-admin  (body.pagina-facturaadmin)
+   ============================================================ */
+body.pagina-facturaadmin { font-family: 'Inter', Arial, sans-serif; background: var(--c-100); color: var(--texto); }
+.pagina-facturaadmin main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+.pagina-facturaadmin .resumen { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 24px; }
+.pagina-facturaadmin .tarjeta {
+  background: var(--c-100); border: 1px solid var(--c-300); border-radius: var(--radio-md);
+  padding: 16px 18px; box-shadow: var(--sombra-sm); transition: transform var(--transicion), box-shadow var(--transicion);
+}
+.pagina-facturaadmin .tarjeta:hover { transform: translateY(-3px); box-shadow: var(--sombra-md); }
+.pagina-facturaadmin .tarjeta .num { font-size: 24px; font-weight: 800; font-family: 'Poppins', sans-serif; }
+.pagina-facturaadmin .tarjeta .label { font-size: 12px; color: var(--texto-suave); margin-top: 3px; font-weight: 500; }
+.pagina-facturaadmin .tarjeta.pendiente .num { color: var(--c-500); }
+.pagina-facturaadmin .tarjeta.paga .num { color: var(--c-900); }
+.pagina-facturaadmin .tarjeta.impaga .num { color: rgba(13,71,161,.55); }
+.pagina-facturaadmin .filtros { display: flex; gap: 9px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.pagina-facturaadmin .filtros-izq { display: flex; gap: 9px; flex-wrap: wrap; }
+.pagina-facturaadmin .filtros button {
+  border: 1px solid var(--c-300); background: var(--c-100); color: var(--texto); padding: 8px 16px;
+  border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all var(--transicion);
+}
+.pagina-facturaadmin .filtros button:hover { border-color: var(--c-500); color: var(--c-900); }
+.pagina-facturaadmin .filtros button.activo { background: var(--c-500); border-color: var(--c-500); color: var(--c-100); box-shadow: var(--sombra-sm); }
+.pagina-facturaadmin .buscador-factura input {
+  padding: 9px 15px; border-radius: 999px; border: 1px solid var(--c-300); font-size: 13px; min-width: 200px; color: var(--texto);
+}
+.pagina-facturaadmin .buscador-factura input:focus { outline: none; border-color: var(--c-500); }
+.pagina-facturaadmin table { width: 100%; border-collapse: collapse; background: var(--c-100); border: 1px solid var(--c-300); border-radius: var(--radio-md); overflow: hidden; box-shadow: var(--sombra-sm); }
+.pagina-facturaadmin thead tr { background: var(--c-300); }
+.pagina-facturaadmin th, .pagina-facturaadmin td { text-align: left; padding: 12px 14px; font-size: 13.5px; }
+.pagina-facturaadmin th { color: var(--c-900); font-weight: 700; text-transform: uppercase; letter-spacing: .4px; font-size: 12px; }
+.pagina-facturaadmin tbody tr { border-top: 1px solid var(--c-300); transition: background var(--transicion); }
+.pagina-facturaadmin tbody tr:hover { background: rgba(144,202,249,.18); }
+.pagina-facturaadmin .monto { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--c-900); }
+.pagina-facturaadmin .estado { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.pagina-facturaadmin .estado.pendiente { background: rgba(33,150,243,.16); color: var(--c-500); }
+.pagina-facturaadmin .estado.paga { background: rgba(144,202,249,.35); color: var(--c-900); }
+.pagina-facturaadmin .estado.impaga { background: rgba(13,71,161,.12); color: rgba(13,71,161,.6); }
+.pagina-facturaadmin .btn-marcar-pagada {
+  border: none; background: var(--c-500); color: var(--c-100); padding: 6px 14px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; cursor: pointer; transition: transform var(--transicion), box-shadow var(--transicion);
+}
+.pagina-facturaadmin .btn-marcar-pagada:hover { transform: translateY(-1px); box-shadow: var(--sombra-sm); }
+.pagina-facturaadmin .btn-marcar-pagada:disabled { opacity: .45; cursor: default; transform: none; box-shadow: none; }
+.pagina-facturaadmin .vacio { text-align: center; padding: 32px; color: var(--texto-suave); font-size: 13px; }
+@media (max-width: 700px) {
+  .pagina-facturaadmin .resumen { grid-template-columns: 1fr 1fr; }
+  .pagina-facturaadmin .filtros { flex-direction: column; align-items: stretch; }
+  .pagina-facturaadmin thead { display: none; }
+  .pagina-facturaadmin table, .pagina-facturaadmin tbody, .pagina-facturaadmin tr, .pagina-facturaadmin td { display: block; width: 100%; }
+  .pagina-facturaadmin tbody tr { padding: 12px 14px; border-top: 8px solid var(--c-100); background: var(--c-100); border-radius: var(--radio-sm); margin-bottom: 8px; }
+  .pagina-facturaadmin td { padding: 5px 0; border: none; }
+  .pagina-facturaadmin td::before { content: attr(data-label); display: block; font-size: 11px; color: var(--texto-tenue); font-weight: 600; text-transform: uppercase; }
+}
+
+/* ============================================================
+   PÁGINA: perfil-admin  (body.pagina-perfiladmin)
+   ============================================================ */
+body.pagina-perfiladmin { font-family: 'Inter', Arial, Helvetica, sans-serif; background: var(--c-100); color: var(--texto); }
+.pagina-perfiladmin .contenedor { width: 100%; max-width: 800px; margin: 48px auto; padding: 0 20px; }
+.pagina-perfiladmin .perfil-card { background: var(--c-100); border-radius: var(--radio-lg); padding: 38px; box-shadow: var(--sombra-lg); border: 1px solid var(--c-300); }
+.pagina-perfiladmin .perfil-header { display: flex; align-items: center; gap: 22px; }
+.pagina-perfiladmin .avatar {
+  width: 82px; height: 82px; border-radius: 50%; background: linear-gradient(135deg, var(--c-500), var(--c-900));
+  color: var(--c-100); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800;
+  box-shadow: 0 8px 20px rgba(33,150,243,.35); font-family: 'Poppins', sans-serif;
+}
+.pagina-perfiladmin .perfil-titulo h2 { color: var(--c-900); font-size: 27px; margin-bottom: 6px; font-weight: 700; }
+.pagina-perfiladmin .badge-rol {
+  display: inline-block; margin-top: 4px; background: var(--c-500); color: var(--c-100); font-size: 11px; font-weight: 700;
+  padding: 3px 12px; border-radius: 999px; letter-spacing: .3px; text-transform: uppercase;
+}
+.pagina-perfiladmin .separador { height: 1px; background: var(--c-300); margin: 30px 0; }
+.pagina-perfiladmin .datos-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 22px; }
+.pagina-perfiladmin .campo { display: flex; flex-direction: column; gap: 8px; }
+.pagina-perfiladmin .campo label { font-size: 12.5px; font-weight: 700; color: var(--c-900); text-transform: uppercase; letter-spacing: .3px; }
+.pagina-perfiladmin .dato {
+  min-height: 46px; display: flex; align-items: center; background: rgba(144,202,249,.16);
+  border: 1px solid var(--c-300); border-radius: var(--radio-sm); padding: 0 15px; color: var(--texto); font-size: 14.5px;
+  transition: border var(--transicion), background var(--transicion);
+}
+.pagina-perfiladmin .dato:hover { border-color: var(--c-500); background: rgba(144,202,249,.26); }
+.pagina-perfiladmin .password-container { justify-content: space-between; }
+.pagina-perfiladmin .btn-password { border: none; background: transparent; color: var(--c-500); font-size: 13px; cursor: pointer; font-weight: 700; }
+.pagina-perfiladmin .btn-password:hover { color: var(--c-900); }
+.pagina-perfiladmin .acciones { margin-top: 26px; display: flex; justify-content: flex-end; }
+.pagina-perfiladmin .btn-principal {
+  border: none; background: linear-gradient(135deg, var(--c-500), var(--c-900)); color: var(--c-100); padding: 13px 24px;
+  border-radius: 999px; cursor: pointer; font-size: 14px; font-weight: 700; transition: .2s; box-shadow: 0 8px 20px rgba(33,150,243,.3);
+}
+.pagina-perfiladmin .btn-principal:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(33,150,243,.4); }
+@media (max-width: 700px) {
+  .pagina-perfiladmin .perfil-card { padding: 26px 20px; }
+  .pagina-perfiladmin .datos-grid { grid-template-columns: 1fr; }
+  .pagina-perfiladmin .perfil-titulo h2 { font-size: 21px; }
+}

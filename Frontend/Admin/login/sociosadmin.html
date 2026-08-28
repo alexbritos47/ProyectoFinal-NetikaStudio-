@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin · Club Ciclista Maragato</title>
+  <link rel="stylesheet" href="../../cssglobal/global.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="pagina-sociosadmin">
+
+  <nav class="navbar-admin">
+    <div class="marca-admin">
+      <div class="logo-icon">CCM</div>
+      <div>
+        <h1>Club Ciclista Maragato</h1>
+        <p>Panel de administración</p>
+      </div>
+    </div>
+    <div class="nav-admin-links">
+      <a href="sociosadmin.html" class="activo">Socios</a>
+      <a href="Facturaadmin.html">Facturas</a>
+      <a href="perfiladmin.html">Mi perfil</a>
+    </div>
+    <button class="btn-logout-admin" id="btnLogout">Cerrar sesión</button>
+  </nav>
+
+  <main>
+    <div class="resumen-admin">
+      <div class="tarjeta-admin">
+        <div class="num" id="totalSocios">0</div>
+        <div class="label">Socios totales</div>
+      </div>
+      <div class="tarjeta-admin">
+        <div class="num" id="sociosAlDia">0</div>
+        <div class="label">Cuotas al día</div>
+      </div>
+      <div class="tarjeta-admin alerta">
+        <div class="num" id="sociosPendientes">0</div>
+        <div class="label">Cuotas pendientes</div>
+      </div>
+    </div>
+
+    <div class="toolbar-admin">
+      <div class="buscador-admin">
+        <input type="text" id="buscarSocio" placeholder="Buscar socio por nombre...">
+      </div>
+      <button class="btn-agregar-socio" id="btnAbrirModal">+ Agregar socio</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Socio</th>
+          <th>Email</th>
+          <th>Estado de cuota</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tablaSocios"></tbody>
+    </table>
+    <p class="vacio" id="mensajeVacio" style="display:none;">No se encontraron socios.</p>
+  </main>
+
+  <!-- Modal agregar socio -->
+  <div class="modal-fondo" id="modalFondo">
+    <div class="modal-caja">
+      <h3>Agregar socio</h3>
+      <div>
+        <label for="nombreSocio">Nombre completo</label>
+        <input type="text" id="nombreSocio" placeholder="Ej: Ana Rodríguez">
+      </div>
+      <div>
+        <label for="emailSocio">Email</label>
+        <input type="text" id="emailSocio" placeholder="Ej: ana@correo.com">
+      </div>
+      <div class="modal-botones">
+        <button class="btn-cancelar" id="btnCancelarModal">Cancelar</button>
+        <button class="btn-confirmar" id="btnConfirmarModal">Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de notificación -->
+  <div class="toast-admin" id="toastAdmin">
+    <div class="toast-icono">✓</div>
+    <div class="toast-texto">
+      <strong id="toastTitulo">Pago registrado</strong>
+      <span id="toastDetalle"></span>
+    </div>
+  </div>
+
+  <script src="sociosadmin.js"></script>
+</body>
+</html>

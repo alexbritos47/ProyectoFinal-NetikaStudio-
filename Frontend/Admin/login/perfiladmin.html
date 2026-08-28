@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi perfil · Panel Admin · Club Ciclista Maragato</title>
+  <link rel="stylesheet" href="../../cssglobal/global.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="pagina-perfiladmin">
+
+  <nav class="navbar-admin">
+    <div class="marca-admin">
+      <div class="logo-icon">CCM</div>
+      <div>
+        <h1>Club Ciclista Maragato</h1>
+        <p>Panel de administración</p>
+      </div>
+    </div>
+    <div class="nav-admin-links">
+      <a href="sociosadmin.html">Socios</a>
+      <a href="Facturaadmin.html">Facturas</a>
+      <a href="perfiladmin.html" class="activo">Mi perfil</a>
+    </div>
+    <button class="btn-logout-admin" id="btnLogout">Cerrar sesión</button>
+  </nav>
+
+  <div class="contenedor">
+    <div class="perfil-card">
+      <div class="perfil-header">
+        <div class="avatar" id="avatarIniciales">A</div>
+        <div class="perfil-titulo">
+          <h2 id="nombreAdmin">Administrador</h2>
+          <span class="badge-rol">Administrador</span>
+        </div>
+      </div>
+
+      <div class="separador"></div>
+
+      <div class="datos-grid">
+        <div class="campo">
+          <label>Usuario</label>
+          <div class="dato" id="datoUsuario">—</div>
+        </div>
+        <div class="campo">
+          <label>Correo electrónico</label>
+          <div class="dato" id="datoEmail">—</div>
+        </div>
+        <div class="campo">
+          <label>Contraseña</label>
+          <div class="dato password-container">
+            <span id="datoPassword">••••••••</span>
+            <button class="btn-password" id="btnVerPassword">Cambiar</button>
+          </div>
+        </div>
+        <div class="campo">
+          <label>Rol</label>
+          <div class="dato">Administrador del club</div>
+        </div>
+      </div>
+
+      <div class="acciones">
+        <button class="btn-principal" id="btnGuardarPerfil">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="perfiladmin.js"></script>
+</body>
+</html>
