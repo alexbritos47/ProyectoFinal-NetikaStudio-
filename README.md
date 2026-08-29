@@ -4,50 +4,49 @@
 
 ## Descripción
 
-Proyecto educativo desarrollado con el objetivo de analizar, diseñar y desarrollar una solución digital para la gestión administrativa del Club Ciclista Maragato.
+Proyecto educativo desarrollado por **Netika Studio** para crear un sistema digital que facilite la gestión de socios y cuotas del Club Ciclista Maragato.
 
-La plataforma busca optimizar el control de socios, cuotas sociales, cobranzas e informes internos mediante un sistema centralizado.
-
----
-
-## Estado del proyecto
-
-Actualmente el proyecto se encuentra en la etapa de desarrollo.
-
-Ya se realizó el relevamiento de información y la entrevista con el cliente, lo que permitió conocer sus necesidades, objetivos y el funcionamiento actual del sistema de gestión. Con esta información, el equipo se encuentra desarrollando la solución propuesta, incorporando los requerimientos definidos para avanzar hacia la finalización del proyecto.
-
----
+El sistema busca mejorar la organización de la información y facilitar el control de socios y pagos.
 
 ## Objetivos
 
-* Comprender el funcionamiento actual de la empresa
-* Identificar problemas y necesidades
-* Diseñar una solución digital adecuada
-* Mejorar la organización y trazabilidad de la información
-* Facilitar la gestión de cuotas y socios
+* Mejorar la gestión de socios.
+* Facilitar el control de cuotas y pagos.
+* Organizar mejor la información.
+* Crear una solución sencilla y fácil de utilizar.
 
----
+## Estado del proyecto
+
+El proyecto se encuentra actualmente en **desarrollo**.
+
+Se realizó el relevamiento y análisis de las necesidades del club y actualmente se está trabajando en la implementación del sistema, incluyendo el desarrollo del **backend**.
+
+## Tecnologías utilizadas
+
+Por el momento, el proyecto utiliza:
+
+* **HTML**
+* **CSS**
+* **JavaScript**
+* **PHP**
 
 ## Próximas etapas
 
-* Continuar con el desarrollo del sistema
-* Realizar pruebas de funcionamiento
-* Corregir posibles errores
-* Finalizar la implementación
-* Presentación y entrega del proyecto
-
----
+* Continuar implementando el backend.
+* Continuar con el desarrollo del sistema.
+* Realizar pruebas.
+* Corregir errores.
+* Finalizar el proyecto.
+* Presentar el proyecto.
 
 ## Integrantes
 
-* Alex Britos — Coordinador
-* Nahuel Alba — Subcoordinador
-* Jonathan López
-* Santiago Vilar
-* Bruno Méndez
+* **Alex Britos** — Coordinador
+* **Nahuel Alba** — Subcoordinador
+* **Jonathan López**
+* **Santiago Vilar**
+* **Bruno Méndez**
 
----
+## Proyecto educativo
 
-## Institución / Proyecto educativo
-
-Proyecto realizado con fines educativos como trabajo final.
+Proyecto realizado con fines educativos como trabajo final de **Netika Studio — 2026**.
