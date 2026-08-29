@@ -6,9 +6,11 @@
    rgb(13, 71, 161)   -> navbar, footer, títulos, elementos importantes
    ============================================================ */
 
+/* Fuentes de Google Fonts: Poppins para títulos, Inter para texto general */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 /* ===================== RESET GLOBAL ===================== */
+/* Reset básico: saca márgenes/paddings por defecto y usa box-sizing consistente */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   min-height: 100vh;
@@ -21,17 +23,18 @@ a { text-decoration: none; }
 ul, ol { list-style: none; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; }
 input, select, textarea { font-family: inherit; font-size: inherit; }
+/* Títulos usan la fuente Poppins */
 h1, h2, h3, h4 { font-family: 'Poppins', 'Inter', Arial, sans-serif; }
 
 /* ===================== VARIABLES ===================== */
 :root {
-  /* paleta base */
+  /* --- paleta base (los 4 colores de arriba) --- */
   --c-100: rgb(227, 242, 253);
   --c-300: rgb(144, 202, 249);
   --c-500: rgb(33, 150, 243);
   --c-900: rgb(13, 71, 161);
 
-  /* alias funcionales (todo derivado de la paleta, con opacidad cuando corresponde) */
+  /* --- alias funcionales: todo derivado de la paleta base, con opacidad cuando corresponde --- */
   --fondo: var(--c-100);
   --superficie: rgba(227, 242, 253, 0.55);
   --borde: rgba(144, 202, 249, 0.65);
@@ -44,23 +47,27 @@ h1, h2, h3, h4 { font-family: 'Poppins', 'Inter', Arial, sans-serif; }
   --acento-hover: rgb(20, 120, 210);
   --oscuro: var(--c-900);
 
+  /* --- sombras reutilizables (sm/md/lg/foco) --- */
   --sombra-sm: 0 2px 8px rgba(13, 71, 161, 0.08);
   --sombra-md: 0 8px 24px rgba(13, 71, 161, 0.14);
   --sombra-lg: 0 16px 40px rgba(13, 71, 161, 0.22);
-  --sombra-foco: 0 0 0 4px rgba(33, 150, 243, 0.25);
+  --sombra-foco: 0 0 0 4px rgba(33, 150, 243, 0.25); /* anillo de foco (inputs, etc) */
 
+  /* --- radios de borde reutilizables --- */
   --radio-sm: 8px;
   --radio-md: 14px;
   --radio-lg: 20px;
-  --transicion: 0.25s cubic-bezier(.4,0,.2,1);
+  --transicion: 0.25s cubic-bezier(.4,0,.2,1); /* transición estándar para hovers/animaciones */
 }
 
 /* ===================== ACCESIBILIDAD ===================== */
+/* Outline visible al navegar con teclado (Tab) */
 a:focus-visible, button:focus-visible, input:focus-visible {
   outline: 3px solid var(--c-500);
   outline-offset: 2px;
   border-radius: 4px;
 }
+/* "Saltar al contenido" — oculto hasta que se hace foco con teclado */
 .skip-link {
   position: absolute; left: -9999px; top: 0;
   background: var(--c-100); color: var(--c-900); padding: .8rem 1.2rem;
@@ -68,16 +75,21 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   box-shadow: var(--sombra-md);
 }
 .skip-link:focus { left: 0; }
+/* Texto solo para lectores de pantalla (invisible visualmente) */
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
 }
 
+/* Respeta la config de "reducir movimiento" del usuario: apaga animaciones */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 
-/* ===================== NAVBAR PRINCIPAL ===================== */
+/* ============================================================
+   NAVBAR PRINCIPAL (nav.main-nav)
+   Usada en la página de inicio / pública
+   ============================================================ */
 nav.main-nav {
   background: linear-gradient(120deg, var(--c-900), rgb(18, 92, 195));
   padding: 0 2rem; position: relative;
@@ -85,7 +97,9 @@ nav.main-nav {
   border-bottom: 3px solid var(--c-500); width: 100%;
   box-shadow: var(--sombra-md);
 }
+/* -- enlaces del lado "personal" (login/registro, izquierda) -- */
 .nav-personal { list-style: none; display: flex; align-items: center; height: 100%; }
+/* -- enlaces centrales del menú, centrados con position absolute -- */
 .nav-links {
   list-style: none; display: flex; align-items: center; height: 100%;
   position: absolute; left: 50%; transform: translateX(-50%);
@@ -97,8 +111,10 @@ nav.main-nav {
   display: flex; align-items: center; transition: background var(--transicion), color var(--transicion); white-space: nowrap;
 }
 .nav-personal > li > a:hover, .nav-links > li > a:hover { background: rgba(33, 150, 243, 0.22); color: var(--c-100); }
+/* -- flechita (▾) de los ítems con submenú -- */
 .nav-links > li.dropdown > a::after { content: '▾'; margin-left: 6px; font-size: 11px; opacity: .75; transition: transform var(--transicion); }
 .nav-links > li.dropdown:hover > a::after { transform: rotate(180deg); }
+/* -- submenú desplegable (dropdown) -- */
 .dropdown-menu {
   display: none; position: absolute; top: 100%; left: 0; background: var(--c-100);
   border: 1px solid var(--c-300); border-top: 3px solid var(--c-500);
@@ -111,6 +127,7 @@ nav.main-nav {
 .dropdown-menu li a:hover { background: var(--c-300); color: var(--c-900); padding-left: 22px; }
 .dropdown-menu li a:focus-visible { outline: 3px solid var(--c-500); outline-offset: -3px; }
 .dropdown-menu li + li { border-top: 1px solid rgba(144, 202, 249, 0.5); }
+/* -- botones de login/registro en la navbar -- */
 .auth-links { display: flex; align-items: center; gap: .6rem; }
 .btn-login, .btn-register {
   display: inline-block; padding: .5rem 1.15rem; border-radius: 999px; font-size: 14px; font-weight: 600;
@@ -119,12 +136,14 @@ nav.main-nav {
 .btn-login:hover, .btn-register:hover { transform: translateY(-2px); box-shadow: var(--sombra-sm); opacity: .95; }
 .btn-login { background: rgba(227, 242, 253, 0.14); border: 1px solid rgba(227, 242, 253, 0.45); }
 .btn-register { background: var(--c-500); }
+/* -- logo centrado en la navbar -- */
 .logo { display: flex; align-items: center; justify-content: center; margin: 0 auto; }
 .nav-logo { display: flex; align-items: center; height: 100%; margin-right: 1rem; padding: 0 10px; margin-top: -10px; }
 .nav-logo img { height: 75px; display: block; transition: transform .3s ease; filter: drop-shadow(0 2px 6px rgba(227,242,253,.25)); }
 .nav-logo img:hover { transform: scale(1.06); }
 
 /* ===================== NAV: BOTÓN HAMBURGUESA (mobile/tablet) ===================== */
+/* Oculto en desktop, aparece en la media query de abajo (max-width: 900px) */
 .nav-toggle {
   display: none;
   flex-direction: column;
@@ -138,6 +157,7 @@ nav.main-nav {
   z-index: 20;
   order: 3;
 }
+/* Las 3 rayitas del ícono hamburguesa */
 .nav-toggle span {
   display: block;
   width: 100%;
@@ -147,14 +167,17 @@ nav.main-nav {
   transition: transform .3s ease, opacity .3s ease;
 }
 .nav-toggle:focus-visible { outline: 3px solid var(--c-500); outline-offset: 4px; border-radius: 4px; }
+/* Animación de hamburguesa -> X cuando el menú está abierto (clase .nav-open puesta por JS) */
 nav.main-nav.nav-open .nav-toggle span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
 nav.main-nav.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
 nav.main-nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
+/* --- RESPONSIVE navbar: se convierte en menú hamburguesa abajo de 900px --- */
 @media (max-width: 900px) {
   nav.main-nav { flex-wrap: wrap; height: auto; min-height: 78px; padding: 0 1.25rem; }
   .logo { order: 1; margin: 0; }
   .nav-toggle { display: flex; }
+  /* Menú colapsado con max-height (para animar la apertura) */
   .nav-personal, .nav-links {
     position: static; transform: none; left: auto;
     flex-direction: column; align-items: stretch; width: 100%; height: auto;
@@ -185,13 +208,17 @@ nav.main-nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-8px
 }
 
 /* ===================== LOADER: keyframe compartido ===================== */
+/* Usado por todos los ".loader-wheel" de las distintas páginas (spinner girando) */
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .loader-wheel { border-radius: 50%; }
 
 /* ============================================================
-   PÁGINA: inicio  (body.pagina-inicio)
+   PÁGINA: INICIO  (body.pagina-inicio)
+   Landing pública: hero, beneficios, carrusel, sobre nosotros, footer
    ============================================================ */
 body.pagina-inicio { background: linear-gradient(160deg, var(--c-900) 0%, var(--c-500) 55%, var(--c-300) 100%); }
+
+/* --- Hero (bienvenida + descripción) --- */
 .pagina-inicio .hero-overlay { background: linear-gradient(to bottom, rgba(13,71,161,.45), rgba(13,71,161,.1)); padding-top: 1px; padding-bottom: 1px; }
 .pagina-inicio .Bienvenida {
   margin: 2.5rem 2rem 1rem; font-size: clamp(32px, 5vw, 54px); font-weight: 800; color: var(--c-100);
@@ -199,6 +226,8 @@ body.pagina-inicio { background: linear-gradient(160deg, var(--c-900) 0%, var(--
 }
 .pagina-inicio .titulodescripcion { margin: 0 2rem; font-size: 18px; color: rgba(227,242,253,.92); text-align: center; line-height: 1.6; text-shadow: 0 1px 6px rgba(13,71,161,.5); }
 .pagina-inicio .descripcion { margin: 1rem 2rem 2rem; font-size: 20px; color: rgba(227,242,253,.92); text-align: center; line-height: 1.55; text-shadow: 0 1px 6px rgba(13,71,161,.5); }
+
+/* --- Sección "beneficios" (lista de tarjetas) --- */
 .pagina-inicio .beneficios {
   margin: 2.5rem 2rem 1.5rem; font-size: clamp(28px, 4vw, 44px); font-weight: 700; color: var(--c-100);
   text-align: center; letter-spacing: .5px; text-shadow: 0 4px 16px rgba(13,71,161,.5);
@@ -206,14 +235,17 @@ body.pagina-inicio { background: linear-gradient(160deg, var(--c-900) 0%, var(--
 .pagina-inicio .beneficios-lista { display: flex; flex-direction: column; gap: 3rem; margin: 2rem; padding-bottom: 1.5rem; }
 .pagina-inicio .beneficio-item { max-width: 900px; margin: 0 auto; width: 100%; }
 .pagina-inicio .beneficio-titulo { font-size: 23px; font-weight: 600; color: var(--c-100); text-align: center; margin-bottom: 1.1rem; text-shadow: 0 1px 6px rgba(13,71,161,.5); }
+
+/* --- Carrusel de imágenes --- */
 .pagina-inicio .carousel {
   position: relative; width: 100%; overflow: hidden; border-radius: var(--radio-lg);
   border: 1px solid rgba(144,202,249,.55); background: var(--c-900); box-shadow: var(--sombra-lg);
 }
-.pagina-inicio .carousel-track { display: flex; transition: transform .5s cubic-bezier(.4,0,.2,1); }
+.pagina-inicio .carousel-track { display: flex; transition: transform .5s cubic-bezier(.4,0,.2,1); } /* riel que se desliza con translateX vía JS */
 @media (prefers-reduced-motion: reduce) { .pagina-inicio .carousel-track { transition: none; } }
 .pagina-inicio .carousel-slide { min-width: 100%; flex-shrink: 0; line-height: 0; }
 .pagina-inicio .carousel-slide img { width: 100%; height: 420px; object-fit: cover; display: block; }
+/* botones prev/next (flechas circulares) */
 .pagina-inicio .carousel-btn {
   position: absolute; top: 50%; transform: translateY(-50%); background: rgba(13,71,161,.6);
   backdrop-filter: blur(4px); color: var(--c-100); width: 40px; height: 40px; border-radius: 50%;
@@ -223,15 +255,19 @@ body.pagina-inicio { background: linear-gradient(160deg, var(--c-900) 0%, var(--
 .pagina-inicio .carousel-btn:hover { background: var(--c-500); transform: translateY(-50%) scale(1.08); }
 .pagina-inicio .carousel-prev { left: 14px; }
 .pagina-inicio .carousel-next { right: 14px; }
+/* puntitos indicadores de slide activo */
 .pagina-inicio .carousel-dots { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; gap: 9px; }
 .pagina-inicio .carousel-dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(227,242,253,.45); cursor: pointer; border: none; padding: 0; transition: background var(--transicion), transform var(--transicion); }
 .pagina-inicio .carousel-dot.active { background: var(--c-500); transform: scale(1.25); }
+/* botón de pausa del autoplay */
 .pagina-inicio .carousel-pause {
   position: absolute; top: 12px; right: 12px; background: rgba(13,71,161,.6); color: var(--c-100);
   width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 14px; display: flex;
   align-items: center; justify-content: center; z-index: 5; border: 1px solid rgba(227,242,253,.25); transition: background var(--transicion);
 }
 .pagina-inicio .carousel-pause:hover { background: var(--c-500); }
+
+/* --- Sección "Sobre nosotros" --- */
 .pagina-inicio .sobre-nosotros {
   background: var(--c-100); border-top: 3px solid var(--c-500); border-bottom: 3px solid var(--c-500);
   padding: 3.5rem 2rem; margin-top: 3rem;
@@ -239,6 +275,8 @@ body.pagina-inicio { background: linear-gradient(160deg, var(--c-900) 0%, var(--
 .pagina-inicio .sobre-nosotros-titulo { font-size: clamp(28px, 4vw, 40px); font-weight: 700; color: var(--c-900); text-align: center; margin-bottom: 1.5rem; letter-spacing: .4px; }
 .pagina-inicio .sobre-nosotros-contenido { max-width: 850px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.1rem; }
 .pagina-inicio .sobre-nosotros-contenido p { font-size: 18px; color: var(--texto-suave); line-height: 1.7; text-align: center; }
+
+/* --- Footer de inicio (contacto + redes sociales) --- */
 .pagina-inicio .footer { background: linear-gradient(120deg, var(--c-900), rgb(18, 92, 195)); border-top: 3px solid var(--c-500); padding: 2.2rem; }
 .pagina-inicio .footer-content { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1.5rem; }
 .pagina-inicio .btn-contacto {
@@ -255,10 +293,12 @@ body.pagina-inicio { background: linear-gradient(160deg, var(--c-900) 0%, var(--
 .pagina-inicio .social-btn:hover { transform: translateY(-3px); box-shadow: var(--sombra-sm); background: var(--c-300); }
 .pagina-inicio .social-whatsapp, .pagina-inicio .social-facebook, .pagina-inicio .social-instagram { background: var(--c-100); color: var(--c-900); }
 .pagina-inicio .footer-copy { text-align: center; color: rgba(227,242,253,.75); font-size: 13px; margin-top: 1.6rem; }
+/* Carrusel más bajito en celular */
 @media (max-width: 600px) { .pagina-inicio .carousel-slide img { height: 240px; } }
 
 /* ============================================================
-   PÁGINA: login  (body.pagina-login)
+   PÁGINA: LOGIN (usuario)  (body.pagina-login)
+   Pantalla completa con fondo, loader inicial y formularios de login/registro
    ============================================================ */
 body.pagina-login {
   font-family: 'Inter', Arial, sans-serif; overflow: hidden; min-width: 100vw; width: 100%; height: 100vh;
@@ -266,6 +306,7 @@ body.pagina-login {
   background-repeat: no-repeat; background-position: center center; background-size: cover; background-attachment: fixed;
   color: var(--c-100); font-size: 12px;
 }
+/* --- Loader de pantalla completa que se muestra mientras carga --- */
 .pagina-login #loader {
   position: fixed; inset: 0; background: linear-gradient(135deg, var(--c-900), rgb(9, 50, 115));
   display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; transition: opacity 1s ease;
@@ -273,8 +314,10 @@ body.pagina-login {
 .pagina-login .loader-wheel { width: 90px; height: 90px; border: 8px solid rgba(144,202,249,.3); border-top: 8px solid var(--c-500); margin-bottom: 20px; box-shadow: 0 0 25px rgba(33,150,243,.45); animation: spin 1s linear infinite; }
 .pagina-login #loader h1 { color: var(--c-300); font-size: 2rem; font-family: 'Poppins', sans-serif; }
 .pagina-login #loader p { color: rgba(227,242,253,.8); margin-top: 8px; }
+/* Overlay oscuro sobre la imagen de fondo, para que se lea mejor el texto */
 .pagina-login .body { position: absolute; top: -20px; left: -20px; right: -40px; bottom: -40px; width: auto; height: auto; background: linear-gradient(180deg, rgba(13,71,161,0) 0%, rgba(13,71,161,.65) 100%); z-index: 1; opacity: .7; }
 .pagina-login .background-inicial { position: fixed; inset: 0; width: 100%; height: 100%; background: rgba(13,71,161,.35); opacity: .2; pointer-events: none; z-index: 9999; }
+/* --- Caja centrada que contiene título + formulario --- */
 .pagina-login .authWrapper { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 18px; }
 .pagina-login .header {
   text-align: center; padding: 18px 44px; border-radius: var(--radio-lg); background: rgba(227,242,253,.9);
@@ -282,12 +325,14 @@ body.pagina-login {
 }
 .pagina-login .header div { color: var(--c-900); font-family: 'Poppins', sans-serif; font-size: 34px; font-weight: 700; }
 .pagina-login .header div span { color: var(--c-500) !important; }
+/* --- Tarjetas de formulario (login / registro) con efecto vidrio (glassmorphism) --- */
 .pagina-login .login, .pagina-login .register {
   height: auto; width: 350px; padding: 26px; background: rgba(13,71,161,.72);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: var(--radio-lg);
   border: 1px solid rgba(227,242,253,.18); box-shadow: var(--sombra-lg);
 }
 .pagina-login .register { display: flex; flex-direction: column; gap: 12px; }
+/* inputs de texto/contraseña de login y registro */
 .pagina-login .login input[type=text], .pagina-login .login input[type=password],
 .pagina-login .register input[type=text], .pagina-login .register input[type=email], .pagina-login .register input[type=password] {
   width: 100%; height: 32px; background: rgba(227,242,253,.08); border: 1px solid rgba(227,242,253,.5);
@@ -295,6 +340,7 @@ body.pagina-login {
   transition: border var(--transicion), background var(--transicion);
 }
 .pagina-login .login input[type=text], .pagina-login .login input[type=password] { margin-bottom: 12px; display: block; }
+/* botón de submit (usa <input type=button>, ojo que NO es <button>) */
 .pagina-login .login input[type=button], .pagina-login .register input[type=button] {
   width: 100%; height: 42px; background: linear-gradient(135deg, var(--c-500), rgb(20,120,210)); border: none; cursor: pointer;
   border-radius: 999px; color: var(--c-100); font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 600; padding: 8px; margin-top: 6px;
@@ -307,16 +353,18 @@ body.pagina-login {
 .pagina-login ::-moz-input-placeholder { color: rgba(227,242,253,.6); }
 
 /* ============================================================
-   PÁGINA: loginadm  (body.pagina-loginadm)
+   PÁGINA: LOGIN ADMIN  (body.pagina-loginadm)
+   Versión más simple/oscura del login, para administradores
    ============================================================ */
 body.pagina-loginadm { font-family: 'Inter', Arial, sans-serif; background: var(--c-900); height: 100vh; }
 .pagina-loginadm #loader { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--c-900); color: var(--c-100); }
 .pagina-loginadm .loader-wheel { width: 50px; height: 50px; border: 4px solid rgba(144,202,249,.35); border-top-color: var(--c-500); animation: spin .9s linear infinite; }
 .pagina-loginadm #main { position: relative; min-height: 100vh; background-image: url("../login/img/fondoinicio.jpg"); background-size: cover; background-position: center; }
-.pagina-loginadm .background-inicial { display: none; }
-.pagina-loginadm .grad { position: absolute; inset: 0; background: rgba(13,71,161,.62); pointer-events: none; }
+.pagina-loginadm .background-inicial { display: none; } /* en esta página no se usa el overlay de background-inicial */
+.pagina-loginadm .grad { position: absolute; inset: 0; background: rgba(13,71,161,.62); pointer-events: none; } /* capa oscura sobre la imagen de fondo */
 .pagina-loginadm .header { position: relative; padding: 26px 32px; font-size: 1.55rem; font-weight: 700; color: var(--c-100); font-family: 'Poppins', sans-serif; }
 .pagina-loginadm .header span { color: var(--c-300); font-weight: 400; margin-left: 6px; }
+/* --- Formulario de login admin (caja chica centrada) --- */
 .pagina-loginadm .login {
   position: relative; width: 290px; margin: 60px auto 0; padding: 26px; background: rgba(227,242,253,.08);
   backdrop-filter: blur(10px); border: 1px solid rgba(227,242,253,.18); border-radius: var(--radio-md);
@@ -332,18 +380,21 @@ body.pagina-loginadm { font-family: 'Inter', Arial, sans-serif; background: var(
   font-weight: 700; cursor: pointer; transition: transform var(--transicion), box-shadow var(--transicion);
 }
 .pagina-loginadm .login input[type="button"]:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(33,150,243,.4); }
-.pagina-loginadm .login-error { color: var(--c-300); font-size: .8rem; min-height: 14px; font-weight: 600; }
+.pagina-loginadm .login-error { color: var(--c-300); font-size: .8rem; min-height: 14px; font-weight: 600; } /* mensaje de error (usuario/contraseña incorrectos) */
 
 /* ============================================================
-   PÁGINA: facturas  (body.pagina-facturas)
+   PÁGINA: MIS FACTURAS (usuario)  (body.pagina-facturas)
+   Resumen (tarjetas) + filtros + tabla de facturas del socio logueado
    ============================================================ */
 body.pagina-facturas { font-family: 'Inter', "Segoe UI", Arial, sans-serif; background: var(--c-100); color: var(--texto); }
+/* --- Header con marca/logo --- */
 .pagina-facturas header { background: linear-gradient(120deg, var(--c-900), rgb(18, 92, 195)); color: var(--c-100); padding: 26px 20px; }
 .pagina-facturas header .marca { display: flex; align-items: center; gap: 12px; max-width: 900px; margin: 0 auto; }
 .pagina-facturas header .marca span.icono { font-size: 28px; }
 .pagina-facturas header h1 { font-size: 21px; font-weight: 700; font-family: 'Poppins', sans-serif; }
 .pagina-facturas header p { margin: 3px 0 0; font-size: 13px; opacity: .85; }
 .pagina-facturas main { max-width: 900px; margin: 0 auto; padding: 24px 20px; }
+/* --- Tarjetas resumen: pendiente / paga / impaga --- */
 .pagina-facturas .resumen { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 24px; }
 .pagina-facturas .tarjeta {
   background: #fff0; background: var(--c-100); border: 1px solid var(--c-300); border-radius: var(--radio-md);
@@ -352,50 +403,58 @@ body.pagina-facturas { font-family: 'Inter', "Segoe UI", Arial, sans-serif; back
 .pagina-facturas .tarjeta:hover { transform: translateY(-3px); box-shadow: var(--sombra-md); }
 .pagina-facturas .tarjeta .num { font-size: 24px; font-weight: 800; font-family: 'Poppins', sans-serif; }
 .pagina-facturas .tarjeta .label { font-size: 12px; color: var(--texto-suave); margin-top: 3px; font-weight: 500; }
+/* color del número según el estado de la tarjeta */
 .pagina-facturas .tarjeta.pendiente .num { color: var(--c-500); }
 .pagina-facturas .tarjeta.paga .num { color: var(--c-900); }
 .pagina-facturas .tarjeta.impaga .num { color: rgba(13,71,161,.55); }
+/* --- Botones de filtro (todas / pendientes / pagas / impagas) --- */
 .pagina-facturas .filtros { display: flex; gap: 9px; margin-bottom: 16px; flex-wrap: wrap; }
 .pagina-facturas .filtros button {
   border: 1px solid var(--c-300); background: var(--c-100); color: var(--texto); padding: 8px 16px;
   border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all var(--transicion);
 }
 .pagina-facturas .filtros button:hover { border-color: var(--c-500); color: var(--c-900); }
-.pagina-facturas .filtros button.activo { background: var(--c-500); border-color: var(--c-500); color: var(--c-100); box-shadow: var(--sombra-sm); }
+.pagina-facturas .filtros button.activo { background: var(--c-500); border-color: var(--c-500); color: var(--c-100); box-shadow: var(--sombra-sm); } /* filtro seleccionado */
+/* --- Tabla de facturas --- */
 .pagina-facturas table { width: 100%; border-collapse: collapse; background: var(--c-100); border: 1px solid var(--c-300); border-radius: var(--radio-md); overflow: hidden; box-shadow: var(--sombra-sm); }
 .pagina-facturas thead tr { background: var(--c-300); }
 .pagina-facturas th, .pagina-facturas td { text-align: left; padding: 12px 14px; font-size: 13.5px; }
 .pagina-facturas th { color: var(--c-900); font-weight: 700; text-transform: uppercase; letter-spacing: .4px; font-size: 12px; }
 .pagina-facturas tbody tr { border-top: 1px solid var(--c-300); transition: background var(--transicion); }
 .pagina-facturas tbody tr:hover { background: rgba(144,202,249,.18); }
-.pagina-facturas .monto { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--c-900); }
+.pagina-facturas .monto { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--c-900); } /* números alineados en la tabla */
+/* --- Badge/etiqueta de estado dentro de la tabla --- */
 .pagina-facturas .estado { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
 .pagina-facturas .estado.pendiente { background: rgba(33,150,243,.16); color: var(--c-500); }
 .pagina-facturas .estado.paga { background: rgba(144,202,249,.35); color: var(--c-900); }
 .pagina-facturas .estado.impaga { background: rgba(13,71,161,.12); color: rgba(13,71,161,.6); }
 .pagina-facturas .accion { font-size: 12.5px; color: var(--c-500); font-weight: 700; transition: color var(--transicion); }
 .pagina-facturas .accion:hover { color: var(--c-900); text-decoration: underline; }
+/* --- Botón "volver al inicio", flotante arriba a la derecha --- */
 .pagina-facturas .volver-inicio {
   position: absolute; top: 12px; right: 16px; display: inline-flex; align-items: center; padding: 0 1.15rem;
   height: 34px; color: var(--c-100); font-size: 14px; font-weight: 600; cursor: pointer;
   background: rgba(227,242,253,.16); border-radius: 999px; transition: background var(--transicion), color var(--transicion), transform var(--transicion); white-space: nowrap;
 }
 .pagina-facturas .volver-inicio:hover { background: var(--c-500); color: var(--c-100); transform: translateY(-1px); }
-.pagina-facturas .vacio { text-align: center; padding: 32px; color: var(--texto-suave); font-size: 13px; }
+.pagina-facturas .vacio { text-align: center; padding: 32px; color: var(--texto-suave); font-size: 13px; } /* mensaje cuando no hay facturas */
 .pagina-facturas footer { max-width: 900px; margin: 32px auto 12px; padding: 0 20px; font-size: 11.5px; color: var(--texto-tenue); }
+/* --- RESPONSIVE: la tabla se convierte en "tarjetas apiladas" en celular --- */
 @media (max-width: 560px) {
   .pagina-facturas .resumen { grid-template-columns: 1fr 1fr; }
-  .pagina-facturas thead { display: none; }
+  .pagina-facturas thead { display: none; } /* se ocultan los encabezados de columna */
   .pagina-facturas table, .pagina-facturas tbody, .pagina-facturas tr, .pagina-facturas td { display: block; width: 100%; }
   .pagina-facturas tbody tr { padding: 12px 14px; border-top: 8px solid var(--c-100); background: var(--c-100); border-radius: var(--radio-sm); margin-bottom: 8px; }
   .pagina-facturas td { padding: 5px 0; border: none; }
-  .pagina-facturas td::before { content: attr(data-label); display: block; font-size: 11px; color: var(--texto-tenue); font-weight: 600; text-transform: uppercase; }
+  .pagina-facturas td::before { content: attr(data-label); display: block; font-size: 11px; color: var(--texto-tenue); font-weight: 600; text-transform: uppercase; } /* etiqueta de cada campo, viene del atributo data-label en el HTML */
 }
 
 /* ============================================================
-   PÁGINA: perfil  (body.pagina-perfil)
+   PÁGINA: PERFIL (usuario)  (body.pagina-perfil)
+   Navbar propia + tarjeta con los datos del socio
    ============================================================ */
 body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; background: var(--c-100); color: var(--texto); }
+/* --- Navbar de la página de perfil (distinta a nav.main-nav) --- */
 .pagina-perfil .navbar {
   width: 100%; min-height: 80px; background: linear-gradient(135deg, var(--c-900), rgb(18, 92, 195));
   display: flex; align-items: center; justify-content: space-between; padding: 15px 7%; color: var(--c-100);
@@ -409,13 +468,14 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
 .pagina-perfil .logo h1 { font-size: 19px; margin-bottom: 3px; font-weight: 700; }
 .pagina-perfil .logo p { font-size: 12px; opacity: .85; }
 .pagina-perfil .nav-buttons { display: flex; align-items: center; gap: 10px; }
+/* botón "volver al inicio" con texto puesto por ::before (ver .volver-inicio::before abajo) */
 .pagina-perfil .volver-inicio {
   display: inline-flex; align-items: center; justify-content: center; min-width: 120px; height: 42px; padding: 0 12px;
   border: 1px solid rgba(227,242,253,.35); background: rgba(227,242,253,.12); color: var(--c-100);
   border-radius: 999px; cursor: pointer; font-size: 12px; font-weight: 700; transition: .25s ease; box-shadow: var(--sombra-sm);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.pagina-perfil .volver-inicio::before { content: "Volver al inicio"; line-height: 1.2; }
+.pagina-perfil .volver-inicio::before { content: "Volver al inicio"; line-height: 1.2; } /* texto del botón generado por CSS */
 .pagina-perfil .volver-inicio:hover {
   background: linear-gradient(135deg, var(--c-500), rgba(33,150,243,.85));
   color: var(--c-100); transform: translateY(-3px) scale(1.1);
@@ -429,6 +489,7 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
   padding: 10px 18px; border-radius: 999px; cursor: pointer; font-size: 14px; font-weight: 600; transition: .2s;
 }
 .pagina-perfil .btn-logout:hover { background: var(--c-100); color: var(--c-900); }
+/* --- Tarjeta con los datos del perfil --- */
 .pagina-perfil .contenedor { width: 100%; max-width: 950px; margin: 48px auto; padding: 0 20px; }
 .pagina-perfil .perfil-card { background: #fff0; background: var(--c-100); border-radius: var(--radio-lg); padding: 38px; box-shadow: var(--sombra-lg); border: 1px solid var(--c-300); }
 .pagina-perfil .perfil-header { display: flex; align-items: center; gap: 22px; }
@@ -436,10 +497,11 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
   width: 82px; height: 82px; border-radius: 50%; background: linear-gradient(135deg, var(--c-500), var(--c-900));
   color: var(--c-100); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800;
   box-shadow: 0 8px 20px rgba(33,150,243,.35); font-family: 'Poppins', sans-serif;
-}
+} /* círculo con las iniciales del usuario */
 .pagina-perfil .perfil-titulo h2 { color: var(--c-900); font-size: 29px; margin-bottom: 6px; font-weight: 700; }
 .pagina-perfil .perfil-titulo p { color: var(--texto-suave); font-size: 14px; }
 .pagina-perfil .separador { height: 1px; background: var(--c-300); margin: 32px 0; }
+/* --- Grilla de campos (nombre, email, etc) --- */
 .pagina-perfil .datos-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 24px; }
 .pagina-perfil .campo { display: flex; flex-direction: column; gap: 8px; }
 .pagina-perfil .campo label { font-size: 13px; font-weight: 700; color: var(--c-900); text-transform: uppercase; letter-spacing: .3px; }
@@ -449,9 +511,10 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
   transition: border var(--transicion), background var(--transicion);
 }
 .pagina-perfil .dato:hover { border-color: var(--c-500); background: rgba(144,202,249,.26); }
-.pagina-perfil .password-container { justify-content: space-between; }
+.pagina-perfil .password-container { justify-content: space-between; } /* fila del dato "contraseña" con botón para cambiarla */
 .pagina-perfil .btn-password { border: none; background: transparent; color: var(--c-500); font-size: 13px; cursor: pointer; font-weight: 700; transition: color var(--transicion); }
 .pagina-perfil .btn-password:hover { color: var(--c-900); }
+/* --- Caja de "estado de cuenta" (al día / con deuda, etc) --- */
 .pagina-perfil .estado-cuenta {
   margin-top: 32px; padding: 20px; display: flex; align-items: center; gap: 16px; background: rgba(144,202,249,.2);
   border: 1px solid var(--c-300); border-radius: var(--radio-md); color: var(--c-900);
@@ -467,6 +530,7 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
 .pagina-perfil .btn-principal:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(33,150,243,.4); }
 .pagina-perfil footer { text-align: center; padding: 26px; color: var(--texto-tenue); font-size: 12px; }
 .pagina-perfil footer p:first-child { margin-bottom: 4px; }
+/* --- RESPONSIVE perfil: navbar compacta, grilla a 1 columna --- */
 @media (max-width: 700px) {
   .pagina-perfil .navbar { padding: 15px 20px; }
   .pagina-perfil .logo h1 { font-size: 15px; }
@@ -480,11 +544,12 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
 
 
 /* ============================================================
-   ESTILOS ADMIN — agregar al final de tu CSS global
-   (usa las mismas variables --c-900/--c-500/--c-300/--c-100 ya definidas)
+   ============  ESTILOS ADMIN (a partir de acá)  =============
+   Usan las mismas variables --c-900/--c-500/--c-300/--c-100 de arriba
    ============================================================ */
 
 /* ---------- NAVBAR COMPARTIDA DE ADMIN ---------- */
+/* Esta navbar (.navbar-admin) es la que se repite en TODAS las páginas de admin */
 .navbar-admin {
   width: 100%; min-height: 74px; background: linear-gradient(120deg, var(--c-900), rgb(18, 92, 195));
   display: flex; align-items: center; justify-content: space-between; padding: 12px 5%; color: var(--c-100);
@@ -497,13 +562,14 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
 }
 .navbar-admin .marca-admin h1 { font-size: 17px; font-weight: 700; font-family: 'Poppins', sans-serif; }
 .navbar-admin .marca-admin p { font-size: 11px; opacity: .8; }
+/* links de navegación entre secciones del panel admin (socios / facturas / perfil) */
 .navbar-admin .nav-admin-links { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .navbar-admin .nav-admin-links a {
   color: rgba(227,242,253,.85); font-size: 13.5px; font-weight: 600; padding: 9px 15px; border-radius: 999px;
   transition: background var(--transicion), color var(--transicion);
 }
 .navbar-admin .nav-admin-links a:hover { background: rgba(227,242,253,.14); color: var(--c-100); }
-.navbar-admin .nav-admin-links a.activo { background: var(--c-100); color: var(--c-900); }
+.navbar-admin .nav-admin-links a.activo { background: var(--c-100); color: var(--c-900); } /* pestaña/sección activa */
 .navbar-admin .btn-logout-admin {
   background: rgba(227,242,253,.15); border: 1px solid rgba(227,242,253,.4); color: var(--c-100);
   padding: 9px 16px; border-radius: 999px; cursor: pointer; font-size: 13.5px; font-weight: 600; transition: .2s;
@@ -511,13 +577,14 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
 .navbar-admin .btn-logout-admin:hover { background: var(--c-100); color: var(--c-900); }
 
 /* ---------- TOAST DE NOTIFICACIÓN (pago registrado, etc.) ---------- */
+/* Notificación flotante arriba a la derecha, se muestra/oculta con la clase .mostrar (JS) */
 .toast-admin {
   position: fixed; top: 20px; right: 20px; z-index: 999; display: flex; align-items: center; gap: 12px;
   background: var(--c-900); color: var(--c-100); padding: 14px 20px; border-radius: var(--radio-md);
   box-shadow: var(--sombra-lg); border-left: 4px solid var(--c-500); transform: translateX(130%);
   transition: transform .35s cubic-bezier(.4,0,.2,1); max-width: 320px; font-size: 13.5px;
 }
-.toast-admin.mostrar { transform: translateX(0); }
+.toast-admin.mostrar { transform: translateX(0); } /* clase que agrega el JS para "entrar" el toast */
 .toast-admin .toast-icono {
   width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%; background: var(--c-500); color: var(--c-100);
   display: flex; align-items: center; justify-content: center; font-weight: 800;
@@ -526,10 +593,12 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
 .toast-admin .toast-texto span { color: rgba(227,242,253,.75); font-size: 12px; }
 
 /* ============================================================
-   PÁGINA: panel-admin  (body.pagina-sociosadmin)
+   PÁGINA: PANEL ADMIN — SOCIOS  (body.pagina-sociosadmin)
+   Resumen + buscador + tabla de socios + modal "agregar socio"
    ============================================================ */
 body.pagina-sociosadmin { font-family: 'Inter', Arial, sans-serif; background: var(--c-100); color: var(--texto); min-height: 100vh; }
 .pagina-sociosadmin main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+/* --- Tarjetas resumen (total socios, al día, con deuda, etc) --- */
 .pagina-sociosadmin .resumen-admin { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 26px; }
 .pagina-sociosadmin .tarjeta-admin {
   background: var(--c-100); border: 1px solid var(--c-300); border-radius: var(--radio-md);
@@ -538,8 +607,9 @@ body.pagina-sociosadmin { font-family: 'Inter', Arial, sans-serif; background: v
 .pagina-sociosadmin .tarjeta-admin:hover { transform: translateY(-3px); box-shadow: var(--sombra-md); }
 .pagina-sociosadmin .tarjeta-admin .num { font-size: 26px; font-weight: 800; font-family: 'Poppins', sans-serif; color: var(--c-900); }
 .pagina-sociosadmin .tarjeta-admin .label { font-size: 12px; color: var(--texto-suave); margin-top: 3px; font-weight: 500; }
-.pagina-sociosadmin .tarjeta-admin.alerta .num { color: var(--c-500); }
+.pagina-sociosadmin .tarjeta-admin.alerta .num { color: var(--c-500); } /* tarjeta que resalta algo (ej: pendientes) */
 
+/* --- Barra de herramientas: buscador + botón "agregar socio" --- */
 .pagina-sociosadmin .toolbar-admin { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 18px; }
 .pagina-sociosadmin .buscador-admin { position: relative; flex: 1; min-width: 220px; }
 .pagina-sociosadmin .buscador-admin input {
@@ -549,7 +619,7 @@ body.pagina-sociosadmin { font-family: 'Inter', Arial, sans-serif; background: v
 .pagina-sociosadmin .buscador-admin input:focus { outline: none; border-color: var(--c-500); box-shadow: var(--sombra-foco); }
 .pagina-sociosadmin .buscador-admin::before {
   content: '⌕'; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--texto-tenue); font-size: 16px;
-}
+} /* ícono de lupa generado por CSS, puesto sobre el input */
 .pagina-sociosadmin .btn-agregar-socio {
   background: var(--c-500); color: var(--c-100); border: none; padding: 11px 20px; border-radius: 999px;
   font-weight: 700; font-size: 14px; cursor: pointer; white-space: nowrap; transition: transform var(--transicion), box-shadow var(--transicion);
@@ -557,6 +627,7 @@ body.pagina-sociosadmin { font-family: 'Inter', Arial, sans-serif; background: v
 }
 .pagina-sociosadmin .btn-agregar-socio:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(33,150,243,.4); }
 
+/* --- Tabla de socios --- */
 .pagina-sociosadmin table { width: 100%; border-collapse: collapse; background: var(--c-100); border: 1px solid var(--c-300); border-radius: var(--radio-md); overflow: hidden; box-shadow: var(--sombra-sm); }
 .pagina-sociosadmin thead tr { background: var(--c-300); }
 .pagina-sociosadmin th, .pagina-sociosadmin td { text-align: left; padding: 12px 14px; font-size: 13.5px; }
@@ -567,20 +638,20 @@ body.pagina-sociosadmin { font-family: 'Inter', Arial, sans-serif; background: v
 .pagina-sociosadmin .socio-avatar {
   width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--c-500), var(--c-900));
   color: var(--c-100); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0;
-}
+} /* iniciales del socio en la fila de la tabla */
 .pagina-sociosadmin .estado-admin { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
 .pagina-sociosadmin .estado-admin.al-dia { background: rgba(144,202,249,.35); color: var(--c-900); }
 .pagina-sociosadmin .estado-admin.pendiente { background: rgba(33,150,243,.16); color: var(--c-500); }
-.pagina-sociosadmin .acciones-fila { display: flex; gap: 8px; }
+.pagina-sociosadmin .acciones-fila { display: flex; gap: 8px; } /* botones editar/eliminar por fila */
 .pagina-sociosadmin .btn-fila {
   border: 1px solid var(--c-300); background: var(--c-100); color: var(--texto); padding: 6px 12px; border-radius: 999px;
   font-size: 12px; font-weight: 600; cursor: pointer; transition: all var(--transicion);
 }
 .pagina-sociosadmin .btn-fila:hover { border-color: var(--c-500); color: var(--c-900); }
-.pagina-sociosadmin .btn-fila.eliminar:hover { border-color: var(--c-900); background: var(--c-900); color: var(--c-100); }
+.pagina-sociosadmin .btn-fila.eliminar:hover { border-color: var(--c-900); background: var(--c-900); color: var(--c-100); } /* botón eliminar se pone "peligroso" en hover */
 .pagina-sociosadmin .vacio { text-align: center; padding: 32px; color: var(--texto-suave); font-size: 13px; }
 
-/* modal agregar socio */
+/* --- Modal "agregar socio" (se abre/cierra con la clase .abierto vía JS) --- */
 .pagina-sociosadmin .modal-fondo {
   position: fixed; inset: 0; background: rgba(13,71,161,.55); display: none; align-items: center; justify-content: center; z-index: 500; padding: 20px;
 }
@@ -604,6 +675,7 @@ body.pagina-sociosadmin { font-family: 'Inter', Arial, sans-serif; background: v
 .pagina-sociosadmin .modal-botones .btn-confirmar { background: var(--c-500); color: var(--c-100); }
 .pagina-sociosadmin .modal-botones button:hover { transform: translateY(-1px); }
 
+/* --- RESPONSIVE: tabla de socios en "tarjetas apiladas" en celular --- */
 @media (max-width: 700px) {
   .pagina-sociosadmin .resumen-admin { grid-template-columns: 1fr 1fr; }
   .pagina-sociosadmin thead { display: none; }
@@ -614,10 +686,12 @@ body.pagina-sociosadmin { font-family: 'Inter', Arial, sans-serif; background: v
 }
 
 /* ============================================================
-   PÁGINA: facturas-admin  (body.pagina-facturaadmin)
+   PÁGINA: PANEL ADMIN — FACTURAS  (body.pagina-facturaadmin)
+   Igual a "mis facturas" pero con buscador y botón para marcar como pagada
    ============================================================ */
 body.pagina-facturaadmin { font-family: 'Inter', Arial, sans-serif; background: var(--c-100); color: var(--texto); }
 .pagina-facturaadmin main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+/* --- Tarjetas resumen --- */
 .pagina-facturaadmin .resumen { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 24px; }
 .pagina-facturaadmin .tarjeta {
   background: var(--c-100); border: 1px solid var(--c-300); border-radius: var(--radio-md);
@@ -629,6 +703,7 @@ body.pagina-facturaadmin { font-family: 'Inter', Arial, sans-serif; background: 
 .pagina-facturaadmin .tarjeta.pendiente .num { color: var(--c-500); }
 .pagina-facturaadmin .tarjeta.paga .num { color: var(--c-900); }
 .pagina-facturaadmin .tarjeta.impaga .num { color: rgba(13,71,161,.55); }
+/* --- Fila de filtros + buscador de facturas --- */
 .pagina-facturaadmin .filtros { display: flex; gap: 9px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
 .pagina-facturaadmin .filtros-izq { display: flex; gap: 9px; flex-wrap: wrap; }
 .pagina-facturaadmin .filtros button {
@@ -641,6 +716,7 @@ body.pagina-facturaadmin { font-family: 'Inter', Arial, sans-serif; background: 
   padding: 9px 15px; border-radius: 999px; border: 1px solid var(--c-300); font-size: 13px; min-width: 200px; color: var(--texto);
 }
 .pagina-facturaadmin .buscador-factura input:focus { outline: none; border-color: var(--c-500); }
+/* --- Tabla de facturas (admin) --- */
 .pagina-facturaadmin table { width: 100%; border-collapse: collapse; background: var(--c-100); border: 1px solid var(--c-300); border-radius: var(--radio-md); overflow: hidden; box-shadow: var(--sombra-sm); }
 .pagina-facturaadmin thead tr { background: var(--c-300); }
 .pagina-facturaadmin th, .pagina-facturaadmin td { text-align: left; padding: 12px 14px; font-size: 13.5px; }
@@ -652,13 +728,15 @@ body.pagina-facturaadmin { font-family: 'Inter', Arial, sans-serif; background: 
 .pagina-facturaadmin .estado.pendiente { background: rgba(33,150,243,.16); color: var(--c-500); }
 .pagina-facturaadmin .estado.paga { background: rgba(144,202,249,.35); color: var(--c-900); }
 .pagina-facturaadmin .estado.impaga { background: rgba(13,71,161,.12); color: rgba(13,71,161,.6); }
+/* botón para que el admin marque una factura como pagada */
 .pagina-facturaadmin .btn-marcar-pagada {
   border: none; background: var(--c-500); color: var(--c-100); padding: 6px 14px; border-radius: 999px;
   font-size: 12px; font-weight: 700; cursor: pointer; transition: transform var(--transicion), box-shadow var(--transicion);
 }
 .pagina-facturaadmin .btn-marcar-pagada:hover { transform: translateY(-1px); box-shadow: var(--sombra-sm); }
-.pagina-facturaadmin .btn-marcar-pagada:disabled { opacity: .45; cursor: default; transform: none; box-shadow: none; }
+.pagina-facturaadmin .btn-marcar-pagada:disabled { opacity: .45; cursor: default; transform: none; box-shadow: none; } /* estado deshabilitado: factura ya pagada */
 .pagina-facturaadmin .vacio { text-align: center; padding: 32px; color: var(--texto-suave); font-size: 13px; }
+/* --- RESPONSIVE facturas admin --- */
 @media (max-width: 700px) {
   .pagina-facturaadmin .resumen { grid-template-columns: 1fr 1fr; }
   .pagina-facturaadmin .filtros { flex-direction: column; align-items: stretch; }
@@ -670,7 +748,8 @@ body.pagina-facturaadmin { font-family: 'Inter', Arial, sans-serif; background: 
 }
 
 /* ============================================================
-   PÁGINA: perfil-admin  (body.pagina-perfiladmin)
+   PÁGINA: PERFIL ADMIN  (body.pagina-perfiladmin)
+   Como el perfil de usuario, pero con badge de "rol"
    ============================================================ */
 body.pagina-perfiladmin { font-family: 'Inter', Arial, Helvetica, sans-serif; background: var(--c-100); color: var(--texto); }
 .pagina-perfiladmin .contenedor { width: 100%; max-width: 800px; margin: 48px auto; padding: 0 20px; }
@@ -682,6 +761,7 @@ body.pagina-perfiladmin { font-family: 'Inter', Arial, Helvetica, sans-serif; ba
   box-shadow: 0 8px 20px rgba(33,150,243,.35); font-family: 'Poppins', sans-serif;
 }
 .pagina-perfiladmin .perfil-titulo h2 { color: var(--c-900); font-size: 27px; margin-bottom: 6px; font-weight: 700; }
+/* etiqueta que muestra el rol (ej: "ADMIN") al lado del nombre */
 .pagina-perfiladmin .badge-rol {
   display: inline-block; margin-top: 4px; background: var(--c-500); color: var(--c-100); font-size: 11px; font-weight: 700;
   padding: 3px 12px; border-radius: 999px; letter-spacing: .3px; text-transform: uppercase;
@@ -705,6 +785,7 @@ body.pagina-perfiladmin { font-family: 'Inter', Arial, Helvetica, sans-serif; ba
   border-radius: 999px; cursor: pointer; font-size: 14px; font-weight: 700; transition: .2s; box-shadow: 0 8px 20px rgba(33,150,243,.3);
 }
 .pagina-perfiladmin .btn-principal:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(33,150,243,.4); }
+/* --- RESPONSIVE perfil admin --- */
 @media (max-width: 700px) {
   .pagina-perfiladmin .perfil-card { padding: 26px 20px; }
   .pagina-perfiladmin .datos-grid { grid-template-columns: 1fr; }
