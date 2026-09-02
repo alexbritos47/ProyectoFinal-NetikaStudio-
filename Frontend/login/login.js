@@ -127,3 +127,26 @@ function logout() {
   sessionStorage.removeItem("usuarioActivo");
   window.location.href = "../inicio/inicio.html";
 }
+
+
+// ===== TÉRMINOS Y CONDICIONES =====
+const modalTerminos = document.getElementById('modalTerminos');
+const btnVerTerminos = document.getElementById('btnVerTerminos');
+const btnCerrarModal = document.getElementById('btnCerrarModal');
+const checkTerminos = document.getElementById('checkTerminos');
+const btnIngresar = document.getElementById('btnIngresar');
+
+// Abrir modal al hacer click en "términos y condiciones"
+btnVerTerminos.addEventListener('click', () => {
+  modalTerminos.style.display = 'flex';
+});
+
+// Cerrar modal
+btnCerrarModal.addEventListener('click', () => {
+  modalTerminos.style.display = 'none';
+});
+
+// Habilitar/deshabilitar el botón "Ingresar" según el checkbox
+checkTerminos.addEventListener('change', () => {
+  btnIngresar.disabled = !checkTerminos.checked;
+});

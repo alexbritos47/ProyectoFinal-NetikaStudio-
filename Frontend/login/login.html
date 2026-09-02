@@ -25,7 +25,13 @@
   <div class="login" id="loginBox">
     <input type="text" id="user" placeholder="Usuario">
     <input type="password" id="pass" placeholder="Contraseña">
-    <input type="button" value="Ingresar" onclick="login()">
+
+    <div class="terminos-check">
+      <input type="checkbox" id="checkTerminos">
+      <label for="checkTerminos">Acepto los <span id="btnVerTerminos" class="link-terminos">términos y condiciones</span></label>
+    </div>
+
+    <input type="button" id="btnIngresar" value="Ingresar" onclick="login()" disabled>
     <input type="button" value="Registrarse" onclick="mostrarRegistro()">
   </div>
 
@@ -38,6 +44,57 @@
     <input type="password" id="regPass" placeholder="Contraseña">
     <input type="button" value="Crear cuenta" onclick="register()">
     <input type="button" value="Volver" onclick="mostrarLogin()">
+  </div>
+</div>
+
+<!-- Modal Términos y Condiciones -->
+<div id="modalTerminos" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <h2>Términos y Condiciones</h2>
+    <div class="modal-scroll" style="color: black;">
+      <div class="terminos-contenido">
+        <p><strong>Sistema de Gestión de Cuotas – Club Ciclista Maragato</strong></p>
+
+        <h3>1. Uso del sistema</h3>
+        <p>El presente sistema tiene como objetivo facilitar la gestión de socios, cuotas, pagos y beneficios del Club Ciclista Maragato.</p>
+        <p>Al utilizar la página web, el usuario acepta cumplir con los presentes Términos y Condiciones.</p>
+
+        <h3>2. Registro y cuenta</h3>
+        <p>Para utilizar determinadas funciones del sistema, el usuario deberá registrarse y proporcionar información correspondiente a su cuenta.</p>
+        <p>El usuario es responsable de mantener la confidencialidad de su contraseña y de no compartir sus datos de acceso con otras personas.</p>
+
+        <h3>3. Uso correcto</h3>
+        <p>El usuario se compromete a utilizar el sistema de manera responsable y únicamente para las funciones disponibles.</p>
+        <p>No está permitido:</p>
+        <ul>
+          <li>Intentar acceder a cuentas o información de otros usuarios.</li>
+          <li>Modificar o eliminar información sin autorización.</li>
+          <li>Utilizar el sistema con fines maliciosos.</li>
+          <li>Intentar afectar el funcionamiento de la página.</li>
+        </ul>
+
+        <h3>4. Información de los socios</h3>
+        <p>La información ingresada en el sistema deberá ser correcta y actualizada.</p>
+        <p>Los datos serán utilizados para las funciones relacionadas con la gestión de socios, cuotas, pagos y beneficios del club.</p>
+
+        <h3>5. Pagos y cuotas</h3>
+        <p>El sistema permite consultar el estado de las cuotas y, cuando corresponda, realizar el proceso de pago mediante los medios disponibles.</p>
+        <p>El registro de un pago estará sujeto a la correcta confirmación de la operación.</p>
+
+        <h3>6. Disponibilidad del sistema</h3>
+        <p>El sistema puede presentar interrupciones debido a tareas de mantenimiento, actualizaciones o problemas técnicos.</p>
+        <p>El equipo encargado del sistema procurará mantener el servicio disponible y funcionando correctamente.</p>
+
+        <h3>7. Modificaciones</h3>
+        <p>Los presentes Términos y Condiciones pueden ser modificados cuando sea necesario para mejorar o actualizar el funcionamiento del sistema.</p>
+        <p>Las modificaciones serán aplicadas en la página web.</p>
+
+        <h3>8. Aceptación</h3>
+        <p>Al registrarse o utilizar el sistema, el usuario declara haber leído y aceptado estos Términos y Condiciones.</p>
+        <p><strong>Última actualización:</strong> 2026.</p>
+      </div>
+    </div>
+    <button id="btnCerrarModal" class="btn-secundario">Cerrar</button>
   </div>
 </div>
 
