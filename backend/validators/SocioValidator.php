@@ -2,22 +2,38 @@
 
 class SocioValidator
 {
-    public function validar(array $datos): array
+    public static function validarCrear($datos)
     {
         $errores = [];
 
         if (empty($datos['nombre'])) {
-            $errores[] = "El nombre es obligatorio";
+            $errores['nombre'] = 'El nombre es obligatorio.';
         }
 
         if (empty($datos['documento'])) {
-            $errores[] = "El documento es obligatorio";
+            $errores['documento'] = 'El documento es obligatorio.';
+        }
+
+        if (empty($datos['telefono'])) {
+            $errores['telefono'] = 'El teléfono es obligatorio.';
         }
 
         if (empty($datos['correo'])) {
-            $errores[] = "El correo es obligatorio";
+            $errores['correo'] = 'El correo es obligatorio.';
         } elseif (!filter_var($datos['correo'], FILTER_VALIDATE_EMAIL)) {
-            $errores[] = "El correo no es válido";
+            $errores['correo'] = 'El correo no tiene un formato válido.';
+        }
+
+        return $errores;
+    }
+
+    public static function validarActualizar(array $datos)
+    {
+        $errores = [];
+
+        if (isset($datos['correo']) &&
+            !filter_var($datos['correo'], FILTER_VALIDATE_EMAIL)) {
+            $errores['correo'] = 'El correo no tiene un formato válido.';
         }
 
         return $errores;
