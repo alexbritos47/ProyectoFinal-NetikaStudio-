@@ -2,54 +2,122 @@
 
 header('Content-Type: application/json; charset=utf-8');
 
-// Database
+// ======================================================
+// DATABASE
+// ======================================================
+
 require_once __DIR__ . '/database/Database.php';
 
-// Models
+
+// ======================================================
+// MODELS
+// ======================================================
+
 require_once __DIR__ . '/models/Socio.php';
+require_once __DIR__ . '/models/Usuario.php';
 
-// Repositories
+
+// ======================================================
+// REPOSITORIES
+// ======================================================
+
 require_once __DIR__ . '/repositories/SocioRepository.php';
+require_once __DIR__ . '/repositories/UsuarioRepository.php';
 
-// Services
+
+// ======================================================
+// SERVICES
+// ======================================================
+
 require_once __DIR__ . '/services/SocioService.php';
+require_once __DIR__ . '/services/UsuarioService.php';
+require_once __DIR__ . '/services/AuthService.php';
 
-// Validators
+
+// ======================================================
+// VALIDATORS
+// ======================================================
+
 require_once __DIR__ . '/validators/SocioValidator.php';
+require_once __DIR__ . '/validators/UsuarioValidator.php';
+require_once __DIR__ . '/validators/AuthValidator.php';
 
-// Controllers
+
+// ======================================================
+// CONTROLLERS
+// ======================================================
+
 require_once __DIR__ . '/controllers/SocioController.php';
+require_once __DIR__ . '/controllers/UsuarioController.php';
+require_once __DIR__ . '/controllers/AuthController.php';
 
-// Routes
+
+// ======================================================
+// ROUTES
+// ======================================================
+
 require_once __DIR__ . '/routes/routes.php';
 
 
-// Crear conexión
+// ======================================================
+// CREAR CONEXIÓN
+// ======================================================
+
 $database = new Database();
 
 $db = $database->conectar();
 
 
-// Crear Repository
+// ======================================================
+// SOCIO
+// ======================================================
+
 $socioRepository = new SocioRepository($db);
 
-
-// Crear Service
 $socioService = new SocioService($socioRepository);
 
-
-// Crear Validator
 $socioValidator = new SocioValidator();
 
-
-// Crear Controller
 $socioController = new SocioController(
     $socioService,
     $socioValidator
 );
 
 
-// Obtener petición
+// ======================================================
+// USUARIO
+// ======================================================
+
+$usuarioRepository = new UsuarioRepository($db);
+
+$usuarioService = new UsuarioService($usuarioRepository);
+
+$usuarioValidator = new UsuarioValidator();
+
+$usuarioController = new UsuarioController(
+    $usuarioService,
+    $usuarioValidator
+);
+
+
+// ======================================================
+// AUTENTICACIÓN
+// ======================================================
+
+$authService = new AuthService($usuarioRepository);
+
+$authValidator = new AuthValidator();
+
+$authController = new AuthController(
+    $authService,
+    $authValidator
+);
+
+
+// ======================================================
+// OBTENER PETICIÓN
+// ======================================================
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 $uri = parse_url(
@@ -58,10 +126,14 @@ $uri = parse_url(
 );
 
 
-// Ejecutar rutas
+// ======================================================
+// EJECUTAR RUTAS
+// ======================================================
+
 manejarRutas(
     $method,
     $uri,
-    $socioController
+    $socioController,
+    $usuarioController,
+    $authController
 );
-

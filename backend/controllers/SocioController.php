@@ -1,122 +1,310 @@
 <?php
 
+require_once __DIR__ . '/../services/SocioService.php';
+require_once __DIR__ . '/../validators/SocioValidator.php';
+
 class SocioController
 {
     private SocioService $service;
-    private SocioValidator $validator;
 
-    public function __construct(
-        SocioService $service,
-        SocioValidator $validator
-    ) {
-        $this->service = $service;
-        $this->validator = $validator;
+    public function __construct()
+    {
+        $this->service = new SocioService();
     }
 
-    public function listar(): void
-    {
-        $socios = $this->service->obtenerSocios();
 
-        echo json_encode($socios);
+    // GET /api/socios
+    public function listar()
+    {
+        try {
+
+            $resultado = $this->service->listarSocios();
+
+            http_response_code(200);
+
+            echo json_encode([
+                'exito' => true,
+                'mensaje' => 'Socios obtenidos correctamente',
+                'datos' => $resultado
+            ]);
+
+        } catch (Exception $e) {
+
+            http_response_code(500);
+
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => 'Error interno del servidor',
+                'errores' => []
+            ]);
+        }
     }
 
-    public function obtener(int $id): void
-    {
-        $socio = $this->service->obtenerSocio($id);
 
-        if (!$socio) {
-            http_response_code(404);
+    // GET /api/socios/{id}
+    public function obtener($id)
+    {
+        try {
+
+            if (!is_numeric($id)) {
+
+                http_response_code(400);
+
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'El ID no es válido',
+                    'errores' => []
+                ]);
+
+                return;
+            }
+
+            $resultado = $this->service->obtenerSocio($id);
+
+            if (!$resultado) {
+
+                http_response_code(404);
+
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'Socio no encontrado',
+                    'errores' => []
+                ]);
+
+                return;
+            }
+
+            http_response_code(200);
 
             echo json_encode([
-                "mensaje" => "Socio no encontrado"
+                'exito' => true,
+                'mensaje' => 'Socio obtenido correctamente',
+                'datos' => $resultado
             ]);
 
-            return;
-        }
+        } catch (Exception $e) {
 
-        echo json_encode($socio);
+            http_response_code(500);
+
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => 'Error interno del servidor',
+                'errores' => []
+            ]);
+        }
     }
 
-    public function crear(): void
+
+    // POST /api/socios
+    public function crear()
     {
-        $datos = json_decode(
-            file_get_contents("php://input"),
-            true
-        );
+        try {
 
-        if (!is_array($datos)) {
-            http_response_code(400);
+            $datos = json_decode(
+                file_get_contents('php://input'),
+                true
+            );
+
+            if (!is_array($datos)) {
+
+                http_response_code(400);
+
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' =>
+                        'Los datos enviados no son válidos',
+                    'errores' => []
+                ]);
+
+                return;
+            }
+
+            $errores =
+                SocioValidator::validarCrear($datos);
+
+            if (!empty($errores)) {
+
+                http_response_code(400);
+
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'Datos inválidos',
+                    'errores' => $errores
+                ]);
+
+                return;
+            }
+
+            $resultado =
+                $this->service->crearSocio($datos);
+
+            http_response_code(201);
 
             echo json_encode([
-                "mensaje" => "Los datos enviados no son válidos"
+                'exito' => true,
+                'mensaje' => 'Socio creado correctamente',
+                'datos' => $resultado
             ]);
 
-            return;
-        }
+        } catch (Exception $e) {
 
-        $errores = $this->validator->validar($datos);
-
-        if (!empty($errores)) {
-            http_response_code(400);
+            http_response_code(500);
 
             echo json_encode([
-                "errores" => $errores
+                'exito' => false,
+                'mensaje' => 'Error interno del servidor',
+                'errores' => []
             ]);
-
-            return;
         }
-
-        $this->service->registrarSocio($datos);
-
-        http_response_code(201);
-
-        echo json_encode([
-            "mensaje" => "Socio registrado correctamente"
-        ]);
     }
 
-    public function actualizar(int $id): void
+
+    // PUT /api/socios/{id}
+    public function actualizar($id)
     {
-        $datos = json_decode(
-            file_get_contents("php://input"),
-            true
-        );
+        try {
 
-        if (!is_array($datos)) {
-            http_response_code(400);
+            if (!is_numeric($id)) {
+
+                http_response_code(400);
+
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'El ID no es válido',
+                    'errores' => []
+                ]);
+
+                return;
+            }
+
+            $datos = json_decode(
+                file_get_contents('php://input'),
+                true
+            );
+
+            if (!is_array($datos)) {
+
+                http_response_code(400);
+
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' =>
+                        'Los datos enviados no son válidos',
+                    'errores' => []
+                ]);
+
+                return;
+            }
+
+            $errores =
+                SocioValidator::validarActualizar($datos);
+
+            if (!empty($errores)) {
+
+                http_response_code(400);
+
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'Datos inválidos',
+                    'errores' => $errores
+                ]);
+
+                return;
+            }
+
+            $resultado =
+                $this->service->actualizarSocio(
+                    $id,
+                    $datos
+                );
+
+            if (!$resultado) {
+
+                http_response_code(404);
+
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'Socio no encontrado',
+                    'errores' => []
+                ]);
+
+                return;
+            }
+
+            http_response_code(200);
 
             echo json_encode([
-                "mensaje" => "Los datos enviados no son válidos"
+                'exito' => true,
+                'mensaje' =>
+                    'Socio actualizado correctamente',
+                'datos' => $resultado
             ]);
 
-            return;
-        }
+        } catch (Exception $e) {
 
-        $errores = $this->validator->validar($datos);
-
-        if (!empty($errores)) {
-            http_response_code(400);
+            http_response_code(500);
 
             echo json_encode([
-                "errores" => $errores
+                'exito' => false,
+                'mensaje' => 'Error interno del servidor',
+                'errores' => []
             ]);
-
-            return;
         }
-
-        $this->service->actualizarSocio($id, $datos);
-
-        echo json_encode([
-            "mensaje" => "Socio actualizado correctamente"
-        ]);
     }
 
-    public function eliminar(int $id): void
-    {
-        $this->service->eliminarSocio($id);
 
-        echo json_encode([
-            "mensaje" => "Socio eliminado correctamente"
-        ]);
+    // DELETE /api/socios/{id}
+    public function eliminar($id)
+    {
+        try {
+
+            if (!is_numeric($id)) {
+
+                http_response_code(400);
+
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'El ID no es válido',
+                    'errores' => []
+                ]);
+
+                return;
+            }
+
+            $resultado =
+                $this->service->eliminarSocio($id);
+
+            if (!$resultado) {
+
+                http_response_code(404);
+
+                echo json_encode([
+                    'exito' => false,
+                    'mensaje' => 'Socio no encontrado',
+                    'errores' => []
+                ]);
+
+                return;
+            }
+
+            http_response_code(200);
+
+            echo json_encode([
+                'exito' => true,
+                'mensaje' =>
+                    'Socio eliminado correctamente',
+                'datos' => []
+            ]);
+
+        } catch (Exception $e) {
+
+            http_response_code(500);
+
+            echo json_encode([
+                'exito' => false,
+                'mensaje' => 'Error interno del servidor',
+                'errores' => []
+            ]);
+        }
     }
 }
