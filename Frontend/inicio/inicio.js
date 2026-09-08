@@ -125,3 +125,41 @@ function initCarousels() {
 }
 
 document.addEventListener("DOMContentLoaded", initCarousels);
+
+// ===== Nav auto-hide + botón subir =====
+(function () {
+  const nav = document.querySelector('nav.main-nav');
+  const btnSubir = document.getElementById('btnSubir');
+  let lastScrollY = window.scrollY;
+  const umbral = 80; // px antes de empezar a ocultar
+
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY;
+
+    // No ocultar el nav si el menú móvil está abierto
+    if (nav.classList.contains('nav-open')) {
+      lastScrollY = currentScrollY;
+      return;
+    }
+
+    // Ocultar nav al bajar, mostrar al subir
+    if (currentScrollY > lastScrollY && currentScrollY > umbral) {
+      nav.classList.add('nav-hidden');
+    } else {
+      nav.classList.remove('nav-hidden');
+    }
+
+    // Mostrar botón "subir" solo si bajaste lo suficiente
+    if (currentScrollY > umbral) {
+      btnSubir.classList.add('visible');
+    } else {
+      btnSubir.classList.remove('visible');
+    }
+
+    lastScrollY = currentScrollY;
+  });
+
+  btnSubir.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();

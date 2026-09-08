@@ -837,3 +837,45 @@ button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+/* Nav con auto-hide al scrollear */
+.main-nav {
+    transition: transform 0.35s ease;
+}
+
+.main-nav.nav-hidden {
+    transform: translateY(-100%);
+}
+
+/* Botón flotante para volver arriba */
+.btn-subir {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--c-500);
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    cursor: pointer;
+    box-shadow: var(--sombra-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    z-index: 999;
+}
+
+.btn-subir.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.btn-subir:hover {
+    background: var(--c-900);
+}
