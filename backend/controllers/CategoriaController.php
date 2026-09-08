@@ -1,11 +1,11 @@
 <?php
 
-class UsuarioController
+class CategoriaController
 {
-    private UsuarioService $service;
-    private UsuarioValidator $validator;
+    private CategoriaService $service;
+    private CategoriaValidator $validator;
 
-    public function __construct(UsuarioService $service, UsuarioValidator $validator)
+    public function __construct(CategoriaService $service, CategoriaValidator $validator)
     {
         $this->service = $service;
         $this->validator = $validator;
@@ -13,20 +13,20 @@ class UsuarioController
 
     public function listar(): void
     {
-        echo json_encode($this->service->obtenerUsuarios());
+        echo json_encode($this->service->obtenerTodas());
     }
 
     public function obtener(int $id): void
     {
-        $usuario = $this->service->obtenerUsuario($id);
+        $categoria = $this->service->obtenerPorId($id);
 
-        if (!$usuario) {
+        if (!$categoria) {
             http_response_code(404);
-            echo json_encode(["mensaje" => "Usuario no encontrado"]);
+            echo json_encode(["mensaje" => "Categoría no encontrada"]);
             return;
         }
 
-        echo json_encode($usuario);
+        echo json_encode($categoria);
     }
 
     public function crear(): void
@@ -47,14 +47,10 @@ class UsuarioController
             return;
         }
 
-        try {
-            $id = $this->service->crearUsuario($datos);
-            http_response_code(201);
-            echo json_encode(["mensaje" => "Usuario creado correctamente", "id_usuario" => $id]);
-        } catch (RuntimeException $e) {
-            http_response_code(409);
-            echo json_encode(["mensaje" => $e->getMessage()]);
-        }
+        $id = $this->service->crear($datos);
+
+        http_response_code(201);
+        echo json_encode(["mensaje" => "Categoría creada correctamente", "id_categoria" => $id]);
     }
 
     public function actualizar(int $id): void
@@ -75,13 +71,13 @@ class UsuarioController
             return;
         }
 
-        $this->service->actualizarUsuario($id, $datos);
-        echo json_encode(["mensaje" => "Usuario actualizado correctamente"]);
+        $this->service->actualizar($id, $datos);
+        echo json_encode(["mensaje" => "Categoría actualizada correctamente"]);
     }
 
     public function eliminar(int $id): void
     {
-        $this->service->eliminarUsuario($id);
-        echo json_encode(["mensaje" => "Usuario eliminado correctamente"]);
+        $this->service->eliminar($id);
+        echo json_encode(["mensaje" => "Categoría eliminada correctamente"]);
     }
 }

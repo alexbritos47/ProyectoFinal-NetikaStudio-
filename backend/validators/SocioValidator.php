@@ -2,67 +2,49 @@
 
 class SocioValidator
 {
-    public static function validarCrear(array $datos): array
+    public function validarCrear(array $datos): array
     {
         $errores = [];
 
         if (empty($datos['nombre'])) {
-            $errores['nombre'] = 'El nombre es obligatorio';
+            $errores['nombre'] = 'El nombre es obligatorio.';
         }
 
-        if (empty($datos['documento'])) {
-            $errores['documento'] = 'El documento es obligatorio';
+        if (empty($datos['apellido'])) {
+            $errores['apellido'] = 'El apellido es obligatorio.';
         }
 
-        if (empty($datos['telefono'])) {
-            $errores['telefono'] = 'El teléfono es obligatorio';
+        if (empty($datos['tipo_documento'])) {
+            $errores['tipo_documento'] = 'El tipo de documento es obligatorio.';
         }
 
-        if (empty($datos['correo'])) {
-            $errores['correo'] = 'El correo es obligatorio';
-        } elseif (!filter_var($datos['correo'], FILTER_VALIDATE_EMAIL)) {
-            $errores['correo'] = 'El correo no tiene un formato válido';
+        if (empty($datos['numero_documento'])) {
+            $errores['numero_documento'] = 'El número de documento es obligatorio.';
         }
 
-        if (isset($datos['estado'])) {
-            if (!in_array($datos['estado'], ['activo', 'inactivo'])) {
-                $errores['estado'] = 'El estado debe ser activo o inactivo';
-            }
+        if (empty($datos['id_categoria'])) {
+            $errores['id_categoria'] = 'La categoría del socio es obligatoria.';
+        }
+
+        if (!empty($datos['email']) && !filter_var($datos['email'], FILTER_VALIDATE_EMAIL)) {
+            $errores['email'] = 'El correo no tiene un formato válido.';
         }
 
         return $errores;
     }
 
-
-    public static function validarActualizar(array $datos): array
+    public function validarActualizar(array $datos): array
     {
         $errores = [];
 
-        if (isset($datos['nombre']) && empty($datos['nombre'])) {
-            $errores['nombre'] = 'El nombre no puede estar vacío';
+        if (isset($datos['email']) && $datos['email'] !== '' &&
+            !filter_var($datos['email'], FILTER_VALIDATE_EMAIL)) {
+            $errores['email'] = 'El correo no tiene un formato válido.';
         }
 
-        if (isset($datos['documento']) && empty($datos['documento'])) {
-            $errores['documento'] = 'El documento no puede estar vacío';
-        }
-
-        if (isset($datos['telefono']) && empty($datos['telefono'])) {
-            $errores['telefono'] = 'El teléfono no puede estar vacío';
-        }
-
-        if (isset($datos['correo'])) {
-
-            if (empty($datos['correo'])) {
-                $errores['correo'] = 'El correo no puede estar vacío';
-            } elseif (!filter_var($datos['correo'], FILTER_VALIDATE_EMAIL)) {
-                $errores['correo'] = 'El correo no tiene un formato válido';
-            }
-        }
-
-        if (isset($datos['estado'])) {
-            if (!in_array($datos['estado'], ['activo', 'inactivo'])) {
-                $errores['estado'] = 'El estado debe ser activo o inactivo';
-            }
+        if (isset($datos['estado']) &&
+            !in_array($datos['estado'], ['activo', 'inactivo', 'moroso'], true)) {
+            $errores['estado'] = 'El estado debe ser activo, inactivo o moroso.';
         }
 
         return $errores;

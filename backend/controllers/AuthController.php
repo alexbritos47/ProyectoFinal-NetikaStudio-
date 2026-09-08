@@ -1,89 +1,59 @@
 <?php
 
-require_once __DIR__ . '/../services/AuthService.php';
-require_once __DIR__ . '/../validators/AuthValidator.php';
-
 class AuthController
 {
     private AuthService $service;
+    private AuthValidator $validator;
 
-    public function __construct()
+    public function __construct(AuthService $service, AuthValidator $validator)
     {
-        $this->service = new AuthService();
+        $this->service = $service;
+        $this->validator = $validator;
     }
 
-    public function iniciarSesion()
+    public function login(): void
     {
-        try {
+        $datos = json_decode(file_get_contents("php://input"), true);
 
-            $datos = json_decode(
-                file_get_contents('php://input'),
-                true
-            );
-
-            if (!is_array($datos)) {
-                http_response_code(400);
-
-                echo json_encode([
-                    'exito' => false,
-                    'mensaje' => 'Los datos enviados no son válidos',
-                    'errores' => []
-                ]);
-
-                return;
-            }
-
-            $errores = AuthValidator::validar($datos);
-
-            if (!empty($errores)) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    'exito' => false,
-                    'mensaje' => 'Datos inválidos',
-                    'errores' => $errores
-                ]);
-
-                return;
-            }
-
-            $resultado = $this->service->iniciarSesion(
-                $datos['correo'],
-                $datos['contrasena']
-            );
-
-            if (!$resultado) {
-
-                http_response_code(401);
-
-                echo json_encode([
-                    'exito' => false,
-                    'mensaje' =>
-                        'Correo o contraseña incorrectos',
-                    'errores' => []
-                ]);
-
-                return;
-            }
-
-            http_response_code(200);
-
-            echo json_encode([
-                'exito' => true,
-                'mensaje' => 'Inicio de sesión exitoso',
-                'datos' => $resultado
-            ]);
-
-        } catch (Exception $e) {
-
-            http_response_code(500);
-
-            echo json_encode([
-                'exito' => false,
-                'mensaje' => 'Error interno del servidor',
-                'errores' => []
-            ]);
+        if (!is_array($datos)) {
+            http_response_code(400);
+            echo json_encode(["mensaje" => "Los datos enviados no son válidos"]);
+            return;
         }
+
+        $errores = $this->validator->validarInicioSesion($datos);
+
+        if (!empty($errores)) {
+            http_response_code(400);
+            echo json_encode(["errores" => $errores]);
+            return;
+        }
+
+        try {
+            $usuario = $this->service->login($datos['nombre_usuario'], $datos['contrasena']);
+            echo json_encode(["mensaje" => "Inicio de sesión correcto", "usuario" => $usuario]);
+        } catch (RuntimeException $e) {
+            http_response_code(401);
+            echo json_encode(["mensaje" => $e->getMessage()]);
+        }
+    }
+
+    public function logout(): void
+    {
+        $this->service->logout();
+        echo json_encode(["mensaje" => "Sesión cerrada correctamente"]);
+    }
+
+    public function me(): void
+    {
+        $usuario = $this->service->usuarioActual();
+
+        if (!$usuario) {
+            http_response_code(401);
+            echo json_encode(["mensaje" => "No hay una sesión activa"]);
+            return;
+        }
+
+        echo json_encode($usuario);
     }
 }

@@ -2,37 +2,48 @@
 
 class AuthService
 {
-    private $usuarioRepository;
+    private UsuarioRepository $repository;
 
-    public function __construct($usuarioRepository)
+    public function __construct(UsuarioRepository $repository)
     {
-        $this->usuarioRepository = $usuarioRepository;
+        $this->repository = $repository;
     }
 
-    public function iniciarSesion($correo, $contrasena)
+    /**
+     * Valida credenciales y abre sesión.
+     * @throws RuntimeException si el usuario no existe, está inactivo o la contraseña es incorrecta.
+     */
+    public function login(string $nombreUsuario, string $contrasena): array
     {
-        // 1. Buscar usuario por correo
-        $usuario = $this->usuarioRepository->obtenerPorCorreo($correo);
+        $usuario = $this->repository->obtenerPorNombreUsuario($nombreUsuario);
 
-        // 2. Comprobar que exista
         if (!$usuario) {
-            throw new Exception("Usuario o contraseña incorrectos");
+            throw new RuntimeException('Usuario o contraseña incorrectos.');
         }
 
-        // 3. Comprobar que esté activo
         if ($usuario['estado'] !== 'activo') {
-            throw new Exception("El usuario está inactivo");
+            throw new RuntimeException('El usuario se encuentra inactivo.');
         }
 
-        // 4. Verificar contraseña
         if (!password_verify($contrasena, $usuario['contrasena'])) {
-            throw new Exception("Usuario o contraseña incorrectos");
+            throw new RuntimeException('Usuario o contraseña incorrectos.');
         }
 
-        // 5. Eliminar la contraseña antes de devolver los datos
         unset($usuario['contrasena']);
 
-        // 6. Devolver datos del usuario
+        $_SESSION['usuario'] = $usuario;
+
         return $usuario;
+    }
+
+    public function logout(): void
+    {
+        unset($_SESSION['usuario']);
+        session_destroy();
+    }
+
+    public function usuarioActual(): ?array
+    {
+        return $_SESSION['usuario'] ?? null;
     }
 }

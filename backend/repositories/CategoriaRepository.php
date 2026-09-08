@@ -1,15 +1,14 @@
 <?php
 
-require_once __DIR__ . '/../database/database.php';
+require_once __DIR__ . '/../database/Database.php';
 
 class CategoriaRepository
 {
     private PDO $conexion;
 
-    public function __construct()
+    public function __construct(PDO $conexion)
     {
-        $database = new Database();
-        $this->conexion = $database->conectar();
+        $this->conexion = $conexion;
     }
 
     public function obtenerTodos(): array
