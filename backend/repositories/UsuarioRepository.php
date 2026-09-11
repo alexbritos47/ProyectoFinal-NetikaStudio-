@@ -1,15 +1,14 @@
 <?php
 
-require_once __DIR__ . '/../database/database.php';
+require_once __DIR__ . '/../database/Database.php';
 
 class UsuarioRepository
 {
     private PDO $conexion;
 
-    public function __construct()
+    public function __construct(PDO $conexion)
     {
-        $database = new Database();
-        $this->conexion = $database->conectar();
+        $this->conexion = $conexion;
     }
 
     public function obtenerTodos(): array
@@ -31,16 +30,13 @@ class UsuarioRepository
         return $stmt->fetch();
     }
 
-    // NOTA: el modelo USUARIO todavía no tiene campo "documento" en el PDF.
-    // Por ahora este método busca por nombre_usuario (el único campo único
-    // disponible). Cuando se agregue "documento" a la tabla, cambiar la
-    // consulta para que filtre por esa columna en vez de nombre_usuario.
-    public function obtenerPorDocumento(string $documento): array|false
+    // Incluye la contraseña (hash), sólo para uso interno de autenticación.
+    public function obtenerPorNombreUsuario(string $nombreUsuario): array|false
     {
         $stmt = $this->conexion->prepare(
-            "SELECT * FROM USUARIO WHERE nombre_usuario = :documento"
+            "SELECT * FROM USUARIO WHERE nombre_usuario = :nombre_usuario"
         );
-        $stmt->execute(['documento' => $documento]);
+        $stmt->execute(['nombre_usuario' => $nombreUsuario]);
         return $stmt->fetch();
     }
 

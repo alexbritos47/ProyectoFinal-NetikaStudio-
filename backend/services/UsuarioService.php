@@ -1,170 +1,42 @@
-```php
 <?php
 
 class UsuarioService
 {
-    private $usuarioRepository;
+    private UsuarioRepository $repository;
 
-    public function __construct($usuarioRepository)
+    public function __construct(UsuarioRepository $repository)
     {
-        $this->usuarioRepository = $usuarioRepository;
+        $this->repository = $repository;
     }
 
-    // Listar todos los usuarios
-    public function listarUsuarios()
+    public function obtenerUsuarios(): array
     {
-        $usuarios = $this->usuarioRepository->obtenerTodos();
-
-        // No devolver contraseñas
-        foreach ($usuarios as &$usuario) {
-            unset($usuario['contrasena']);
-        }
-
-        return $usuarios;
+        return $this->repository->obtenerTodos();
     }
 
-    // Obtener un usuario por ID
-    public function obtenerUsuario($id)
+    public function obtenerUsuario(int $id): array|false
     {
-        $usuario = $this->usuarioRepository->obtenerPorId($id);
-
-        if (!$usuario) {
-            throw new Exception("El usuario no existe");
-        }
-
-        // No devolver contraseña
-        unset($usuario['contrasena']);
-
-        return $usuario;
+        return $this->repository->obtenerPorId($id);
     }
 
-    // Crear usuario
-    public function crearUsuario($datos)
+    public function crearUsuario(array $datos): int
     {
-        // Comprobar documento duplicado
-        $usuario = $this->usuarioRepository
-            ->obtenerPorDocumento($datos['documento']);
+        $existente = $this->repository->obtenerPorNombreUsuario($datos['nombre_usuario']);
 
-        if ($usuario) {
-            throw new Exception("El documento ya está registrado");
+        if ($existente) {
+            throw new RuntimeException('Ya existe un usuario con ese nombre de usuario.');
         }
 
-        // Comprobar correo duplicado
-        $usuario = $this->usuarioRepository
-            ->obtenerPorCorreo($datos['correo']);
-
-        if ($usuario) {
-            throw new Exception("El correo ya está registrado");
-        }
-
-        // Comprobar que el rol sea válido
-        if (
-            $datos['rol'] !== 'administrador' &&
-            $datos['rol'] !== 'socio'
-        ) {
-            throw new Exception("El rol no es válido");
-        }
-
-        // Hashear contraseña
-        $datos['contrasena'] = password_hash(
-            $datos['contrasena'],
-            PASSWORD_DEFAULT
-        );
-
-        // Crear usuario
-        $id = $this->usuarioRepository->crear($datos);
-
-        // Devolver usuario creado sin contraseña
-        $usuario = $this->usuarioRepository->obtenerPorId($id);
-
-        unset($usuario['contrasena']);
-
-        return $usuario;
+        return $this->repository->crear($datos);
     }
 
-    // Actualizar usuario
-    public function actualizarUsuario($id, $datos)
+    public function actualizarUsuario(int $id, array $datos): bool
     {
-        // Comprobar que exista
-        $usuario = $this->usuarioRepository->obtenerPorId($id);
-
-        if (!$usuario) {
-            throw new Exception("El usuario no existe");
-        }
-
-        // Comprobar documento si se está modificando
-        if (isset($datos['documento'])) {
-
-            $usuarioDocumento = $this->usuarioRepository
-                ->obtenerPorDocumento($datos['documento']);
-
-            if (
-                $usuarioDocumento &&
-                $usuarioDocumento['id'] != $id
-            ) {
-                throw new Exception("El documento ya está registrado");
-            }
-        }
-
-        // Comprobar correo si se está modificando
-        if (isset($datos['correo'])) {
-
-            $usuarioCorreo = $this->usuarioRepository
-                ->obtenerPorCorreo($datos['correo']);
-
-            if (
-                $usuarioCorreo &&
-                $usuarioCorreo['id'] != $id
-            ) {
-                throw new Exception("El correo ya está registrado");
-            }
-        }
-
-        // Comprobar rol
-        if (isset($datos['rol'])) {
-
-            if (
-                $datos['rol'] !== 'administrador' &&
-                $datos['rol'] !== 'socio'
-            ) {
-                throw new Exception("El rol no es válido");
-            }
-        }
-
-        // Hashear contraseña solamente si se está modificando
-        if (isset($datos['contrasena']) && !empty($datos['contrasena'])) {
-
-            $datos['contrasena'] = password_hash(
-                $datos['contrasena'],
-                PASSWORD_DEFAULT
-            );
-        }
-
-        // Actualizar
-        $this->usuarioRepository->actualizar($id, $datos);
-
-        // Obtener usuario actualizado
-        $usuario = $this->usuarioRepository->obtenerPorId($id);
-
-        // Nunca devolver contraseña
-        unset($usuario['contrasena']);
-
-        return $usuario;
+        return $this->repository->actualizar($id, $datos);
     }
 
-    // Eliminar usuario
-    public function eliminarUsuario($id)
+    public function eliminarUsuario(int $id): bool
     {
-        // Comprobar que exista
-        $usuario = $this->usuarioRepository->obtenerPorId($id);
-
-        if (!$usuario) {
-            throw new Exception("El usuario no existe");
-        }
-
-        // Eliminar
-        $this->usuarioRepository->eliminar($id);
-
-        return true;
+        return $this->repository->eliminar($id);
     }
 }

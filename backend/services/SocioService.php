@@ -1,119 +1,55 @@
-```php
 <?php
 
 class SocioService
 {
-    private $socioRepository;
+    private SocioRepository $repository;
 
-    public function __construct($socioRepository)
+    public function __construct(SocioRepository $repository)
     {
-        $this->socioRepository = $socioRepository;
+        $this->repository = $repository;
     }
 
-    // Listar todos los socios
-    public function listarSocios()
+    public function obtenerSocios(): array
     {
-        return $this->socioRepository->obtenerTodos();
+        return $this->repository->obtenerTodos();
     }
 
-    // Obtener un socio por ID
-    public function obtenerSocio($id)
+    public function obtenerSocio(int $id): array|false
     {
-        $socio = $this->socioRepository->obtenerPorId($id);
-
-        if (!$socio) {
-            throw new Exception("El socio no existe");
-        }
-
-        return $socio;
+        return $this->repository->obtenerPorId($id);
     }
 
-    // Crear un socio
-    public function crearSocio($datos)
+    public function registrarSocio(array $datos): int
     {
-        // Comprobar documento duplicado
-        $socio = $this->socioRepository
-            ->obtenerPorDocumento($datos['documento']);
-
-        if ($socio) {
-            throw new Exception("El documento ya está registrado");
+        if (empty($datos['numero_socio'])) {
+            $datos['numero_socio'] = $this->generarNumeroSocio();
         }
-
-        // Si no se envía estado, queda activo
-        if (!isset($datos['estado'])) {
-            $datos['estado'] = 'activo';
-        }
-
-        // Comprobar que el estado sea válido
-        if (
-            $datos['estado'] !== 'activo' &&
-            $datos['estado'] !== 'inactivo'
-        ) {
-            throw new Exception("El estado no es válido");
-        }
-
-        // Crear socio
-        $id = $this->socioRepository->crear($datos);
-
-        // Obtener el socio creado
-        return $this->socioRepository->obtenerPorId($id);
+        return $this->repository->crear($datos);
     }
 
-    // Actualizar un socio
-    public function actualizarSocio($id, $datos)
+    public function actualizarSocio(int $id, array $datos): bool
     {
-        // Comprobar que el socio exista
-        $socio = $this->socioRepository->obtenerPorId($id);
-
-        if (!$socio) {
-            throw new Exception("El socio no existe");
-        }
-
-        // Comprobar documento duplicado
-        if (isset($datos['documento'])) {
-
-            $socioDocumento = $this->socioRepository
-                ->obtenerPorDocumento($datos['documento']);
-
-            if (
-                $socioDocumento &&
-                $socioDocumento['id'] != $id
-            ) {
-                throw new Exception("El documento ya está registrado");
-            }
-        }
-
-        // Comprobar estado
-        if (isset($datos['estado'])) {
-
-            if (
-                $datos['estado'] !== 'activo' &&
-                $datos['estado'] !== 'inactivo'
-            ) {
-                throw new Exception("El estado no es válido");
-            }
-        }
-
-        // Actualizar socio
-        $this->socioRepository->actualizar($id, $datos);
-
-        // Devolver socio actualizado
-        return $this->socioRepository->obtenerPorId($id);
+        return $this->repository->actualizar($id, $datos);
     }
 
-    // Eliminar un socio
-    public function eliminarSocio($id)
+    public function cambiarEstado(int $id, string $estado): bool
     {
-        // Comprobar que exista
-        $socio = $this->socioRepository->obtenerPorId($id);
+        $estadosValidos = ['activo', 'inactivo', 'moroso'];
 
-        if (!$socio) {
-            throw new Exception("El socio no existe");
+        if (!in_array($estado, $estadosValidos, true)) {
+            throw new InvalidArgumentException('Estado inválido. Use: activo, inactivo o moroso.');
         }
 
-        // Eliminar
-        $this->socioRepository->eliminar($id);
+        return $this->repository->cambiarEstado($id, $estado);
+    }
 
-        return true;
+    public function eliminarSocio(int $id): bool
+    {
+        return $this->repository->eliminar($id);
+    }
+
+    private function generarNumeroSocio(): string
+    {
+        return 'S-' . date('Y') . '-' . str_pad((string) random_int(1, 9999), 4, '0', STR_PAD_LEFT);
     }
 }

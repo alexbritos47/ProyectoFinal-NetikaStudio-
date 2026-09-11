@@ -1,22 +1,22 @@
 <?php
 
-require_once __DIR__ . '/../database/database.php';
+require_once __DIR__ . '/../database/Database.php';
 
 class SocioRepository
 {
     private PDO $conexion;
 
-    public function __construct()
+    public function __construct(PDO $conexion)
     {
-        $database = new Database();
-        $this->conexion = $database->conectar();
+        $this->conexion = $conexion;
     }
 
     public function obtenerTodos(): array
     {
         $stmt = $this->conexion->query(
-            "SELECT id_socio, numero_socio, nombre, apellido, tipo_documento, numero_documento,
-                    telefono, email, fecha_ingreso, estado, id_categoria
+            "SELECT id_socio, id_usuario, id_cobrador, numero_socio, nombre, apellido,
+                    tipo_documento, numero_documento, direccion, telefono, email,
+                    fecha_ingreso, estado, id_categoria
              FROM SOCIO"
         );
         return $stmt->fetchAll();
@@ -25,8 +25,9 @@ class SocioRepository
     public function obtenerPorId(int $id): array|false
     {
         $stmt = $this->conexion->prepare(
-            "SELECT id_socio, numero_socio, nombre, apellido, tipo_documento, numero_documento,
-                    telefono, email, fecha_ingreso, estado, id_categoria
+            "SELECT id_socio, id_usuario, id_cobrador, numero_socio, nombre, apellido,
+                    tipo_documento, numero_documento, direccion, telefono, email,
+                    fecha_ingreso, estado, id_categoria
              FROM SOCIO WHERE id_socio = :id"
         );
         $stmt->execute(['id' => $id]);
@@ -42,30 +43,36 @@ class SocioRepository
         return $stmt->fetch();
     }
 
-    public function obtenerPorCorreo(string $email): array|false
+    public function obtenerPorCobrador(int $idCobrador): array
     {
         $stmt = $this->conexion->prepare(
-            "SELECT * FROM SOCIO WHERE email = :email"
+            "SELECT id_socio, numero_socio, nombre, apellido, direccion, telefono, estado
+             FROM SOCIO WHERE id_cobrador = :id_cobrador"
         );
-        $stmt->execute(['email' => $email]);
-        return $stmt->fetch();
+        $stmt->execute(['id_cobrador' => $idCobrador]);
+        return $stmt->fetchAll();
     }
 
     public function crear(array $datos): int
     {
         $stmt = $this->conexion->prepare(
-            "INSERT INTO SOCIO (numero_socio, nombre, apellido, tipo_documento, numero_documento,
-                                 telefono, email, fecha_ingreso, estado, id_categoria)
-             VALUES (:numero_socio, :nombre, :apellido, :tipo_documento, :numero_documento,
-                     :telefono, :email, :fecha_ingreso, :estado, :id_categoria)"
+            "INSERT INTO SOCIO (id_usuario, id_cobrador, numero_socio, nombre, apellido,
+                                 tipo_documento, numero_documento, direccion, telefono, email,
+                                 fecha_ingreso, estado, id_categoria)
+             VALUES (:id_usuario, :id_cobrador, :numero_socio, :nombre, :apellido,
+                     :tipo_documento, :numero_documento, :direccion, :telefono, :email,
+                     :fecha_ingreso, :estado, :id_categoria)"
         );
 
         $stmt->execute([
+            'id_usuario'       => $datos['id_usuario'] ?? null,
+            'id_cobrador'      => $datos['id_cobrador'] ?? null,
             'numero_socio'     => $datos['numero_socio'],
             'nombre'           => $datos['nombre'],
             'apellido'         => $datos['apellido'],
             'tipo_documento'   => $datos['tipo_documento'],
             'numero_documento' => $datos['numero_documento'],
+            'direccion'        => $datos['direccion'] ?? null,
             'telefono'         => $datos['telefono'] ?? null,
             'email'            => $datos['email'] ?? null,
             'fecha_ingreso'    => $datos['fecha_ingreso'] ?? date('Y-m-d'),
@@ -82,8 +89,9 @@ class SocioRepository
         $parametros = ['id' => $id];
 
         $permitidos = [
-            'numero_socio', 'nombre', 'apellido', 'tipo_documento', 'numero_documento',
-            'telefono', 'email', 'fecha_ingreso', 'estado', 'id_categoria'
+            'id_usuario', 'id_cobrador', 'numero_socio', 'nombre', 'apellido',
+            'tipo_documento', 'numero_documento', 'direccion', 'telefono', 'email',
+            'fecha_ingreso', 'estado', 'id_categoria'
         ];
 
         foreach ($permitidos as $campo) {
@@ -103,9 +111,25 @@ class SocioRepository
         return $stmt->execute($parametros);
     }
 
+    public function cambiarEstado(int $id, string $estado): bool
+    {
+        $stmt = $this->conexion->prepare(
+            "UPDATE SOCIO SET estado = :estado WHERE id_socio = :id"
+        );
+        return $stmt->execute(['estado' => $estado, 'id' => $id]);
+    }
+
     public function eliminar(int $id): bool
     {
         $stmt = $this->conexion->prepare("DELETE FROM SOCIO WHERE id_socio = :id");
         return $stmt->execute(['id' => $id]);
+    }
+
+    public function obtenerActivos(): array
+    {
+        $stmt = $this->conexion->query(
+            "SELECT id_socio, id_categoria FROM SOCIO WHERE estado = 'activo'"
+        );
+        return $stmt->fetchAll();
     }
 }
