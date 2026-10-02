@@ -46,6 +46,7 @@ function manejarRutas(string $method, string $uri, array $controladores): void
         // ---------- AUTENTICACIÓN ----------
         case 'auth':
             if ($sub1 === 'login' && $method === 'POST') {
+                // /login
                 $auth->login();
                 return;
             }
