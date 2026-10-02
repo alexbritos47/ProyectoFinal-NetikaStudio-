@@ -45,15 +45,18 @@ function manejarRutas(string $method, string $uri, array $controladores): void
 
         // ---------- AUTENTICACIÓN ----------
         case 'auth':
+            // POST /api/auth/login: inicia sesión con las credenciales recibidas.
             if ($sub1 === 'login' && $method === 'POST') {
                 // /login
                 $auth->login();
                 return;
             }
+            // POST /api/auth/logout: cierra la sesión actual.
             if ($sub1 === 'logout' && $method === 'POST') {
                 $auth->logout();
                 return;
             }
+            // GET /api/auth/me: consulta los datos del usuario autenticado.
             if ($sub1 === 'me' && $method === 'GET') {
                 $auth->me();
                 return;
@@ -65,6 +68,10 @@ function manejarRutas(string $method, string $uri, array $controladores): void
         case 'usuarios':
             $id = $sub1 !== null ? (int) $sub1 : null;
 
+            // GET /api/usuarios y GET /api/usuarios/{id}: lista o consulta un usuario.
+            // POST /api/usuarios: crea un usuario.
+            // PUT /api/usuarios/{id}: actualiza un usuario.
+            // DELETE /api/usuarios/{id}: elimina un usuario.
             match (true) {
                 $method === 'GET' && $id !== null   => $usuarios->obtener($id),
                 $method === 'GET'                   => $usuarios->listar(),
@@ -79,16 +86,22 @@ function manejarRutas(string $method, string $uri, array $controladores): void
         case 'socios':
             $id = $sub1 !== null ? (int) $sub1 : null;
 
+            // GET /api/socios/{id}/recibos: lista los recibos del socio indicado.
             if ($id !== null && $sub2 === 'recibos' && $method === 'GET') {
                 $recibos->porSocio($id);
                 return;
             }
 
+            // PATCH /api/socios/{id}/estado: cambia el estado del socio.
             if ($id !== null && $sub2 === 'estado' && $method === 'PATCH') {
                 $socios->cambiarEstado($id);
                 return;
             }
 
+            // GET /api/socios y GET /api/socios/{id}: lista o consulta socios.
+            // POST /api/socios: crea un socio.
+            // PUT /api/socios/{id}: actualiza un socio.
+            // DELETE /api/socios/{id}: elimina un socio.
             match (true) {
                 $method === 'GET' && $id !== null   => $socios->obtener($id),
                 $method === 'GET'                   => $socios->listar(),
@@ -103,6 +116,10 @@ function manejarRutas(string $method, string $uri, array $controladores): void
         case 'categorias':
             $id = $sub1 !== null ? (int) $sub1 : null;
 
+            // GET /api/categorias y GET /api/categorias/{id}: lista o consulta categorías.
+            // POST /api/categorias: crea una categoría.
+            // PUT /api/categorias/{id}: actualiza una categoría.
+            // DELETE /api/categorias/{id}: elimina una categoría.
             match (true) {
                 $method === 'GET' && $id !== null   => $categorias->obtener($id),
                 $method === 'GET'                   => $categorias->listar(),
@@ -115,6 +132,7 @@ function manejarRutas(string $method, string $uri, array $controladores): void
 
         // ---------- RECIBOS ----------
         case 'recibos':
+            // POST /api/recibos/generar-anuales: genera los recibos del año solicitado.
             if ($sub1 === 'generar-anuales' && $method === 'POST') {
                 $recibos->generarAnuales();
                 return;
@@ -122,11 +140,13 @@ function manejarRutas(string $method, string $uri, array $controladores): void
 
             $id = $sub1 !== null ? (int) $sub1 : null;
 
+            // PATCH /api/recibos/{id}/anular: anula el recibo indicado.
             if ($id !== null && $sub2 === 'anular' && $method === 'PATCH') {
                 $recibos->anular($id);
                 return;
             }
 
+            // GET /api/recibos y GET /api/recibos/{id}: lista o consulta recibos.
             match (true) {
                 $method === 'GET' && $id !== null => $recibos->obtener($id),
                 $method === 'GET'                 => $recibos->listar(),
@@ -138,6 +158,9 @@ function manejarRutas(string $method, string $uri, array $controladores): void
         case 'pagos':
             $id = $sub1 !== null ? (int) $sub1 : null;
 
+            // GET /api/pagos y GET /api/pagos/{id}: lista o consulta pagos.
+            // POST /api/pagos: registra un pago y los recibos que cancela.
+            // DELETE /api/pagos/{id}: anula el pago.
             match (true) {
                 $method === 'GET' && $id !== null   => $pagos->obtener($id),
                 $method === 'GET'                   => $pagos->listar(),
@@ -149,15 +172,18 @@ function manejarRutas(string $method, string $uri, array $controladores): void
 
         // ---------- COBRANZA (panel del cobrador) ----------
         case 'cobranzas':
+            // GET /api/cobranzas/pendientes: consulta socios pendientes de cobro.
             if ($sub1 === 'pendientes' && $method === 'GET') {
                 $cobranzas->pendientes();
                 return;
             }
+            // POST /api/cobranzas/registrar: registra un cobro mediante el flujo de pagos.
             if ($sub1 === 'registrar' && $method === 'POST') {
                 // Registro directo de un cobro: se resuelve como un pago.
                 $pagos->crear();
                 return;
             }
+            // POST /api/cobranzas/resultado-visita: guarda el resultado de una visita.
             if ($sub1 === 'resultado-visita' && $method === 'POST') {
                 $cobranzas->registrarVisita();
                 return;
@@ -167,6 +193,9 @@ function manejarRutas(string $method, string $uri, array $controladores): void
 
         // ---------- REPORTES ----------
         case 'reportes':
+            // GET /api/reportes/ingresos: obtiene el reporte de ingresos por periodo.
+            // GET /api/reportes/morosos: lista los socios morosos.
+            // GET /api/reportes/cobranza-porcentaje: calcula el porcentaje de cobranza.
             match (true) {
                 $sub1 === 'ingresos' && $method === 'GET'             => $reportes->ingresos(),
                 $sub1 === 'morosos' && $method === 'GET'               => $reportes->morosos(),
@@ -179,11 +208,14 @@ function manejarRutas(string $method, string $uri, array $controladores): void
         case 'notificaciones':
             $id = $sub1 !== null ? (int) $sub1 : null;
 
+            // PATCH /api/notificaciones/{id}/leer: marca una notificación como leída.
             if ($id !== null && $sub2 === 'leer' && $method === 'PATCH') {
                 $notificaciones->marcarLeida($id);
                 return;
             }
 
+            // GET /api/notificaciones: lista notificaciones (puede filtrar por socio).
+            // POST /api/notificaciones: crea una notificación.
             match (true) {
                 $method === 'GET'  => $notificaciones->listar(),
                 $method === 'POST' => $notificaciones->crear(),
@@ -195,6 +227,8 @@ function manejarRutas(string $method, string $uri, array $controladores): void
         case 'consultas':
             $id = $sub1 !== null ? (int) $sub1 : null;
 
+            // GET /api/consultas y GET /api/consultas/{id}: lista o consulta solicitudes.
+            // POST /api/consultas: crea una consulta enviada por un socio.
             match (true) {
                 $method === 'GET' && $id !== null => $consultas->obtener($id),
                 $method === 'GET'                 => $consultas->listar(),
