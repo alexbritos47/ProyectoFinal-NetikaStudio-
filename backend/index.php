@@ -2,8 +2,9 @@
 <?php
 
 // Activa el modo de tipos estrictos de PHP.
-// Ayuda a detectar errores cuando se utilizan
-// tipos de datos incorrectos.
+// Ayuda a detectar errores cuando se utilizas
+// un tipos de datos incorrectos.
+//
 declare(strict_types=1);
 
 
