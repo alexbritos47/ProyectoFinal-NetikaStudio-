@@ -1,7 +1,4 @@
-
 <?php
-
-
 
 class CobranzaController
 // Esta clase se encarga de manejar las operaciones relacionadas con las cobranzas.
@@ -152,4 +149,4 @@ class CobranzaController
         }
     }
 }
-```
+

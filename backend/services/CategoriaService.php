@@ -1,4 +1,3 @@
-
 <?php
 
 // Clase que se encarga de manejar la lógica de las categorías.

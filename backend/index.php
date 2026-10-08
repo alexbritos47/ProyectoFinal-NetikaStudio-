@@ -1,4 +1,3 @@
-
 <?php
 
 // Activa el modo de tipos estrictos de PHP.

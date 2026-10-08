@@ -1,4 +1,3 @@
-
 <?php
 
 // Clase encargada de manejar la lógica relacionada con los pagos.

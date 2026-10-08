@@ -1,4 +1,3 @@
-
 <?php
 
 // Incluye el archivo que contiene la clase Database.

@@ -1,4 +1,3 @@
-
 <?php
 
 // Clase encargada de validar los datos
