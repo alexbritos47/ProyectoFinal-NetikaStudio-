@@ -1,7 +1,4 @@
 <?php
-
-
-
 class Database
 
 // Esta clase se encarga de configurar y realizar
