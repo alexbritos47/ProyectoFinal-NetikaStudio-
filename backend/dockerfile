@@ -1,0 +1,23 @@
+FROM php:8.3-apache
+
+# Extensión PDO MySQL (la usa database/Database.php)
+RUN docker-php-ext-install pdo pdo_mysql
+
+# mod_rewrite: manda todas las rutas /api/... a index.php
+RUN a2enmod rewrite
+
+# Permitir que .htaccess funcione
+RUN sed -ri 's!AllowOverride None!AllowOverride All!g' /etc/apache2/apache2.conf
+
+WORKDIR /var/www/html
+COPY . /var/www/html
+
+# index.php hace require de "Database.php" (con D mayúscula), pero el archivo
+# se llama "database.php". En Linux importa mayúsculas/minúsculas, así que lo corregimos.
+RUN if [ -f database/database.php ] && [ ! -f database/Database.php ]; then \
+      mv database/database.php database/Database.php; \
+    fi
+
+RUN chown -R www-data:www-data /var/www/html
+
+EXPOSE 80
