@@ -73,6 +73,29 @@ class SocioValidator
                 'El correo no tiene un formato válido.';
         }
 
+        // Acceso al portal (opcional): si se manda nombre_usuario,
+        // hace falta una contraseña de al menos 6 caracteres.
+        if (!empty($datos['nombre_usuario'])) {
+
+            if (!empty($datos['id_usuario'])) {
+
+                $errores['nombre_usuario'] =
+                    'Mandá nombre_usuario (crear acceso) o id_usuario '
+                    . '(vincular uno existente), no los dos.';
+            }
+
+            if (empty($datos['contrasena'])) {
+
+                $errores['contrasena'] =
+                    'La contraseña es obligatoria para crear el acceso.';
+
+            } elseif (strlen((string) $datos['contrasena']) < 6) {
+
+                $errores['contrasena'] =
+                    'La contraseña debe tener al menos 6 caracteres.';
+            }
+        }
+
         // Devuelve todos los errores encontrados.
         //
         // Si no hay errores, devuelve [].
@@ -119,8 +142,40 @@ class SocioValidator
                 'El estado debe ser activo, inactivo o moroso.';
         }
 
+        // Largo máximo de los datos de contacto (coincide con la base de datos).
+        $maximos = ['email' => 100, 'telefono' => 30, 'direccion' => 200];
+
+        foreach ($maximos as $campo => $maximo) {
+
+            if (!isset($datos[$campo])) {
+                continue;
+            }
+
+            if (!is_string($datos[$campo])) {
+
+                $errores[$campo] = "El campo $campo no es válido.";
+
+            } elseif ($this->largo($datos[$campo]) > $maximo) {
+
+                $errores[$campo] =
+                    "El campo $campo admite hasta $maximo caracteres.";
+            }
+        }
+
         // Devuelve todos los errores encontrados.
         return $errores;
     }
-}
 
+    // Cuenta caracteres (no bytes): una "á" cuenta como 1.
+    // Usa mbstring si está disponible; si no, un método equivalente.
+    private function largo(string $texto): int
+    {
+        if (function_exists('mb_strlen')) {
+            return mb_strlen($texto);
+        }
+
+        $letras = preg_split('//u', $texto, -1, PREG_SPLIT_NO_EMPTY);
+
+        return $letras === false ? strlen($texto) : count($letras);
+    }
+}

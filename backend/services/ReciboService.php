@@ -42,6 +42,71 @@ class ReciboService
 
     // Busca un recibo por su ID.
     // Puede devolver un array o false si no existe.
+    // Lista recibos con filtros opcionales que llegan de la URL:
+    //   ?id_socio=3  ?estado=pendiente  ?periodo=2026-09  ?anio=2026
+    // Un filtro con formato inválido lanza InvalidArgumentException
+    // (el controller lo convierte en un error 400).
+    public function obtenerFiltrados(array $parametros): array
+    {
+        $filtros = [];
+
+        $idSocio = $this->textoFiltro($parametros, 'id_socio');
+        if ($idSocio !== null) {
+            if (!ctype_digit($idSocio)) {
+                throw new InvalidArgumentException('id_socio debe ser un número.');
+            }
+            $filtros['id_socio'] = (int) $idSocio;
+        }
+
+        $estado = $this->textoFiltro($parametros, 'estado');
+        if ($estado !== null) {
+            if (!in_array($estado, ['pendiente', 'pagado', 'anulado'], true)) {
+                throw new InvalidArgumentException(
+                    'estado debe ser pendiente, pagado o anulado.'
+                );
+            }
+            $filtros['estado'] = $estado;
+        }
+
+        $periodo = $this->textoFiltro($parametros, 'periodo');
+        if ($periodo !== null) {
+            if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $periodo)) {
+                throw new InvalidArgumentException(
+                    'periodo debe tener el formato AAAA-MM (ejemplo: 2026-09).'
+                );
+            }
+            $filtros['periodo'] = $periodo;
+        }
+
+        $anio = $this->textoFiltro($parametros, 'anio');
+        if ($anio !== null) {
+            if (!preg_match('/^\d{4}$/', $anio)) {
+                throw new InvalidArgumentException(
+                    'anio debe tener 4 dígitos (ejemplo: 2026).'
+                );
+            }
+            $filtros['anio'] = $anio;
+        }
+
+        return $this->repository->obtenerFiltrados($filtros);
+    }
+
+    // Devuelve el valor de un parámetro como texto, o null si no vino o está vacío.
+    // Rechaza valores que no sean texto (por ejemplo ?estado[]=x).
+    private function textoFiltro(array $parametros, string $clave): ?string
+    {
+        if (!isset($parametros[$clave]) || $parametros[$clave] === '') {
+            return null;
+        }
+
+        if (!is_string($parametros[$clave])) {
+            throw new InvalidArgumentException("El filtro $clave no es válido.");
+        }
+
+        return trim($parametros[$clave]);
+    }
+
+
     public function obtenerPorId(int $id): array|false
     {
         // Envía el ID al Repository para realizar la búsqueda.
@@ -204,4 +269,3 @@ class ReciboService
         );
     }
 }
-

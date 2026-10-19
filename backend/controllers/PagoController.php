@@ -29,9 +29,19 @@ class PagoController
     // Función que obtiene todos los pagos.
     // : void significa que no devuelve un valor directamente.
     {
-        // Llama al Service para obtener todos los pagos.
-        // json_encode convierte los datos de PHP a formato JSON.
-        echo json_encode($this->service->obtenerTodos());
+        // Llama al Service para obtener los pagos.
+        // Acepta filtros opcionales en la URL:
+        //   ?id_socio=  ?metodo_pago=  ?anulado=0|1  ?desde=AAAA-MM-DD  ?hasta=AAAA-MM-DD
+        // Sin filtros devuelve todos, igual que antes.
+        try {
+
+            echo json_encode($this->service->obtenerFiltrados($_GET));
+
+        } catch (InvalidArgumentException $e) {
+
+            http_response_code(400);
+            echo json_encode(["mensaje" => $e->getMessage()]);
+        }
     }
 
 
@@ -115,7 +125,11 @@ class PagoController
                 // Comprueba si existe id_usuario.
                 // Si existe, lo convierte a entero.
                 // Si no existe, utiliza null.
-                isset($datos['id_usuario']) ? (int) $datos['id_usuario'] : null,
+                // El usuario que registra el pago sale de la SESIÓN,
+                // no de lo que mande el cliente (así no se puede falsificar).
+                isset($_SESSION['usuario']['id_usuario'])
+                    ? (int) $_SESSION['usuario']['id_usuario']
+                    : null,
 
                 // Obtiene el método de pago.
                 // Si no fue enviado, utiliza null.
@@ -156,4 +170,3 @@ class PagoController
         echo json_encode(["mensaje" => "Pago anulado correctamente"]);
     }
 }
-

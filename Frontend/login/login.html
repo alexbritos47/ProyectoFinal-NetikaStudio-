@@ -32,19 +32,9 @@
     </div>
 
     <input type="button" id="btnIngresar" value="Ingresar" onclick="login()" disabled>
-    <input type="button" value="Registrarse" onclick="mostrarRegistro()">
+    <input type="button" value="¿No tenés usuario?" onclick="infoAlta()">
   </div>
 
-  <div class="register" id="registerBox" style="display:none;">
-    <input type="text" id="nombre" placeholder="Nombre">
-    <input type="text" id="apellido" placeholder="Apellido">
-    <input type="text" id="cedula" placeholder="Cédula de identidad">
-    <input type="email" id="email" placeholder="Email">
-    <input type="text" id="regUser" placeholder="Usuario">
-    <input type="password" id="regPass" placeholder="Contraseña">
-    <input type="button" value="Crear cuenta" onclick="register()">
-    <input type="button" value="Volver" onclick="mostrarLogin()">
-  </div>
 </div>
 
 <!-- Modal Términos y Condiciones -->
@@ -98,6 +88,7 @@
   </div>
 </div>
 
+<script src="../js/portal-api.js"></script>
 <script src="login.js"></script>
 </body>
 </html>

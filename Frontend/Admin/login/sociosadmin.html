@@ -6,6 +6,24 @@
   <title>Panel Admin · Club Ciclista Maragato</title>
   <link rel="stylesheet" href="../../cssglobal/global.css">
   <link rel="stylesheet" href="admin.css">
+  <style>
+    /* Campos extra del modal "agregar socio" (select, doble columna, scroll) */
+    .pagina-sociosadmin .modal-caja { max-height: 92vh; overflow-y: auto; max-width: 460px; }
+    .pagina-sociosadmin .modal-caja select {
+      width: 100%; padding: 10px 13px; border-radius: 8px; border: 1px solid var(--c-300);
+      background: rgba(144,202,249,.12); font-size: 14px; color: var(--texto);
+    }
+    .pagina-sociosadmin .modal-caja select:focus { outline: none; border-color: var(--c-500); }
+    .pagina-sociosadmin .btn-fila:disabled { opacity: .55; cursor: default; }
+    .pagina-sociosadmin .fila-doble { display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px; }
+    /* Acceso al portal del socio (opcional) */
+    .pagina-sociosadmin .modal-caja .fila-acceso { display: flex; align-items: center; gap: 8px; }
+    .pagina-sociosadmin .modal-caja .fila-acceso input { width: auto; margin: 0; }
+    .pagina-sociosadmin .modal-caja .fila-acceso label { margin: 0; text-transform: none; font-size: 13.5px; cursor: pointer; }
+    .pagina-sociosadmin .modal-caja .bloque-acceso { display: none; flex-direction: column; gap: 14px; }
+    .pagina-sociosadmin .modal-caja .bloque-acceso.visible { display: flex; }
+    .pagina-sociosadmin .modal-caja .ayuda-acceso { font-size: 12px; opacity: .75; margin: 0; }
+  </style>
 </head>
 <body class="pagina-sociosadmin">
 
@@ -67,12 +85,48 @@
     <div class="modal-caja">
       <h3>Agregar socio</h3>
       <div>
-        <label for="nombreSocio">Nombre completo</label>
-        <input type="text" id="nombreSocio" placeholder="Ej: Ana Rodríguez">
+        <label for="nombreSocio">Nombre</label>
+        <input type="text" id="nombreSocio" placeholder="Ej: Ana">
       </div>
       <div>
-        <label for="emailSocio">Email</label>
+        <label for="apellidoSocio">Apellido</label>
+        <input type="text" id="apellidoSocio" placeholder="Ej: Rodríguez">
+      </div>
+      <div class="fila-doble">
+        <div>
+          <label for="tipoDocSocio">Documento</label>
+          <select id="tipoDocSocio">
+            <option value="CI">CI</option>
+            <option value="Pasaporte">Pasaporte</option>
+          </select>
+        </div>
+        <div>
+          <label for="nroDocSocio">Número</label>
+          <input type="text" id="nroDocSocio" placeholder="Ej: 1.234.567-8">
+        </div>
+      </div>
+      <div>
+        <label for="emailSocio">Email (opcional)</label>
         <input type="text" id="emailSocio" placeholder="Ej: ana@correo.com">
+      </div>
+      <div>
+        <label for="categoriaSocio">Categoría</label>
+        <select id="categoriaSocio"></select>
+      </div>
+      <div class="fila-acceso">
+        <input type="checkbox" id="crearAcceso">
+        <label for="crearAcceso">Crear acceso al portal del socio</label>
+      </div>
+      <div class="bloque-acceso" id="bloqueAcceso">
+        <div>
+          <label for="usuarioSocio">Usuario</label>
+          <input type="text" id="usuarioSocio" placeholder="Ej: ana.rodriguez" autocomplete="off">
+        </div>
+        <div>
+          <label for="contrasenaSocio">Contraseña</label>
+          <input type="password" id="contrasenaSocio" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+        </div>
+        <p class="ayuda-acceso">Con este usuario y contraseña el socio podrá entrar al portal.</p>
       </div>
       <div class="modal-botones">
         <button class="btn-cancelar" id="btnCancelarModal">Cancelar</button>

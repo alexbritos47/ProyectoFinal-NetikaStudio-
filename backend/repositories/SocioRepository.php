@@ -99,6 +99,44 @@ class SocioRepository
     // Crea un nuevo socio en la base de datos.
     // Recibe los datos del socio en un arreglo.
     // Devuelve el ID generado por la base de datos.
+    // Devuelve el socio vinculado a un usuario del portal, o false.
+    public function obtenerPorUsuario(int $idUsuario): array|false
+    {
+        $stmt = $this->conexion->prepare(
+            "SELECT * FROM SOCIO WHERE id_usuario = :id_usuario"
+        );
+
+        $stmt->execute(['id_usuario' => $idUsuario]);
+
+        return $stmt->fetch();
+    }
+
+
+    // Ejecuta varias operaciones como una sola unidad:
+    // o se guardan todas, o no se guarda ninguna.
+    // Sirve, por ejemplo, para crear el usuario y el socio juntos.
+    public function transaccion(callable $operaciones): mixed
+    {
+        $this->conexion->beginTransaction();
+
+        try {
+            $resultado = $operaciones();
+
+            $this->conexion->commit();
+
+            return $resultado;
+
+        } catch (Throwable $e) {
+
+            if ($this->conexion->inTransaction()) {
+                $this->conexion->rollBack();
+            }
+
+            throw $e;
+        }
+    }
+
+
     public function crear(array $datos): int
     {
         // Prepara la consulta INSERT para agregar un nuevo socio.
@@ -260,4 +298,3 @@ class SocioRepository
         return $stmt->fetchAll();
     }
 }
-

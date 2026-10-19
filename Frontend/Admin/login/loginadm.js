@@ -9,13 +9,16 @@ window.addEventListener('load', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Con Docker (http://localhost:3000) la API está en el mismo origen.
+  // Si abrís el HTML de otra forma (Live Server, etc.), llama directo al puerto 8080.
+  const API_BASE = location.port === '3000' ? '' : 'http://localhost:8080';
+
   const userInput = document.getElementById('user');
   const passInput = document.getElementById('password');
   const btnIngresar = document.getElementById('btnIngresar');
   const loginBox = document.querySelector('.login');
 
-  // Credenciales de prueba mientras no está el backend PHP conectado.
-  // Cuando tengas login_admin.php andando, borrá este bloque y dejá solo el fetch.
+  // Credenciales de respaldo, solo se usan si el backend no responde.
   const ADMIN_PRUEBA = { usuario: 'admin', password: 'admin123' };
 
   // Mensaje de error (se agrega solo, no hace falta tocar el HTML)
@@ -49,29 +52,28 @@ document.addEventListener('DOMContentLoaded', () => {
     btnIngresar.value = 'Ingresando...';
 
     try {
-      const res = await fetch('login_admin.php', {
+      const res = await fetch(API_BASE + '/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario, password })
+        body: JSON.stringify({ nombre_usuario: usuario, contrasena: password })
       });
 
-      if (!res.ok) throw new Error('sin backend');
+      let data = {};
+      try { data = await res.json(); } catch (e) { /* respuesta sin JSON */ }
 
-      const data = await res.json();
-
-      if (data.success && data.rol === 'admin') {
-        entrarComoAdmin(usuario);
-      } else if (data.success && data.rol !== 'admin') {
+      if (res.ok && data.usuario && data.usuario.rol === 'administrador') {
+        entrarComoAdmin(data.usuario.nombre_usuario || usuario);
+      } else if (res.ok && data.usuario) {
         mostrarError('Este usuario no tiene permisos de administrador.');
       } else {
-        mostrarError(data.message || 'Usuario o contraseña incorrectos.');
+        mostrarError(data.mensaje || 'Usuario o contraseña incorrectos.');
       }
     } catch (err) {
-      // Todavía no hay backend: valida contra las credenciales de prueba.
+      // No se pudo conectar con el backend: valida contra las credenciales de prueba.
       if (usuario === ADMIN_PRUEBA.usuario && password === ADMIN_PRUEBA.password) {
         entrarComoAdmin(usuario);
       } else {
-        mostrarError('Usuario o contraseña incorrectos.');
+        mostrarError('No se pudo conectar con el servidor.');
       }
     } finally {
       btnIngresar.disabled = false;

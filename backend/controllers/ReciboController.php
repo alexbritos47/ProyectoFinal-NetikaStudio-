@@ -23,9 +23,19 @@ class ReciboController
     // Función que obtiene todos los recibos.
     // : void significa que no devuelve un valor directamente.
     {
-        // Llama al Service para obtener todos los recibos.
-        // json_encode convierte los datos de PHP a formato JSON.
-        echo json_encode($this->service->obtenerTodos());
+        // Llama al Service para obtener los recibos.
+        // Acepta filtros opcionales en la URL:
+        //   ?id_socio=  ?estado=  ?periodo=AAAA-MM  ?anio=AAAA
+        // Sin filtros devuelve todos, igual que antes.
+        try {
+
+            echo json_encode($this->service->obtenerFiltrados($_GET));
+
+        } catch (InvalidArgumentException $e) {
+
+            http_response_code(400);
+            echo json_encode(["mensaje" => $e->getMessage()]);
+        }
     }
 
 
@@ -108,4 +118,3 @@ class ReciboController
         echo json_encode(["mensaje" => "Recibo anulado correctamente"]);
     }
 }
-

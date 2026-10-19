@@ -7,105 +7,198 @@ class SocioService
     // El Repository es el encargado de comunicarse con la base de datos.
     private SocioRepository $repository;
 
+    // Sirve para crear o comprobar el usuario con el que el socio
+    // entra al portal. Es opcional para no romper código anterior.
+    private ?UsuarioRepository $usuarioRepository;
+
     // Constructor de la clase.
-    // Recibe un objeto de tipo SocioRepository.
-    public function __construct(SocioRepository $repository)
-    {
-        // Guarda el Repository recibido dentro de la propiedad $repository.
+    public function __construct(
+        SocioRepository $repository,
+        ?UsuarioRepository $usuarioRepository = null
+    ) {
         $this->repository = $repository;
+        $this->usuarioRepository = $usuarioRepository;
     }
 
     // Obtiene todos los socios.
-    // Devuelve un array con los socios.
     public function obtenerSocios(): array
     {
-        // Llama al Repository para obtener todos los socios.
         return $this->repository->obtenerTodos();
     }
 
-    // Busca un socio por su ID.
-    // Recibe un número entero.
-    // Puede devolver un array o false si no encuentra el socio.
+    // Obtiene un socio por su ID.
     public function obtenerSocio(int $id): array|false
     {
-        // Envía el ID al Repository para buscar el socio.
         return $this->repository->obtenerPorId($id);
     }
 
     // Registra un nuevo socio.
-    // Recibe los datos del socio como un array.
-    // Devuelve un número entero, normalmente el ID del socio creado.
+    //
+    // Hay tres formas de usarlo:
+    //  1. Solo el socio (sin acceso al portal).
+    //  2. Con nombre_usuario + contrasena: crea también el usuario
+    //     del portal (rol socio) y lo vincula. Todo en una transacción,
+    //     así no queda un usuario suelto si falla el alta del socio.
+    //  3. Con id_usuario: vincula un usuario que ya existe.
+    //
+    // Devuelve el ID del socio creado.
+    // El usuario creado (si lo hay) queda en $this->ultimoIdUsuario.
     public function registrarSocio(array $datos): int
     {
-        // Comprueba si el número de socio está vacío o no fue enviado.
         if (empty($datos['numero_socio'])) {
 
-            // Si está vacío, genera automáticamente un número de socio.
             $datos['numero_socio'] = $this->generarNumeroSocio();
         }
 
-        // Envía los datos al Repository para crear el socio
-        // en la base de datos.
+        $this->ultimoIdUsuario = null;
+
+        // Caso 2: crear usuario y socio juntos.
+        if (!empty($datos['nombre_usuario'])) {
+
+            return $this->repository->transaccion(function () use ($datos) {
+
+                $datos['id_usuario'] = $this->crearUsuarioDelSocio($datos);
+
+                $this->ultimoIdUsuario = $datos['id_usuario'];
+
+                return $this->repository->crear($datos);
+            });
+        }
+
+        // Caso 3: vincular un usuario existente.
+        if (!empty($datos['id_usuario'])) {
+
+            $this->comprobarUsuarioVinculable((int) $datos['id_usuario'], null);
+
+            $this->ultimoIdUsuario = (int) $datos['id_usuario'];
+        }
+
+        // Caso 1 (y 3 ya validado): solo se crea el socio.
         return $this->repository->crear($datos);
     }
 
-    // Actualiza los datos de un socio existente.
-    // Recibe el ID del socio y los nuevos datos.
-    // Devuelve true si se actualizó correctamente o false si no.
+    // ID del usuario del portal creado o vinculado en el último alta.
+    public ?int $ultimoIdUsuario = null;
+
+    // Actualiza los datos de un socio.
+    // Si se manda id_usuario, se comprueba que se pueda vincular.
+    // Si se manda id_usuario = null, el socio queda sin acceso al portal.
     public function actualizarSocio(int $id, array $datos): bool
     {
-        // Envía el ID y los datos al Repository.
+        if (!empty($datos['id_usuario'])) {
+
+            $this->comprobarUsuarioVinculable((int) $datos['id_usuario'], $id);
+        }
+
         return $this->repository->actualizar($id, $datos);
     }
 
-    // Cambia el estado de un socio.
-    // El estado puede ser activo, inactivo o moroso.
+    // Cambia el estado de un socio (activo, inactivo o moroso).
     public function cambiarEstado(int $id, string $estado): bool
     {
-        // Define los únicos estados permitidos para un socio.
         $estadosValidos = ['activo', 'inactivo', 'moroso'];
 
-        // Comprueba si el estado recibido NO está dentro
-        // de la lista de estados permitidos.
-        //
-        // in_array() busca un valor dentro de un array.
-        // El true indica que también debe coincidir el tipo de dato.
         if (!in_array($estado, $estadosValidos, true)) {
 
-            // Si el estado no es válido, lanza una excepción.
             throw new InvalidArgumentException(
                 'Estado inválido. Use: activo, inactivo o moroso.'
             );
         }
 
-        // Si el estado es válido, se lo envía al Repository
-        // para actualizarlo en la base de datos.
         return $this->repository->cambiarEstado($id, $estado);
     }
 
-    // Elimina un socio por su ID.
-    // Devuelve true si se eliminó correctamente o false si no.
+    // Elimina un socio.
     public function eliminarSocio(int $id): bool
     {
-        // Envía el ID al Repository para eliminar el socio.
         return $this->repository->eliminar($id);
     }
 
-    // Función privada que genera automáticamente
-    // un número de socio.
-    //
-    // Ejemplo:
-    // S-2026-4837
+    // Crea el usuario del portal para un socio nuevo y devuelve su ID.
+    private function crearUsuarioDelSocio(array $datos): int
+    {
+        $usuarios = $this->exigirUsuarioRepository();
+
+        if ($usuarios->obtenerPorNombreUsuario($datos['nombre_usuario'])) {
+
+            throw new RuntimeException(
+                'Ya existe un usuario con ese nombre de usuario.'
+            );
+        }
+
+        $email = !empty($datos['email']) ? $datos['email'] : null;
+
+        if ($email !== null && $usuarios->obtenerPorCorreo($email)) {
+
+            throw new RuntimeException(
+                'Ya existe un usuario con ese correo.'
+            );
+        }
+
+        return $usuarios->crear([
+            'nombre_usuario'  => $datos['nombre_usuario'],
+            'contrasena'      => $datos['contrasena'],
+            'nombre_completo' => trim($datos['nombre'] . ' ' . $datos['apellido']),
+            'rol'             => 'socio',
+            'email'           => $email,
+            'estado'          => 'activo',
+        ]);
+    }
+
+    // Comprueba que un usuario existente se pueda vincular a un socio:
+    //  - tiene que existir,
+    //  - tiene que tener rol socio,
+    //  - no puede estar ya vinculado a OTRO socio.
+    // $idSocioActual es el socio que se está editando (o null si es nuevo).
+    private function comprobarUsuarioVinculable(
+        int $idUsuario,
+        ?int $idSocioActual
+    ): void {
+
+        $usuarios = $this->exigirUsuarioRepository();
+
+        $usuario = $usuarios->obtenerPorId($idUsuario);
+
+        if (!$usuario) {
+
+            throw new InvalidArgumentException(
+                'El usuario indicado no existe.'
+            );
+        }
+
+        if ($usuario['rol'] !== 'socio') {
+
+            throw new InvalidArgumentException(
+                'El usuario indicado debe tener rol socio.'
+            );
+        }
+
+        $vinculado = $this->repository->obtenerPorUsuario($idUsuario);
+
+        if ($vinculado && (int) $vinculado['id_socio'] !== $idSocioActual) {
+
+            throw new RuntimeException(
+                'Ese usuario ya está vinculado a otro socio.'
+            );
+        }
+    }
+
+    private function exigirUsuarioRepository(): UsuarioRepository
+    {
+        if ($this->usuarioRepository === null) {
+
+            throw new LogicException(
+                'SocioService no recibió el UsuarioRepository.'
+            );
+        }
+
+        return $this->usuarioRepository;
+    }
+
+    // Genera un número de socio automático.
+    // Ejemplo: S-2026-0457
     private function generarNumeroSocio(): string
     {
-        // Genera un número con el siguiente formato:
-        //
-        // S-AAAA-NNNN
-        //
-        // S       = identifica que es un socio.
-        // date('Y') = año actual.
-        // random_int() = número aleatorio entre 1 y 9999.
-        // str_pad() = completa con ceros hasta tener 4 números.
         return 'S-' . date('Y') . '-' .
             str_pad(
                 (string) random_int(1, 9999),
@@ -115,4 +208,3 @@ class SocioService
             );
     }
 }
-

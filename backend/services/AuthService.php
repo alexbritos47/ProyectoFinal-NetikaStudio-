@@ -77,6 +77,18 @@ class AuthService
         // Guarda los datos del usuario en la sesión.
         // $_SESSION permite mantener información del usuario
         // mientras permanece conectado.
+        // Genera un id de sesión nuevo al iniciar sesión.
+        // Evita que alguien reutilice un id de sesión anterior.
+        // Si es un socio, se guarda también su id_socio para que el portal
+        // sepa qué ficha pedir (/api/socios/{id_socio}).
+        if ($usuario['rol'] === 'socio') {
+            $usuario['id_socio'] = $this->repository->obtenerIdSocio(
+                (int) $usuario['id_usuario']
+            );
+        }
+
+        session_regenerate_id(true);
+
         $_SESSION['usuario'] = $usuario;
 
 
@@ -113,4 +125,3 @@ class AuthService
         return $_SESSION['usuario'] ?? null;
     }
 }
-

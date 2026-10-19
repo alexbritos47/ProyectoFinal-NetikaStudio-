@@ -97,16 +97,50 @@ class SocioController
         }
 
         // Llama al Service para registrar el nuevo socio.
-        // Guarda el ID generado en $id.
-        $id = $this->service->registrarSocio($datos);
+        // Si algo no se puede guardar (usuario repetido, documento
+        // repetido, etc.) responde con un error claro en vez de un 500.
+        try {
+
+            $id = $this->service->registrarSocio($datos);
+
+        } catch (InvalidArgumentException $e) {
+
+            http_response_code(400);
+            echo json_encode(["mensaje" => $e->getMessage()]);
+            return;
+
+        // OJO: PDOException va ANTES que RuntimeException porque es un
+        // tipo de RuntimeException; si no, nunca se llegaría a este bloque.
+        } catch (PDOException $e) {
+
+            // 23000 = valor repetido en una columna UNIQUE.
+            if ($e->getCode() === '23000') {
+
+                http_response_code(409);
+                echo json_encode([
+                    "mensaje" => "Ya existe un socio con ese número de documento o número de socio."
+                ]);
+                return;
+            }
+
+            throw $e;
+
+        } catch (RuntimeException $e) {
+
+            http_response_code(409);
+            echo json_encode(["mensaje" => $e->getMessage()]);
+            return;
+        }
 
         // Código 201 significa que se creó correctamente.
         http_response_code(201);
 
-        // Devuelve un mensaje de éxito y el ID del socio creado.
+        // Devuelve un mensaje de éxito, el ID del socio y, si se creó
+        // o vinculó un acceso al portal, el ID de ese usuario.
         echo json_encode([
             "mensaje" => "Socio registrado correctamente",
-            "id_socio" => $id
+            "id_socio" => $id,
+            "id_usuario" => $this->service->ultimoIdUsuario
         ]);
     }
 
@@ -150,7 +184,35 @@ class SocioController
 
         // Llama al Service para actualizar el socio.
         // Le pasa el ID y los nuevos datos.
-        $this->service->actualizarSocio($id, $datos);
+        try {
+
+            $this->service->actualizarSocio($id, $datos);
+
+        } catch (InvalidArgumentException $e) {
+
+            http_response_code(400);
+            echo json_encode(["mensaje" => $e->getMessage()]);
+            return;
+
+        } catch (PDOException $e) {
+
+            if ($e->getCode() === '23000') {
+
+                http_response_code(409);
+                echo json_encode([
+                    "mensaje" => "Ya existe un socio con ese número de documento o número de socio."
+                ]);
+                return;
+            }
+
+            throw $e;
+
+        } catch (RuntimeException $e) {
+
+            http_response_code(409);
+            echo json_encode(["mensaje" => $e->getMessage()]);
+            return;
+        }
 
         // Devuelve un mensaje indicando que se actualizó correctamente.
         echo json_encode(["mensaje" => "Socio actualizado correctamente"]);
@@ -196,10 +258,27 @@ class SocioController
     // Recibe el ID del socio que se quiere eliminar.
     {
         // Llama al Service para eliminar el socio.
-        $this->service->eliminarSocio($id);
+        // Si el socio ya tiene recibos, pagos o cobranzas, la base de datos
+        // no deja borrarlo (clave foránea): se responde con un mensaje claro.
+        try {
+
+            $this->service->eliminarSocio($id);
+
+        } catch (PDOException $e) {
+
+            if ($e->getCode() === '23000') {
+
+                http_response_code(409);
+                echo json_encode([
+                    "mensaje" => "No se puede eliminar: el socio tiene recibos, pagos o cobranzas registrados."
+                ]);
+                return;
+            }
+
+            throw $e;
+        }
 
         // Devuelve un mensaje indicando que fue eliminado correctamente.
         echo json_encode(["mensaje" => "Socio eliminado correctamente"]);
     }
 }
-

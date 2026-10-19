@@ -95,6 +95,14 @@ if (is_readable($envFile)) {
 //
 // Permite utilizar $_SESSION para mantener información
 // del usuario que inició sesión.
+// Seguridad de la cookie de sesión:
+// - httponly: JavaScript no puede leerla.
+// - samesite Lax: el navegador no la manda desde otros sitios.
+session_set_cookie_params([
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
+
 session_start();
 
 
@@ -153,6 +161,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // require_once significa que el archivo
 // se incluye una sola vez.
 require_once __DIR__ . '/database/Database.php';
+
+// Carga el middleware que controla sesión y roles.
+require_once __DIR__ . '/middleware/AuthMiddleware.php';
 
 
 // ======================================================
@@ -369,7 +380,9 @@ try {
     $usuarioService = new UsuarioService($usuarioRepository);
 
     // Crea el servicio de socios.
-    $socioService = new SocioService($socioRepository);
+    // Recibe también el repositorio de usuarios para crear/vincular
+    // el acceso del socio al portal.
+    $socioService = new SocioService($socioRepository, $usuarioRepository);
 
     // Crea el servicio de categorías.
     $categoriaService = new CategoriaService($categoriaRepository);
@@ -487,6 +500,12 @@ try {
     $uri = $_SERVER['REQUEST_URI'];
 
 
+    // Antes de atender la ruta, comprueba que haya sesión
+    // y que el rol del usuario tenga permiso.
+    // Si no lo tiene, responde 401/403 y corta acá.
+    AuthMiddleware::proteger($method, $uri, $db);
+
+
     // Envía el método, la URL y los controladores
     // al sistema de rutas.
     //
@@ -517,7 +536,7 @@ try {
             "Error de conexión o de base de datos",
 
         // Mensaje específico de la excepción.
-        "detalle" => $e->getMessage(),
+        "detalle" => getenv('APP_DEBUG') === '1' ? $e->getMessage() : null,
     ]);
 
 
@@ -539,7 +558,6 @@ try {
         "mensaje" => "Error interno del servidor",
 
         // Detalle del error.
-        "detalle" => $e->getMessage(),
+        "detalle" => getenv('APP_DEBUG') === '1' ? $e->getMessage() : null,
     ]);
 }
-

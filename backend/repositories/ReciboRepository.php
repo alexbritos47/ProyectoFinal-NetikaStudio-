@@ -63,6 +63,52 @@ class ReciboRepository
     }
 
 
+    // Lista recibos aplicando filtros opcionales.
+    // $filtros puede tener: id_socio, estado, periodo, anio.
+    // Todos los valores viajan como parámetros (nunca se pegan en el SQL).
+    public function obtenerFiltrados(array $filtros): array
+    {
+        $condiciones = [];
+        $parametros = [];
+
+        if (isset($filtros['id_socio'])) {
+            $condiciones[] = 'id_socio = :id_socio';
+            $parametros['id_socio'] = $filtros['id_socio'];
+        }
+
+        if (isset($filtros['estado'])) {
+            $condiciones[] = 'estado = :estado';
+            $parametros['estado'] = $filtros['estado'];
+        }
+
+        if (isset($filtros['periodo'])) {
+            $condiciones[] = 'periodo = :periodo';
+            $parametros['periodo'] = $filtros['periodo'];
+        }
+
+        if (isset($filtros['anio'])) {
+            // El período tiene el formato 2026-09: se busca por el año.
+            $condiciones[] = 'periodo LIKE :anio';
+            $parametros['anio'] = $filtros['anio'] . '-%';
+        }
+
+        $sql = "SELECT id_recibo, numero_recibo, id_socio, periodo, importe,
+                       fecha_vencimiento, estado, fecha_pago
+                FROM RECIBO";
+
+        if (!empty($condiciones)) {
+            $sql .= ' WHERE ' . implode(' AND ', $condiciones);
+        }
+
+        $sql .= ' ORDER BY fecha_vencimiento DESC';
+
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->execute($parametros);
+
+        return $stmt->fetchAll();
+    }
+
+
     public function obtenerPorId(int $id): array|false
     // Busca un recibo por su ID.
     // Recibe un número entero.
@@ -493,4 +539,3 @@ class ReciboRepository
         // (float) convierte el resultado a número decimal.
     }
 }
-

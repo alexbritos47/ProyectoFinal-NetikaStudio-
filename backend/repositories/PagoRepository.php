@@ -71,6 +71,55 @@ class PagoRepository
     }
 
 
+    // Lista pagos aplicando filtros opcionales.
+    // $filtros puede tener: id_socio, metodo_pago, anulado (0 o 1),
+    // desde (fecha y hora, inclusive) y hasta_exclusivo (fecha y hora, no incluida).
+    public function obtenerFiltrados(array $filtros): array
+    {
+        $condiciones = [];
+        $parametros = [];
+
+        if (isset($filtros['id_socio'])) {
+            $condiciones[] = 'id_socio = :id_socio';
+            $parametros['id_socio'] = $filtros['id_socio'];
+        }
+
+        if (isset($filtros['metodo_pago'])) {
+            $condiciones[] = 'metodo_pago = :metodo_pago';
+            $parametros['metodo_pago'] = $filtros['metodo_pago'];
+        }
+
+        if (isset($filtros['anulado'])) {
+            $condiciones[] = 'anulado = :anulado';
+            $parametros['anulado'] = $filtros['anulado'];
+        }
+
+        if (isset($filtros['desde'])) {
+            $condiciones[] = 'fecha_pago >= :desde';
+            $parametros['desde'] = $filtros['desde'];
+        }
+
+        if (isset($filtros['hasta_exclusivo'])) {
+            $condiciones[] = 'fecha_pago < :hasta_exclusivo';
+            $parametros['hasta_exclusivo'] = $filtros['hasta_exclusivo'];
+        }
+
+        $sql = "SELECT id_pago, id_socio, id_usuario, monto_total, metodo_pago, fecha_pago, anulado
+                FROM PAGO";
+
+        if (!empty($condiciones)) {
+            $sql .= ' WHERE ' . implode(' AND ', $condiciones);
+        }
+
+        $sql .= ' ORDER BY fecha_pago DESC';
+
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->execute($parametros);
+
+        return $stmt->fetchAll();
+    }
+
+
     public function obtenerPorId(int $id): array|false
     // Busca un pago específico por su ID.
     // Puede devolver un array si lo encuentra
@@ -381,4 +430,3 @@ class PagoRepository
         // o false si hubo un problema.
     }
 }
-

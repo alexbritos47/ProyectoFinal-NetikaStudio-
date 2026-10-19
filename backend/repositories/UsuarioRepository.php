@@ -78,6 +78,21 @@ class UsuarioRepository
 
 
     // Busca un usuario por su dirección de correo electrónico.
+    // Devuelve el id_socio vinculado a un usuario (rol socio), o null.
+    public function obtenerIdSocio(int $idUsuario): ?int
+    {
+        $stmt = $this->conexion->prepare(
+            "SELECT id_socio FROM SOCIO WHERE id_usuario = :id_usuario"
+        );
+
+        $stmt->execute(['id_usuario' => $idUsuario]);
+
+        $fila = $stmt->fetch();
+
+        return $fila ? (int) $fila['id_socio'] : null;
+    }
+
+
     public function obtenerPorCorreo(string $email): array|false
     {
         // Prepara una consulta para buscar por email.
@@ -227,4 +242,3 @@ class UsuarioRepository
         return $stmt->execute(['id' => $id]);
     }
 }
-
