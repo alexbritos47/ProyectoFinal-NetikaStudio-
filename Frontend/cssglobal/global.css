@@ -879,3 +879,91 @@ button:disabled {
 .btn-subir:hover {
     background: var(--c-900);
 }
+
+/* ===== CONTACTO REDES FLOTANTE ===== */
+.contacto-flotante {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.social-btn {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,.4);
+  transition: transform .25s, box-shadow .25s;
+  animation: pulso 2s infinite;
+}
+
+.social-btn svg {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  z-index: 2;
+  transition: transform .3s;
+}
+
+/* Etiqueta que sale a la izquierda */
+.social-label {
+  position: absolute;
+  right: 70px;
+  top: 50%;
+  transform: translateY(-50%) translateX(15px);
+  background: #111;
+  color: #fff;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s, transform .25s;
+}
+
+.social-btn:hover {
+  transform: scale(1.18) translateX(-4px);
+  box-shadow: 0 10px 28px rgba(0,0,0,.55);
+  animation-play-state: paused;
+}
+
+.social-btn:hover svg {
+  transform: rotate(-12deg) scale(1.1);
+}
+
+.social-btn:hover .social-label {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Colores de cada red */
+.social-btn.wp { background: #25D366; --glow: 37,211,102; }
+.social-btn.fb { background: #1877F2; --glow: 24,119,242; }
+.social-btn.ig { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); --glow: 220,39,67; }
+
+/* Pulso animado */
+@keyframes pulso {
+  0%   { box-shadow: 0 6px 18px rgba(0,0,0,.4), 0 0 0 0 rgba(var(--glow), .7); }
+  70%  { box-shadow: 0 6px 18px rgba(0,0,0,.4), 0 0 0 16px rgba(var(--glow), 0); }
+  100% { box-shadow: 0 6px 18px rgba(0,0,0,.4), 0 0 0 0 rgba(var(--glow), 0); }
+}
+
+/* Celular: más chicos y sin etiqueta */
+@media (max-width: 600px) {
+  .contacto-flotante { right: 14px; bottom: 14px; gap: 10px; }
+  .social-btn { width: 50px; height: 50px; }
+  .social-btn svg { width: 24px; height: 24px; }
+  .social-label { display: none; }
+}
