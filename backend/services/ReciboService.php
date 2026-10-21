@@ -238,6 +238,79 @@ class ReciboService
     }
 
 
+    /**
+     * Genera los recibos de un socio recién creado.
+     *
+     * Crea un recibo por cada mes, desde el mes de su fecha de ingreso
+     * hasta diciembre de ese mismo año. El importe es la cuota de su
+     * categoría y el vencimiento es el día 10 de cada mes (igual que en
+     * generarAnuales). Si ya existe un recibo para un período, lo omite.
+     *
+     * No abre transacción: la abre quien lo llama (SocioService), para que
+     * el alta del socio y sus recibos se guarden juntos o no se guarde nada.
+     */
+    public function generarParaSocio(
+        int $idSocio,
+        int $idCategoria,
+        string $fechaIngreso
+    ): array {
+
+        $categoria = $this->categorias->obtenerPorId($idCategoria);
+
+        if (!$categoria) {
+
+            throw new InvalidArgumentException(
+                'La categoría indicada no existe.'
+            );
+        }
+
+        $importe = $categoria['monto_cuota'];
+
+        $marca = strtotime($fechaIngreso);
+
+        if ($marca === false) {
+
+            throw new InvalidArgumentException(
+                'La fecha de ingreso no es válida.'
+            );
+        }
+
+        $anio = (int) date('Y', $marca);
+        $mesInicial = (int) date('n', $marca);
+
+        $generados = 0;
+        $omitidos = 0;
+
+        for ($mes = $mesInicial; $mes <= 12; $mes++) {
+
+            $periodo = sprintf('%04d-%02d', $anio, $mes);
+
+            if ($this->repository->existePeriodo($idSocio, $periodo)) {
+
+                $omitidos++;
+                continue;
+            }
+
+            $this->repository->crear([
+                'numero_recibo'     => $this->generarNumeroRecibo($anio, $idSocio, $mes),
+                'id_socio'          => $idSocio,
+                'periodo'           => $periodo,
+                'importe'           => $importe,
+                'fecha_vencimiento' => sprintf('%04d-%02d-10', $anio, $mes),
+            ]);
+
+            $generados++;
+        }
+
+        return [
+            'generados' => $generados,
+            'omitidos'  => $omitidos,
+            'desde'     => sprintf('%04d-%02d', $anio, $mesInicial),
+            'hasta'     => sprintf('%04d-12', $anio),
+        ];
+    }
+
+
     // Anula un recibo existente.
     // Recibe el ID del recibo.
     // Devuelve true o false.

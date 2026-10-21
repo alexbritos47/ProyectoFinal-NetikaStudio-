@@ -140,7 +140,8 @@ class SocioController
         echo json_encode([
             "mensaje" => "Socio registrado correctamente",
             "id_socio" => $id,
-            "id_usuario" => $this->service->ultimoIdUsuario
+            "id_usuario" => $this->service->ultimoIdUsuario,
+            "recibos" => $this->service->ultimosRecibos
         ]);
     }
 

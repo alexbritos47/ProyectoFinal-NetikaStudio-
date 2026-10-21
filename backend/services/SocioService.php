@@ -11,13 +11,19 @@ class SocioService
     // entra al portal. Es opcional para no romper código anterior.
     private ?UsuarioRepository $usuarioRepository;
 
+    // Sirve para generar los recibos del socio al darlo de alta.
+    // Es opcional para no romper código anterior.
+    private ?ReciboService $reciboService;
+
     // Constructor de la clase.
     public function __construct(
         SocioRepository $repository,
-        ?UsuarioRepository $usuarioRepository = null
+        ?UsuarioRepository $usuarioRepository = null,
+        ?ReciboService $reciboService = null
     ) {
         $this->repository = $repository;
         $this->usuarioRepository = $usuarioRepository;
+        $this->reciboService = $reciboService;
     }
 
     // Obtiene todos los socios.
@@ -37,12 +43,18 @@ class SocioService
     // Hay tres formas de usarlo:
     //  1. Solo el socio (sin acceso al portal).
     //  2. Con nombre_usuario + contrasena: crea también el usuario
-    //     del portal (rol socio) y lo vincula. Todo en una transacción,
-    //     así no queda un usuario suelto si falla el alta del socio.
+    //     del portal (rol socio) y lo vincula.
     //  3. Con id_usuario: vincula un usuario que ya existe.
+    //
+    // Todo ocurre en UNA transacción: el usuario (si se crea), el socio y
+    // sus recibos. Si algo falla no queda nada a medias.
+    //
+    // Si el socio se crea como activo, se le generan automáticamente los
+    // recibos desde su mes de ingreso hasta diciembre de ese año.
     //
     // Devuelve el ID del socio creado.
     // El usuario creado (si lo hay) queda en $this->ultimoIdUsuario.
+    // El resumen de recibos queda en $this->ultimosRecibos.
     public function registrarSocio(array $datos): int
     {
         if (empty($datos['numero_socio'])) {
@@ -50,35 +62,53 @@ class SocioService
             $datos['numero_socio'] = $this->generarNumeroSocio();
         }
 
+        // Se completan aquí los valores por defecto que usa el Repository,
+        // para generar los recibos con los mismos datos que se guardan.
+        $datos['fecha_ingreso'] = $datos['fecha_ingreso'] ?? date('Y-m-d');
+        $datos['estado'] = $datos['estado'] ?? 'activo';
+
         $this->ultimoIdUsuario = null;
+        $this->ultimosRecibos = null;
 
-        // Caso 2: crear usuario y socio juntos.
-        if (!empty($datos['nombre_usuario'])) {
+        return $this->repository->transaccion(function () use ($datos) {
 
-            return $this->repository->transaccion(function () use ($datos) {
+            // Caso 2: crear usuario y socio juntos.
+            if (!empty($datos['nombre_usuario'])) {
 
                 $datos['id_usuario'] = $this->crearUsuarioDelSocio($datos);
 
                 $this->ultimoIdUsuario = $datos['id_usuario'];
 
-                return $this->repository->crear($datos);
-            });
-        }
+            // Caso 3: vincular un usuario existente.
+            } elseif (!empty($datos['id_usuario'])) {
 
-        // Caso 3: vincular un usuario existente.
-        if (!empty($datos['id_usuario'])) {
+                $this->comprobarUsuarioVinculable((int) $datos['id_usuario'], null);
 
-            $this->comprobarUsuarioVinculable((int) $datos['id_usuario'], null);
+                $this->ultimoIdUsuario = (int) $datos['id_usuario'];
+            }
 
-            $this->ultimoIdUsuario = (int) $datos['id_usuario'];
-        }
+            $idSocio = $this->repository->crear($datos);
 
-        // Caso 1 (y 3 ya validado): solo se crea el socio.
-        return $this->repository->crear($datos);
+            // Recibos automáticos (solo para socios activos).
+            if ($this->reciboService !== null && $datos['estado'] === 'activo') {
+
+                $this->ultimosRecibos = $this->reciboService->generarParaSocio(
+                    $idSocio,
+                    (int) $datos['id_categoria'],
+                    $datos['fecha_ingreso']
+                );
+            }
+
+            return $idSocio;
+        });
     }
 
     // ID del usuario del portal creado o vinculado en el último alta.
     public ?int $ultimoIdUsuario = null;
+
+    // Resumen de los recibos generados en el último alta
+    // (null si no se generó ninguno).
+    public ?array $ultimosRecibos = null;
 
     // Actualiza los datos de un socio.
     // Si se manda id_usuario, se comprueba que se pueda vincular.

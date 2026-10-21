@@ -379,14 +379,6 @@ try {
     // Crea el servicio de usuarios.
     $usuarioService = new UsuarioService($usuarioRepository);
 
-    // Crea el servicio de socios.
-    // Recibe también el repositorio de usuarios para crear/vincular
-    // el acceso del socio al portal.
-    $socioService = new SocioService($socioRepository, $usuarioRepository);
-
-    // Crea el servicio de categorías.
-    $categoriaService = new CategoriaService($categoriaRepository);
-
     // Crea el servicio de recibos.
     //
     // Necesita:
@@ -398,6 +390,19 @@ try {
         $socioRepository,
         $categoriaRepository
     );
+
+    // Crea el servicio de socios.
+    // Recibe también el repositorio de usuarios para crear/vincular
+    // el acceso del socio al portal, y el servicio de recibos para
+    // generar sus recibos automáticamente al darlo de alta.
+    $socioService = new SocioService(
+        $socioRepository,
+        $usuarioRepository,
+        $reciboService
+    );
+
+    // Crea el servicio de categorías.
+    $categoriaService = new CategoriaService($categoriaRepository);
 
     // Crea el servicio de pagos.
     $pagoService = new PagoService($pagoRepository);
