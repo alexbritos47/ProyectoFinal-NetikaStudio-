@@ -61,13 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const nueva = prompt('Ingresá la nueva contraseña:');
     if (nueva && nueva.trim()) {
       datoPassword.textContent = '••••••••';
-      alert('Contraseña actualizada (pendiente de conectar con el backend).');
+      alerta("info", "Contraseña", "Contraseña actualizada (pendiente de conectar con el backend).");
     }
   });
 
   btnGuardarPerfil.addEventListener('click', () => {
     guardarPerfil(perfil);
-    alert('Perfil guardado.');
+    alerta("success", "Perfil guardado", "Los cambios se guardaron correctamente.");
   });
 
   // ---------- Logout ----------

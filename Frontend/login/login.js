@@ -9,11 +9,6 @@ setTimeout(() => {
 
 // ===== UTILIDADES =====
 const CLAVE_USUARIO_RECORDADO = "usuarioRecordado";
-const SWAL_BASE = { background: "#111827", color: "#fff", confirmButtonColor: "#29aae1" };
-
-function alerta(icon, title, text) {
-  return Swal.fire({ icon, title, text, ...SWAL_BASE });
-}
 
 // Recuadro con el usuario (nunca se muestra la contraseña)
 function cajaUsuario(user) {
@@ -60,7 +55,7 @@ async function preguntarRecordar(user) {
     cancelButtonText: "No",
     cancelButtonColor: "#475569",
     allowOutsideClick: false,
-    ...SWAL_BASE
+    ...window.SWAL_BASE
   });
 
   try {

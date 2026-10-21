@@ -7,6 +7,20 @@
   <link rel="stylesheet" href="../../cssglobal/global.css">
   <link rel="stylesheet" href="admin.css">
   <style>
+    /* Barra para generar los recibos del año */
+    .pagina-facturaadmin .barra-generar {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 16px;
+      font-size: 13px; color: var(--texto-suave);
+    }
+    .pagina-facturaadmin .barra-generar input {
+      width: 90px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--c-300);
+      background: rgba(144,202,249,.12); font-size: 14px; color: var(--texto);
+    }
+    .pagina-facturaadmin .btn-generar {
+      border: none; background: var(--c-500); color: var(--c-100); padding: 9px 18px; border-radius: 999px;
+      font-weight: 700; font-size: 13px; cursor: pointer;
+    }
+    .pagina-facturaadmin .btn-generar:disabled { opacity: .6; cursor: default; }
   </style>
 </head>
 <body class="pagina-facturaadmin">
@@ -41,6 +55,12 @@
         <div class="num" id="cantImpagas">0</div>
         <div class="label">Impagas / vencidas</div>
       </div>
+    </div>
+
+    <div class="barra-generar">
+      <span>Generar recibos del año</span>
+      <input type="number" id="anioRecibos" min="2000" max="2100">
+      <button class="btn-generar" id="btnGenerarRecibos">Generar recibos</button>
     </div>
 
     <div class="filtros">
@@ -79,6 +99,8 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../../js/alertas.js"></script>
   <script src="Facturaadmin.js"></script>
 </body>
 </html>

@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const error = validar(valores);
         if (error) {
-            alert(error);
+            alerta("warning", "Revisá los datos", error);
             return;
         }
 
@@ -154,13 +154,13 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             Object.assign(socio, cambios);
             salirEdicion();
-            alert("Tus datos fueron actualizados.");
+            alerta("success", "Perfil actualizado", "Tus datos fueron actualizados.");
 
         } catch (e) {
             console.error("Error al guardar:", e);
             botonEditar.disabled = false;
             botonEditar.textContent = "Guardar cambios";
-            alert("No se pudieron guardar los cambios: " + e.message);
+            alerta("error", "No se pudieron guardar los cambios", e.message);
         }
     }
 
@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         socio = await apiPortal("/socios/" + usuario.id_socio);
     } catch (error) {
         console.error("Error al leer el perfil:", error);
-        alert("No se pudieron cargar tus datos: " + error.message);
+        alerta("error", "No se pudieron cargar tus datos", error.message);
         return;
     }
 

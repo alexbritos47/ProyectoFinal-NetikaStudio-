@@ -85,6 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const buscarFactura = document.getElementById('buscarFactura');
   const botonesFiltro = document.querySelectorAll('.filtros button[data-filtro]');
   const btnLogout = document.getElementById('btnLogout');
+  const anioRecibos = document.getElementById('anioRecibos');
+  const btnGenerarRecibos = document.getElementById('btnGenerarRecibos');
+
+  anioRecibos.value = new Date().getFullYear();
 
   function formatoMonto(n) {
     return '$' + n.toLocaleString('es-UY');
@@ -164,12 +168,38 @@ document.addEventListener('DOMContentLoaded', () => {
   let toastTimeout;
 
   function mostrarToast(titulo, detalle) {
-    toastTitulo.textContent = titulo;
-    toastDetalle.textContent = detalle;
-    toastAdmin.classList.add('mostrar');
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => toastAdmin.classList.remove('mostrar'), 4000);
+    return window.mostrarToast(titulo, detalle);
   }
+
+  // ---------- Generar recibos del año ----------
+  // Crea los 12 recibos mensuales de cada socio ACTIVO. Los que ya existen no se duplican.
+  btnGenerarRecibos.addEventListener('click', async () => {
+    const anio = Number(anioRecibos.value);
+    if (!Number.isInteger(anio) || anio < 2000 || anio > 2100) {
+      mostrarToast('Año no válido', 'Escribí un año entre 2000 y 2100.');
+      return;
+    }
+    const confirmacion = await confirmarAccion({
+      title: '¿Generar recibos?',
+      text: `Se van a generar los recibos de ${anio} para todos los socios activos. Los que ya existen no se duplican. ¿Continuar?`,
+      confirmButtonText: 'Sí, generar'
+    });
+    if (!confirmacion.isConfirmed) return;
+
+    btnGenerarRecibos.disabled = true;
+    try {
+      const r = await api('/recibos/generar-anuales', {
+        method: 'POST',
+        body: JSON.stringify({ anio })
+      });
+      await cargarFacturas();
+      mostrarToast('Recibos generados', `Nuevos: ${r.generados} · Ya existían: ${r.omitidos}`);
+    } catch (err) {
+      mostrarToast('No se pudieron generar', err.message);
+    } finally {
+      btnGenerarRecibos.disabled = false;
+    }
+  });
 
   // ---------- Marcar factura como pagada ----------
   // Registra un pago real (tabla PAGO) que cancela ese recibo.

@@ -288,8 +288,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!socio) return;
 
     if (boton.classList.contains('eliminar')) {
-      const confirmar = confirm(`¿Quitar a ${socio.nombre} del club?`);
-      if (!confirmar) return;
+      const confirmacion = await confirmarAccion({
+        title: '¿Eliminar socio?',
+        text: `¿Quitar a ${socio.nombre} del club?`,
+        confirmButtonText: 'Sí, eliminar'
+      });
+      if (!confirmacion.isConfirmed) return;
       try {
         await api('/socios/' + id, { method: 'DELETE' });
         socios = socios.filter(s => s.id !== id);
@@ -304,11 +308,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!socio.vencidos.length) return;
       const total = socio.vencidos.reduce((suma, r) => suma + r.importe, 0);
       const cuotas = socio.vencidos.length;
-      const confirmar = confirm(
-        `¿Registrar el pago de ${cuotas} ${cuotas === 1 ? 'cuota vencida' : 'cuotas vencidas'} de ${socio.nombre} ` +
-        `por $${total.toLocaleString('es-UY')}?`
-      );
-      if (!confirmar) return;
+      const confirmacion = await confirmarAccion({
+        title: '¿Registrar el pago?',
+        text: `¿Registrar el pago de ${cuotas} ${cuotas === 1 ? 'cuota vencida' : 'cuotas vencidas'} de ${socio.nombre} por $${total.toLocaleString('es-UY')}?`,
+        confirmButtonText: 'Sí, registrar pago'
+      });
+      if (!confirmacion.isConfirmed) return;
 
       boton.disabled = true;
       try {
@@ -337,11 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let toastTimeout;
 
   function mostrarToast(titulo, detalle) {
-    toastTitulo.textContent = titulo;
-    toastDetalle.textContent = detalle;
-    toastAdmin.classList.add('mostrar');
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => toastAdmin.classList.remove('mostrar'), 4000);
+    return window.mostrarToast(titulo, detalle);
   }
 
   // Si venimos de facturas-admin.html tras registrar un pago, mostramos el aviso acá también.
