@@ -10,42 +10,46 @@ El sistema busca mejorar la organización de la información y facilitar el cont
 
 ## Objetivos
 
-* Mejorar la gestión de socios.
-* Facilitar el control de cuotas y pagos.
-* Organizar mejor la información.
-* Crear una solución sencilla y fácil de utilizar.
+- Mejorar la gestión de socios.
+- Facilitar el control de cuotas y pagos.
+- Organizar mejor la información.
+- Crear una solución sencilla y fácil de utilizar.
 
 ## Estado del proyecto
 
 El proyecto se encuentra actualmente en **desarrollo**.
 
-Se realizó el relevamiento y análisis de las necesidades del club y actualmente se está trabajando en la implementación del sistema, incluyendo el desarrollo del **backend**.
+Se realizó el relevamiento y análisis de las necesidades del club y actualmente se está trabajando en la implementación del sistema, incluyendo el desarrollo del **backend** y la integración con la base de datos.
 
 ## Tecnologías utilizadas
 
 Por el momento, el proyecto utiliza:
 
-* **HTML**
-* **CSS**
-* **JavaScript**
-* **PHP**
+- **HTML** — Estructura de las páginas web.
+- **CSS** — Diseño y estilos de la interfaz.
+- **JavaScript** — Interactividad del sistema.
+- **PHP** — Desarrollo del backend y procesamiento de datos.
+- **MySQL** — Gestión y almacenamiento de la base de datos.
+- **Docker** — Configuración y ejecución de los servicios del proyecto mediante contenedores.
+- **XAMPP** — Entorno de desarrollo local para ejecutar PHP y administrar MySQL.
 
 ## Próximas etapas
 
-* Continuar implementando el backend.
-* Continuar con el desarrollo del sistema.
-* Realizar pruebas.
-* Corregir errores.
-* Finalizar el proyecto.
-* Presentar el proyecto.
+- Continuar implementando el backend.
+- Integrar y completar las funcionalidades de la base de datos.
+- Continuar con el desarrollo del sistema.
+- Realizar pruebas.
+- Corregir errores.
+- Finalizar el proyecto.
+- Presentar el proyecto.
 
 ## Integrantes
 
-* **Alex Britos** — Coordinador
-* **Nahuel Alba** — Subcoordinador
-* **Jonathan López**
-* **Santiago Vilar**
-* **Bruno Méndez**
+- **Alex Britos** — Coordinador
+- **Nahuel Alba** — Subcoordinador
+- **Jonathan López**
+- **Santiago Vilar**
+- **Bruno Méndez**
 
 ## Proyecto educativo
 
