@@ -589,14 +589,21 @@ nav.main-nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-8px
    ============================================================ */
 body.pagina-inicio { background: linear-gradient(160deg, var(--c-900) 0%, var(--c-500) 55%, var(--c-300) 100%); }
 
-/* --- Hero (bienvenida + descripción) --- */
-.pagina-inicio .hero-overlay { background: linear-gradient(to bottom, rgba(13,71,161,.45), rgba(13,71,161,.1)); padding-top: 1px; padding-bottom: 1px; }
-.pagina-inicio .Bienvenida {
-  margin: 2.5rem 2rem 1rem; font-size: clamp(32px, 5vw, 54px); font-weight: 800; color: var(--c-100);
-  text-align: center; letter-spacing: .5px; text-shadow: 0 4px 18px rgba(13,71,161,.55);
+/* --- Hero (bienvenida + descripción) ---
+   CAMBIO: ahora tiene el mismo fondo claro que "Sobre nosotros" (var(--c-100)),
+   con el mismo borde inferior, y los textos pasaron a azul oscuro para que se lean. */
+.pagina-inicio .hero-overlay {
+  background: var(--c-100);
+  border-bottom: 3px solid var(--c-500);
+  padding-top: 1px;
+  padding-bottom: 1px;
 }
-.pagina-inicio .titulodescripcion { margin: 0 2rem; font-size: 18px; color: rgba(227,242,253,.92); text-align: center; line-height: 1.6; text-shadow: 0 1px 6px rgba(13,71,161,.5); }
-.pagina-inicio .descripcion { margin: 1rem 2rem 2rem; font-size: 20px; color: rgba(227,242,253,.92); text-align: center; line-height: 1.55; text-shadow: 0 1px 6px rgba(13,71,161,.5); }
+.pagina-inicio .Bienvenida {
+  margin: 2.5rem 2rem 1rem; font-size: clamp(32px, 5vw, 54px); font-weight: 800; color: var(--c-900);
+  text-align: center; letter-spacing: .5px;
+}
+.pagina-inicio .titulodescripcion { margin: 0 2rem; font-size: 18px; color: var(--texto-suave); text-align: center; line-height: 1.6; }
+.pagina-inicio .descripcion { margin: 1rem 2rem 2rem; font-size: 20px; color: var(--texto-suave); text-align: center; line-height: 1.55; }
 
 /* --- Sección "beneficios" (lista de tarjetas) --- */
 .pagina-inicio .beneficios {
