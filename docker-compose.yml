@@ -1,6 +1,8 @@
 services:
   api:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: dockerfile
     container_name: maragato_api
     ports:
       - "8080:80"
