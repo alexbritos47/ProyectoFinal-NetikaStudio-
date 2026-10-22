@@ -589,14 +589,21 @@ nav.main-nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-8px
    ============================================================ */
 body.pagina-inicio { background: linear-gradient(160deg, var(--c-900) 0%, var(--c-500) 55%, var(--c-300) 100%); }
 
-/* --- Hero (bienvenida + descripción) --- */
-.pagina-inicio .hero-overlay { background: linear-gradient(to bottom, rgba(13,71,161,.45), rgba(13,71,161,.1)); padding-top: 1px; padding-bottom: 1px; }
-.pagina-inicio .Bienvenida {
-  margin: 2.5rem 2rem 1rem; font-size: clamp(32px, 5vw, 54px); font-weight: 800; color: var(--c-100);
-  text-align: center; letter-spacing: .5px; text-shadow: 0 4px 18px rgba(13,71,161,.55);
+/* --- Hero (bienvenida + descripción) ---
+   CAMBIO: ahora tiene el mismo fondo claro que "Sobre nosotros" (var(--c-100)),
+   con el mismo borde inferior, y los textos pasaron a azul oscuro para que se lean. */
+.pagina-inicio .hero-overlay {
+  background: var(--c-100);
+  border-bottom: 3px solid var(--c-500);
+  padding-top: 1px;
+  padding-bottom: 1px;
 }
-.pagina-inicio .titulodescripcion { margin: 0 2rem; font-size: 18px; color: rgba(227,242,253,.92); text-align: center; line-height: 1.6; text-shadow: 0 1px 6px rgba(13,71,161,.5); }
-.pagina-inicio .descripcion { margin: 1rem 2rem 2rem; font-size: 20px; color: rgba(227,242,253,.92); text-align: center; line-height: 1.55; text-shadow: 0 1px 6px rgba(13,71,161,.5); }
+.pagina-inicio .Bienvenida {
+  margin: 2.5rem 2rem 1rem; font-size: clamp(32px, 5vw, 54px); font-weight: 800; color: var(--c-900);
+  text-align: center; letter-spacing: .5px;
+}
+.pagina-inicio .titulodescripcion { margin: 0 2rem; font-size: 18px; color: var(--texto-suave); text-align: center; line-height: 1.6; }
+.pagina-inicio .descripcion { margin: 1rem 2rem 2rem; font-size: 20px; color: var(--texto-suave); text-align: center; line-height: 1.55; }
 
 /* --- Sección "beneficios" (lista de tarjetas) --- */
 .pagina-inicio .beneficios {
@@ -895,7 +902,8 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
 .pagina-perfil .estado-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--c-500); color: var(--c-100); display: flex; align-items: center; justify-content: center; font-weight: 800; box-shadow: var(--sombra-sm); }
 .pagina-perfil .estado-cuenta strong { font-size: 14px; }
 .pagina-perfil .estado-cuenta p { font-size: 13px; margin-top: 3px; color: var(--texto-suave); }
-.pagina-perfil .acciones { margin-top: 26px; display: flex; justify-content: flex-end; }
+.pagina-perfil .acciones { margin-top: 26px; display: flex; width: 100%; justify-content: flex-start; }
+.pagina-perfil .acciones #cerrarSesion { margin-left: auto; } /* Cerrar sesión siempre en la esquina derecha */
 .pagina-perfil .btn-principal {
   border: none; background: linear-gradient(135deg, var(--c-500), var(--c-900)); color: var(--c-100); padding: 13px 24px;
   border-radius: 999px; cursor: pointer; font-size: 14px; font-weight: 700; transition: .2s; box-shadow: 0 8px 20px rgba(33,150,243,.3);
@@ -964,6 +972,8 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
 }
 .toast-admin .toast-texto strong { display: block; margin-bottom: 2px; }
 .toast-admin .toast-texto span { color: rgba(227,242,253,.75); font-size: 12px; }
+.toast-admin.error { border-left-color: #e53935; }
+.toast-admin.error .toast-icono { background: #e53935; }
 
 /* ============================================================
    PÁGINA: PANEL ADMIN — SOCIOS  (body.pagina-sociosadmin)
@@ -1152,6 +1162,12 @@ body.pagina-perfiladmin { font-family: 'Inter', Arial, Helvetica, sans-serif; ba
 /* campos que no se pueden modificar: sin borde */
 .pagina-perfiladmin .dato.dato-fijo, .pagina-perfiladmin .dato.dato-fijo:hover { border-color: transparent; background: rgba(144,202,249,.16); }
 .pagina-perfiladmin .password-container { justify-content: space-between; }
+/* Inputs dentro de las cajas de datos (correo y contraseña se editan acá, sin ventanas emergentes) */
+.pagina-perfiladmin .dato input { flex: 1; min-width: 0; width: 100%; height: 44px; border: none; background: transparent; font: inherit; color: inherit; outline: none; padding: 0; }
+.pagina-perfiladmin .dato:focus-within { border-color: var(--c-500); background: rgba(144,202,249,.26); }
+.pagina-perfiladmin .dato.invalido { border-color: #e53935; }
+.pagina-perfiladmin .bloque-password { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.pagina-perfiladmin .bloque-password[hidden] { display: none; }
 .pagina-perfiladmin .btn-password { border: none; background: transparent; color: var(--c-500); font-size: 13px; cursor: pointer; font-weight: 700; }
 .pagina-perfiladmin .btn-password:hover { color: var(--c-900); }
 .pagina-perfiladmin .acciones { margin-top: 26px; display: flex; justify-content: flex-end; }
