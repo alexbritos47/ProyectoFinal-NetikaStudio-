@@ -882,6 +882,8 @@ body.pagina-perfil { font-family: 'Inter', Arial, Helvetica, sans-serif; backgro
   transition: border var(--transicion), background var(--transicion);
 }
 .pagina-perfil .dato:hover { border-color: var(--c-500); background: rgba(144,202,249,.26); }
+/* campos que no se pueden modificar: sin borde */
+.pagina-perfil .dato.dato-fijo, .pagina-perfil .dato.dato-fijo:hover { border-color: transparent; background: rgba(144,202,249,.16); }
 .pagina-perfil .password-container { justify-content: space-between; } /* fila del dato "contraseña" con botón para cambiarla */
 .pagina-perfil .btn-password { border: none; background: transparent; color: var(--c-500); font-size: 13px; cursor: pointer; font-weight: 700; transition: color var(--transicion); }
 .pagina-perfil .btn-password:hover { color: var(--c-900); }
@@ -1147,6 +1149,8 @@ body.pagina-perfiladmin { font-family: 'Inter', Arial, Helvetica, sans-serif; ba
   transition: border var(--transicion), background var(--transicion);
 }
 .pagina-perfiladmin .dato:hover { border-color: var(--c-500); background: rgba(144,202,249,.26); }
+/* campos que no se pueden modificar: sin borde */
+.pagina-perfiladmin .dato.dato-fijo, .pagina-perfiladmin .dato.dato-fijo:hover { border-color: transparent; background: rgba(144,202,249,.16); }
 .pagina-perfiladmin .password-container { justify-content: space-between; }
 .pagina-perfiladmin .btn-password { border: none; background: transparent; color: var(--c-500); font-size: 13px; cursor: pointer; font-weight: 700; }
 .pagina-perfiladmin .btn-password:hover { color: var(--c-900); }
