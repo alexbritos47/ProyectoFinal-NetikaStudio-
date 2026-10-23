@@ -1358,3 +1358,11 @@ button:disabled {
   .social-btn svg { width: 24px; height: 24px; }
   .social-label { display: none; }
 }
+
+
+/* ---------- BOTÓN "VOLVER AL INICIO" dentro del nav (perfil y facturas) ---------- */
+nav.main-nav .nav-personal #nav-socio > a.btn-nav-volver {
+  border: 1px solid rgba(227,242,253,.5); background: rgba(227,242,253,.15); border-radius: 999px;
+  padding: 0 18px; height: 40px; font-weight: 600;
+}
+nav.main-nav .nav-personal #nav-socio > a.btn-nav-volver:hover { background: var(--c-100); color: var(--c-900); }
