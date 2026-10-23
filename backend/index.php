@@ -123,7 +123,7 @@ header('Content-Type: application/json; charset=utf-8');
 // Permite que los frontends puedan comunicarse
 // con el backend aunque estén en otro origen
 // durante el desarrollo.
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:3000');
 
 // Indica qué métodos HTTP permite la API.
 header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
