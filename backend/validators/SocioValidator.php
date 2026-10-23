@@ -47,6 +47,14 @@ class SocioValidator
             // guarda un mensaje de error.
             $errores['numero_documento'] =
                 'El número de documento es obligatorio.';
+
+        } elseif (
+            ($datos['tipo_documento'] ?? '') === 'CI' &&
+            !$this->esCedulaUruguaya($datos['numero_documento'])
+        ) {
+
+            $errores['numero_documento'] =
+                'La cédula no es válida. Ingresá una cédula uruguaya válida.';
         }
 
         // Comprueba si se indicó la categoría del socio.
@@ -100,6 +108,31 @@ class SocioValidator
         //
         // Si no hay errores, devuelve [].
         return $errores;
+    }
+
+    private function esCedulaUruguaya($documento): bool
+    {
+        if (!is_string($documento)) {
+            return false;
+        }
+
+        $documento = trim($documento);
+
+        if (!preg_match('/^(?:\d{8}|\d{7}-\d|\d\.\d{3}\.\d{3}-\d)$/', $documento)) {
+            return false;
+        }
+
+        $digitos = preg_replace('/\D/', '', $documento);
+        $pesos = [2, 9, 8, 7, 6, 3, 4];
+        $suma = 0;
+
+        for ($i = 0; $i < count($pesos); $i++) {
+            $suma += (int) $digitos[$i] * $pesos[$i];
+        }
+
+        $digitoVerificador = (10 - ($suma % 10)) % 10;
+
+        return (int) $digitos[7] === $digitoVerificador;
     }
 
     // Función que valida los datos enviados
