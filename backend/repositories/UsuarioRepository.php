@@ -242,3 +242,5 @@ class UsuarioRepository
         return $stmt->execute(['id' => $id]);
     }
 }
+
+
