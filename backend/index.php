@@ -122,7 +122,16 @@ header('Content-Type: application/json; charset=utf-8');
 // Permite que los frontends puedan comunicarse
 // con el backend aunque estén en otro origen
 // durante el desarrollo.
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:3000');
+
+$allowedOrigins = [ 'http://localhost:3000'];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+if (in_array($origin, $allowedOrigins, true)) {
+    header("Access-Control-Allow-Origin: $origin");
+    header('Vary: Origin');
+}
 
 // Indica qué métodos HTTP permite la API.
 header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');

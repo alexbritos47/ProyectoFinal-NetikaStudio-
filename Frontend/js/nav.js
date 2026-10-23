@@ -39,6 +39,12 @@
   // --- Menú del socio ---
   const navSocio = document.getElementById("nav-socio");
 
+  // En perfil y facturas: en vez del desplegable, botón "Volver al inicio"
+  if (nav.dataset.navPortal === "volver") {
+    navSocio.innerHTML = `<a href="../inicio/inicio.html" class="btn-nav-volver">&larr; Volver al inicio</a>`;
+    return;
+  }
+
   function pintarNavSocio(conSesion) {
     if (conSesion) {
       navSocio.className = "dropdown";
