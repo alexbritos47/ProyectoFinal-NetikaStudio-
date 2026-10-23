@@ -1,8 +1,7 @@
-
 <?php
 // Activa el modo de tipos estrictos de PHP.
-// Ayuda a detectar errores cuando se utiliza
-// un tipo de dato incorrecto.
+// Ayuda a detectar errores cuando se utilizas
+// un tipos de datos incorrectos.
 //
 declare(strict_types=1);
 // ======================================================
@@ -123,21 +122,11 @@ header('Content-Type: application/json; charset=utf-8');
 // Permite que los frontends puedan comunicarse
 // con el backend aunque estén en otro origen
 // durante el desarrollo.
-header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Origin: *');
 
 // Indica qué métodos HTTP permite la API.
 header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
 
-$allowedOrigins = [
-    'http://localhost:3000'
-];
-
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-
-if (in_array($origin, $allowedOrigins, true)) {
-    header("Access-Control-Allow-Origin: $origin");
-    header('Vary: Origin');
-}
 // Indica qué encabezados HTTP puede recibir la API.
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
