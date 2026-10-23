@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mis facturas — Unión Ciclista Maragata</title>
- <link rel="stylesheet" href="../cssglobal/global.css">
+<link rel="stylesheet" href="../cssglobal/global.css">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body class="pagina-facturas">
 
@@ -13,24 +14,27 @@
 
   <section class="resumen">
     <div class="tarjeta pendiente">
+      <i class="ph ph-clock num-icono"></i>
       <div class="num" id="totalPendiente">-</div>
       <div class="label">Pendientes de pago</div>
     </div>
     <div class="tarjeta paga">
+      <i class="ph ph-check-circle num-icono"></i>
       <div class="num" id="totalPaga">-</div>
       <div class="label">Pagas</div>
     </div>
     <div class="tarjeta impaga">
+      <i class="ph ph-warning-circle num-icono"></i>
       <div class="num" id="totalImpaga">-</div>
       <div class="label">No pagas / vencidas</div>
     </div>
   </section>
 
   <div class="filtros">
-    <button data-filtro="todas" class="activo">Todas</button>
-    <button data-filtro="pendiente">Pendientes</button>
-    <button data-filtro="paga">Pagas</button>
-    <button data-filtro="impaga">No pagas</button>
+    <button data-filtro="todas" class="activo"><i class="ph ph-list"></i> Todas</button>
+    <button data-filtro="pendiente"><i class="ph ph-clock"></i> Pendientes</button>
+    <button data-filtro="paga"><i class="ph ph-check-circle"></i> Pagas</button>
+    <button data-filtro="impaga"><i class="ph ph-warning-circle"></i> No pagas</button>
   </div>
 
   <table>
@@ -47,7 +51,7 @@
   </table>
 
   <div class="vacio" id="mensajeVacio" style="display:none;">
-    No hay facturas para mostrar en este filtro.
+    <i class="ph ph-receipt"></i> No hay facturas para mostrar en este filtro.
   </div>
 
 </main>
@@ -57,5 +61,38 @@
 <script src="../js/portal-api.js"></script>
 <script src="../js/nav.js"></script>
 <script src="facturas.js"></script>
+
+<!-- Íconos del menú del navbar -->
+<script>
+(function () {
+  const iconos = {
+    'inicio': 'ph-house',
+    'mi perfil': 'ph-user-circle',
+    'perfil': 'ph-user-circle',
+    'mis facturas': 'ph-receipt',
+    'facturas': 'ph-receipt',
+    'iniciar sesión': 'ph-sign-in',
+    'iniciar sesion': 'ph-sign-in',
+    'cerrar sesión': 'ph-sign-out',
+    'cerrar sesion': 'ph-sign-out',
+    'volver': 'ph-arrow-left'
+  };
+
+  function poner() {
+    document.querySelectorAll('.main-nav a, .main-nav button, .main-nav li').forEach(el => {
+      if (el.querySelector('i.ph')) return;
+      if (el.children.length > 0 && el.tagName === 'LI') return;
+      const clave = el.textContent.trim().toLowerCase();
+      if (iconos[clave]) {
+        el.insertAdjacentHTML('afterbegin', '<i class="ph ph-' + iconos[clave].replace('ph-','') + '"></i> ');
+      }
+    });
+  }
+
+  poner();
+  new MutationObserver(poner).observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+
 </body>
 </html>

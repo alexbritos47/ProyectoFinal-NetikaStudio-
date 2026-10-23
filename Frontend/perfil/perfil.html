@@ -1,240 +1,122 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Mi Perfil - Club Ciclista Maragato</title>
-
- <link rel="stylesheet" href="../cssglobal/global.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - Club Ciclista Maragato</title>
+  <link rel="stylesheet" href="../cssglobal/global.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
-
 <body class="pagina-perfil">
 
-    <!-- =========================
-         NAVBAR
-    ========================== -->
-
-    <nav class="main-nav" data-nav-portal="volver"></nav>
-
-
-    <!-- =========================
-         CONTENIDO
-    ========================== -->
-
-    <main class="contenedor">
-
-
-        <section class="perfil-card">
-
-            <!-- CABECERA DEL PERFIL -->
-
-            <div class="perfil-header">
-
-                <div class="avatar" id="avatar">
-                    US
-                </div>
-
-                <div class="perfil-titulo">
-
-                    <h2>Mi Perfil</h2>
-
-                    <p>
-                        Información personal del socio
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="separador"></div>
-
-
-            <!-- =========================
-                 DATOS DEL USUARIO
-            ========================== -->
-
-            <div class="datos-grid">
-
-                <div class="campo">
-
-                    <label for="nombre">
-                        Nombre
-                    </label>
-
-                    <div class="dato dato-fijo">
-                        <span id="nombre">---</span>
-                    </div>
-
-                </div>
-
-
-                <div class="campo">
-
-                    <label for="apellido">
-                        Apellido
-                    </label>
-
-                    <div class="dato dato-fijo">
-                        <span id="apellido">---</span>
-                    </div>
-
-                </div>
-
-
-                <div class="campo">
-
-                    <label for="cedula">
-                        Cédula de identidad
-                    </label>
-
-                    <div class="dato dato-fijo">
-                        <span id="cedula">---</span>
-                    </div>
-
-                </div>
-
-
-                <div class="campo">
-
-                    <label for="email">
-                        Correo electrónico
-                    </label>
-
-                    <div class="dato">
-                        <span id="email">---</span>
-                    </div>
-
-                </div>
-
-
-                <div class="campo">
-
-                    <label for="usuario">
-                        Usuario
-                    </label>
-
-                    <div class="dato dato-fijo">
-                        <span id="usuario">---</span>
-                    </div>
-
-                </div>
-
-
-                <div class="campo">
-
-                    <label for="numeroSocio">
-                        Número de socio
-                    </label>
-
-                    <div class="dato dato-fijo">
-                        <span id="numeroSocio">---</span>
-                    </div>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="telefono">
-                        Teléfono
-                    </label>
-
-                    <div class="dato">
-                        <span id="telefono">---</span>
-                    </div>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="direccion">
-                        Dirección
-                    </label>
-
-                    <div class="dato">
-                        <span id="direccion">---</span>
-                    </div>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="categoria">
-                        Categoría
-                    </label>
-
-                    <div class="dato dato-fijo">
-                        <span id="categoria">---</span>
-                    </div>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="fechaIngreso">
-                        Socio desde
-                    </label>
-
-                    <div class="dato dato-fijo">
-                        <span id="fechaIngreso">---</span>
-                    </div>
-
-                </div>
-
-            </div> <!-- fin de .datos-grid -->
-
-            <!-- =========================
-                 ACCIONES
-            ========================== -->
-
-            <div class="acciones">
-
-                <button
-                    id="editarPerfil"
-                    class="btn-principal">
-
-                    Editar información
-
-                </button>
-
-                <button
-                    id="cerrarSesion"
-                    class="btn-principal">
-
-                    Cerrar sesión
-
-                </button>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- =========================
-         FOOTER
-    ========================== -->
-
-    <footer>
-
-        <p>
-            © 2026 Club Ciclista Maragato
-        </p>
-
-        <p>
-            Sistema de Gestión de Cuotas
-        </p>
-
-    </footer>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../js/alertas.js"></script>
-    <script src="../js/portal-api.js"></script>
-    <script src="../js/nav.js"></script>
-    <script src="perfil.js"></script>
+  <nav class="main-nav" data-nav-portal="volver"></nav>
+
+  <main class="contenedor">
+    <section class="perfil-card">
+
+      <div class="perfil-header">
+        <div class="avatar" id="avatar">US</div>
+        <div class="perfil-titulo">
+          <h2><i class="ph ph-user-circle"></i> Mi Perfil</h2>
+          <p>Información personal del socio</p>
+        </div>
+      </div>
+
+      <div class="separador"></div>
+
+      <div class="datos-grid">
+        <div class="campo">
+          <label for="nombre"><i class="ph ph-user"></i> Nombre</label>
+          <div class="dato dato-fijo"><span id="nombre">---</span></div>
+        </div>
+        <div class="campo">
+          <label for="apellido"><i class="ph ph-user"></i> Apellido</label>
+          <div class="dato dato-fijo"><span id="apellido">---</span></div>
+        </div>
+        <div class="campo">
+          <label for="cedula"><i class="ph ph-identification-card"></i> Cédula de identidad</label>
+          <div class="dato dato-fijo"><span id="cedula">---</span></div>
+        </div>
+        <div class="campo">
+          <label for="email"><i class="ph ph-envelope"></i> Correo electrónico</label>
+          <div class="dato"><span id="email">---</span></div>
+        </div>
+        <div class="campo">
+          <label for="usuario"><i class="ph ph-at"></i> Usuario</label>
+          <div class="dato dato-fijo"><span id="usuario">---</span></div>
+        </div>
+        <div class="campo">
+          <label for="numeroSocio"><i class="ph ph-hash"></i> Número de socio</label>
+          <div class="dato dato-fijo"><span id="numeroSocio">---</span></div>
+        </div>
+        <div class="campo">
+          <label for="telefono"><i class="ph ph-phone"></i> Teléfono</label>
+          <div class="dato"><span id="telefono">---</span></div>
+        </div>
+        <div class="campo">
+          <label for="direccion"><i class="ph ph-map-pin"></i> Dirección</label>
+          <div class="dato"><span id="direccion">---</span></div>
+        </div>
+        <div class="campo">
+          <label for="categoria"><i class="ph ph-tag"></i> Categoría</label>
+          <div class="dato dato-fijo"><span id="categoria">---</span></div>
+        </div>
+        <div class="campo">
+          <label for="fechaIngreso"><i class="ph ph-calendar-blank"></i> Socio desde</label>
+          <div class="dato dato-fijo"><span id="fechaIngreso">---</span></div>
+        </div>
+      </div>
+
+      <div class="acciones">
+        <button id="editarPerfil" class="btn-principal"><i class="ph ph-pencil-simple"></i> Editar información</button>
+        <button id="cerrarSesion" class="btn-principal"><i class="ph ph-sign-out"></i> Cerrar sesión</button>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Club Ciclista Maragato</p>
+    <p>Sistema de Gestión de Cuotas</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../js/alertas.js"></script>
+  <script src="../js/portal-api.js"></script>
+  <script src="../js/nav.js"></script>
+  <script src="perfil.js"></script>
+
+  <!-- Íconos del menú del navbar -->
+  <script>
+  (function () {
+    const iconos = {
+      'inicio': 'ph-house',
+      'mi perfil': 'ph-user-circle',
+      'perfil': 'ph-user-circle',
+      'mis facturas': 'ph-receipt',
+      'facturas': 'ph-receipt',
+      'iniciar sesión': 'ph-sign-in',
+      'iniciar sesion': 'ph-sign-in',
+      'cerrar sesión': 'ph-sign-out',
+      'cerrar sesion': 'ph-sign-out',
+      'volver': 'ph-arrow-left'
+    };
+
+    function poner() {
+      document.querySelectorAll('.main-nav a, .main-nav button, .main-nav li').forEach(el => {
+        if (el.querySelector('i.ph')) return;
+        if (el.children.length > 0 && el.tagName === 'LI') return;
+        const clave = el.textContent.trim().toLowerCase();
+        if (iconos[clave]) {
+          el.insertAdjacentHTML('afterbegin', '<i class="ph ' + iconos[clave] + '"></i> ');
+        }
+      });
+    }
+
+    poner();
+    new MutationObserver(poner).observe(document.body, { childList: true, subtree: true });
+  })();
+  </script>
 
 </body>
 </html>
