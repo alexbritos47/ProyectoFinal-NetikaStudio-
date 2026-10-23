@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,25 +11,7 @@
 
     <a href="#contenido-principal" class="skip-link">Saltar al contenido principal</a>
 
-    <nav class="main-nav">
-        <div class="nav-logo">
-            <img src="../login/img/logoucm.png" alt="Logo Club Ciclista Maragato">
-        </div>
-
-        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-principal">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <ul class="nav-personal">
-            <li id="nav-socio"></li>
-        </ul>
-
-        <ul class="nav-links" id="menu-principal">
-            <li><a href="#sobre-nosotros">Sobre nosotros</a></li>
-        </ul>
-    </nav>
+    <nav class="main-nav" data-nav-portal></nav>
 
     <main id="contenido-principal">
 
@@ -296,21 +277,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../js/alertas.js"></script>
     <script src="../js/portal-api.js"></script>
+    <script src="../js/nav.js"></script>
     <script src="inicio.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const navToggle = document.querySelector('.nav-toggle');
-            const mainNav = document.querySelector('nav.main-nav');
-
-            if (navToggle && mainNav) {
-                navToggle.addEventListener('click', () => {
-                    const abierto = mainNav.classList.toggle('nav-open');
-                    navToggle.setAttribute('aria-expanded', abierto);
-                });
-            }
-        });
-    </script>
 
 </body>
 </html>
