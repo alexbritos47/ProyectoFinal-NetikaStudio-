@@ -22,9 +22,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Datos que el socio puede cambiar.
     const CAMPOS_EDITABLES = [
         { id: "email",     tipo: "email", max: 100 },
-        { id: "telefono",  tipo: "tel",   max: 30  },
+        { id: "telefono",  tipo: "tel",   max: 9   },
         { id: "direccion", tipo: "text",  max: 200 }
     ];
+
+    // Regex de validación
+    const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;   // algo@dominio.xx
+    const REGEX_TELEFONO = /^\d{9}$/;                       // exactamente 9 dígitos
+
+    // Deja solo números y corta en 9
+    const limpiarTelefono = valor => String(valor || "").replace(/\D/g, "").slice(0, 9);
 
     let socio = null;       // datos actuales del socio
     let editando = false;
@@ -64,6 +71,24 @@ document.addEventListener("DOMContentLoaded", async function () {
                 "width:100%;border:none;background:transparent;outline:none;" +
                 "font:inherit;color:inherit;padding:12px 0;";
 
+            // Configuración especial por tipo de campo
+            if (campo.id === "telefono") {
+                entrada.value = limpiarTelefono(entrada.value);
+                entrada.setAttribute("inputmode", "numeric");
+                entrada.setAttribute("placeholder", "9 dígitos (ej: 091234567)");
+                entrada.addEventListener("input", () => {
+                    entrada.value = limpiarTelefono(entrada.value);
+                });
+            }
+            if (campo.id === "email") {
+                entrada.setAttribute("placeholder", "ejemplo@correo.com");
+            }
+
+            // Al escribir, se saca el marcado de error
+            entrada.addEventListener("input", () => {
+                entrada.closest(".dato")?.classList.remove("invalido");
+            });
+
             lugar.textContent = "";
             lugar.style.width = "100%";
             lugar.appendChild(entrada);
@@ -90,7 +115,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         CAMPOS_EDITABLES.forEach(campo => {
             const lugar = document.getElementById(campo.id);
-            if (lugar) lugar.style.width = "";
+            if (lugar) {
+                lugar.style.width = "";
+                lugar.closest(".dato")?.classList.remove("invalido");
+            }
         });
 
         mostrarContacto();
@@ -104,15 +132,31 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    // Valida lo escrito. Devuelve un texto de error, o "" si está todo bien.
+    // Marca un campo como inválido y le pone el foco
+    function marcarInvalido(id) {
+        const entrada = document.getElementById("editar_" + id);
+        if (!entrada) return;
+        entrada.closest(".dato")?.classList.add("invalido");
+        entrada.focus();
+    }
+
+    // Valida lo escrito. Devuelve { campo, mensaje } si hay error, o null si está todo bien.
+    // La dirección no se valida (puede tener letras y números).
     function validar(valores) {
-        if (valores.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valores.email)) {
-            return "El email no es válido.";
+        if (valores.email !== undefined) {
+            if (!valores.email) {
+                return { campo: "email", mensaje: "Ingresá tu correo electrónico." };
+            }
+            if (!REGEX_EMAIL.test(valores.email)) {
+                return { campo: "email", mensaje: "El correo no es válido. Tiene que tener un @ y un dominio (ej: nombre@correo.com)." };
+            }
         }
-        if (valores.telefono && !/^[0-9+()\s-]{6,30}$/.test(valores.telefono)) {
-            return "El teléfono solo puede tener números, espacios y los signos + - ( ). Mínimo 6 caracteres.";
+        if (valores.telefono !== undefined) {
+            if (!REGEX_TELEFONO.test(valores.telefono)) {
+                return { campo: "telefono", mensaje: "El teléfono tiene que tener exactamente 9 dígitos, solo números (ej: 091234567)." };
+            }
         }
-        return "";
+        return null;
     }
 
     async function guardar() {
@@ -125,7 +169,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const error = validar(valores);
         if (error) {
-            alerta("warning", "Revisá los datos", error);
+            marcarInvalido(error.campo);
+            alerta("warning", "Revisá los datos", error.mensaje);
             return;
         }
 

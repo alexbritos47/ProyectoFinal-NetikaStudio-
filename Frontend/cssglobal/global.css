@@ -1394,3 +1394,333 @@ nav.main-nav a.btn-hacerse-socio:hover .ph { color: #fff; }
     animation: none;
   }
 }
+
+
+/* ============================================================
+   PERFIL: campos editables resaltados (correo, teléfono, dirección)
+   ============================================================ */
+
+/* Campos editables: fondo blanco, borde azul y lápiz a la derecha */
+.pagina-perfil .dato:not(.dato-fijo) {
+  background: #fff;
+  border: 2px solid var(--c-500);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, .12);
+  cursor: pointer;
+  position: relative;
+  padding-right: 44px;
+  transition: box-shadow var(--transicion), border-color var(--transicion), background var(--transicion);
+}
+
+.pagina-perfil .dato:not(.dato-fijo)::after {
+  content: "✎";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--c-500);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.pagina-perfil .dato:not(.dato-fijo):hover,
+.pagina-perfil .dato:not(.dato-fijo):focus-within {
+  background: #fff;
+  border-color: var(--c-900);
+  box-shadow: 0 0 0 4px rgba(33, 150, 243, .25);
+}
+
+/* Si al editar se convierte en input, que se vea bien */
+.pagina-perfil .dato:not(.dato-fijo) input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  font: inherit;
+  color: inherit;
+}
+
+/* Campos fijos: más apagados, para que el contraste sea claro */
+.pagina-perfil .dato.dato-fijo {
+  opacity: .75;
+  cursor: not-allowed;
+}
+
+/* Campo en rojo si la validación falla */
+.pagina-perfil .dato.invalido,
+.pagina-perfil .dato:not(.dato-fijo).invalido {
+  border-color: #e53935;
+  box-shadow: 0 0 0 3px rgba(229, 57, 53, .18);
+}
+
+
+/* ============================================================
+   RESPONSIVE GLOBAL
+   (tiene que quedar al final para pisar lo anterior)
+   ============================================================ */
+
+html { overflow-x: hidden; }
+body { overflow-x: hidden; }
+video, svg, canvas { max-width: 100%; }
+
+/* Textos largos (emails, direcciones) no rompen el layout */
+.pagina-perfil .dato span,
+.pagina-perfiladmin .dato span { overflow-wrap: anywhere; word-break: break-word; }
+
+/* ---------- Tablet grande / laptop chica (hasta 1100px) ---------- */
+@media (max-width: 1100px) {
+  .nav-links > li > a,
+  .nav-personal > li > a { padding: 0 .8rem; font-size: 13px; }
+  .pagina-inicio .carousel-slide img { height: 360px; }
+}
+
+/* ---------- Tablet (hasta 900px) ---------- */
+@media (max-width: 900px) {
+  /* El desplegable de "Soy socio" dentro del menú hamburguesa */
+  nav.main-nav .nav-personal #nav-socio > .dropdown-menu {
+    position: static;
+    min-width: 0;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: rgba(227, 242, 253, .06);
+    animation: none;
+  }
+  nav.main-nav .nav-personal #nav-socio > .dropdown-menu > li > a {
+    background: transparent;
+    color: rgba(227, 242, 253, .88);
+    padding: 12px 6px 12px 32px;
+  }
+  nav.main-nav .nav-personal #nav-socio > .dropdown-menu > li > a:hover {
+    background: rgba(227, 242, 253, .1);
+    color: var(--c-100);
+    padding-left: 36px;
+  }
+  nav.main-nav .nav-personal #nav-socio > .dropdown-menu > li + li {
+    border-top: 1px solid rgba(227, 242, 253, .1);
+  }
+
+  /* Inicio */
+  .pagina-inicio .Bienvenida { margin: 2rem 1.25rem 1rem; }
+  .pagina-inicio .titulodescripcion { margin: 0 1.25rem; }
+  .pagina-inicio .descripcion { margin: 1rem 1.25rem 1.5rem; font-size: 18px; }
+  .pagina-inicio .beneficios-lista { margin: 1.5rem 1.25rem; gap: 2.2rem; }
+  .pagina-inicio .carousel-slide img { height: 300px; }
+  .pagina-inicio .sobre-nosotros { padding: 2.5rem 1.25rem; }
+
+  /* Admin */
+  .navbar-admin { padding: 12px 4%; }
+  .pagina-sociosadmin main,
+  .pagina-facturaadmin main { padding: 22px 16px 50px; }
+}
+
+/* ---------- Celular (hasta 700px) ---------- */
+@media (max-width: 700px) {
+
+  /* ----- LOGIN: que se pueda scrollear y no se corte ----- */
+  body.pagina-login {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+    min-width: 0;
+  }
+  .pagina-login .authWrapper {
+    position: relative;
+    top: auto; left: auto;
+    transform: none;
+    width: 100%;
+    min-height: 100vh;
+    justify-content: center;
+    padding: 24px 14px 90px; /* espacio abajo para los botones flotantes */
+  }
+  .pagina-login .header { padding: 14px 22px; width: 100%; max-width: 380px; }
+  .pagina-login .header div { font-size: 26px; }
+  .pagina-login .login,
+  .pagina-login .register { width: 100%; max-width: 380px; padding: 22px 18px; }
+  .pagina-login .login input[type=text],
+  .pagina-login .login input[type=password],
+  .pagina-login .register input { font-size: 16px; } /* evita el zoom automático en iPhone */
+
+  /* Login admin */
+  .pagina-loginadm .login { width: calc(100% - 32px); max-width: 340px; margin-top: 30px; }
+  .pagina-loginadm .header { padding: 20px 16px; font-size: 1.3rem; }
+
+  /* ----- PERFIL ----- */
+  .pagina-perfil .contenedor,
+  .pagina-perfiladmin .contenedor { margin: 24px auto; padding: 0 14px; }
+  .pagina-perfil .perfil-header,
+  .pagina-perfiladmin .perfil-header { gap: 14px; }
+  .pagina-perfil .avatar,
+  .pagina-perfiladmin .avatar { width: 64px; height: 64px; font-size: 21px; flex-shrink: 0; }
+  .pagina-perfil .perfil-titulo h2 { font-size: 21px; }
+  .pagina-perfil .separador,
+  .pagina-perfiladmin .separador { margin: 22px 0; }
+  .pagina-perfil .datos-grid,
+  .pagina-perfiladmin .datos-grid { gap: 16px; }
+
+  /* Botones de Editar / Cerrar sesión: uno debajo del otro, ancho completo */
+  .pagina-perfil .acciones,
+  .pagina-perfiladmin .acciones {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+  .pagina-perfil .acciones .btn-principal,
+  .pagina-perfiladmin .acciones .btn-principal { width: 100%; margin: 0 !important; }
+  .pagina-perfil .acciones #cerrarSesion { margin-left: 0; }
+
+  /* ----- FACTURAS (usuario) ----- */
+  .pagina-facturas main { padding: 18px 14px; }
+  .pagina-facturas header { padding: 20px 14px; }
+  .pagina-facturas .volver-inicio {
+    position: static;
+    margin: 12px auto 0;
+    max-width: 1100px;
+    width: fit-content;
+  }
+  .pagina-facturas .filtros { gap: 7px; }
+  .pagina-facturas .filtros button { padding: 8px 12px; font-size: 12.5px; }
+
+  /* ----- ADMIN ----- */
+  .navbar-admin { flex-direction: column; align-items: stretch; text-align: left; }
+  .navbar-admin .nav-admin-links {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .navbar-admin .nav-admin-links a,
+  .navbar-admin .btn-logout-admin { white-space: nowrap; flex-shrink: 0; }
+
+  .pagina-sociosadmin .toolbar-admin { flex-direction: column; align-items: stretch; }
+  .pagina-sociosadmin .btn-agregar-socio { width: 100%; }
+  .pagina-facturaadmin .buscador-factura input { width: 100%; min-width: 0; }
+  .pagina-sociosadmin .acciones-fila { flex-wrap: wrap; }
+  .pagina-sociosadmin .modal-caja { padding: 22px 18px; }
+
+  /* Tablas en formato tarjeta: textos largos no se salen */
+  .pagina-facturas td,
+  .pagina-sociosadmin td,
+  .pagina-facturaadmin td { overflow-wrap: anywhere; }
+
+  /* ----- INICIO ----- */
+  .pagina-inicio .beneficio-titulo { font-size: 19px; }
+  .pagina-inicio .carousel-slide img { height: 220px; }
+  .pagina-inicio .carousel-btn { width: 34px; height: 34px; }
+  .pagina-inicio .sobre-nosotros-contenido p { font-size: 16px; }
+  .pagina-inicio .footer { padding: 1.6rem 1rem; }
+  .pagina-inicio .footer-content { flex-direction: column; }
+
+  /* Botón volver arriba más chico */
+  .btn-subir { width: 42px; height: 42px; bottom: 16px; right: 16px; }
+
+  /* Toast no se sale de la pantalla */
+  .toast-admin { left: 14px; right: 14px; max-width: none; top: 14px; }
+}
+
+/* ---------- Celular chico (hasta 480px) ---------- */
+@media (max-width: 480px) {
+  nav.main-nav { padding: 0 .9rem; }
+  .nav-logo img { height: 60px; }
+
+  .pagina-facturas .resumen,
+  .pagina-facturaadmin .resumen,
+  .pagina-sociosadmin .resumen-admin { grid-template-columns: 1fr; }
+
+  .pagina-perfil .perfil-card,
+  .pagina-perfiladmin .perfil-card { padding: 22px 16px; }
+  .pagina-perfil .perfil-titulo h2 { font-size: 19px; }
+
+  .pagina-inicio .Bienvenida { font-size: 28px; }
+  .pagina-inicio .descripcion { font-size: 16px; }
+  .pagina-inicio .carousel-slide img { height: 190px; }
+}
+
+/* ---------- Pantallas bajas (celular horizontal) ---------- */
+@media (max-height: 520px) and (orientation: landscape) {
+  .pagina-login .authWrapper { padding-top: 16px; padding-bottom: 16px; }
+}
+
+
+/* ============================================================
+   FIX MENÚ HAMBURGUESA (tablet / celular)
+   Los <li> son flex en fila: en móvil el desplegable quedaba
+   al costado (a la derecha). Acá se apilan en columna.
+   ============================================================ */
+@media (max-width: 900px) {
+
+  nav.main-nav .nav-personal,
+  nav.main-nav .nav-links {
+    margin: 0;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  /* Cada item en columna: el link arriba y el desplegable DEBAJO */
+  nav.main-nav .nav-links > li,
+  nav.main-nav .nav-personal > li,
+  nav.main-nav .nav-personal #nav-socio.dropdown {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Links del menú: texto a la izquierda, flechita a la derecha */
+  nav.main-nav .nav-links > li > a,
+  nav.main-nav .nav-personal #nav-socio > a:not(.btn-nav-volver) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    padding: 14px 6px;
+  }
+
+  /* Desplegable "Soy socio": debajo, ancho completo, sin flotar */
+  nav.main-nav .nav-personal #nav-socio > .dropdown-menu {
+    position: static;
+    display: none;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: rgba(227, 242, 253, .06);
+    animation: none;
+  }
+  nav.main-nav .nav-personal #nav-socio.open > .dropdown-menu,
+  nav.main-nav .nav-personal #nav-socio:focus-within > .dropdown-menu,
+  nav.main-nav .nav-links > li.open > .dropdown-menu,
+  nav.main-nav .nav-links > li:focus-within > .dropdown-menu {
+    display: block !important;
+  }
+  nav.main-nav .nav-links > li > .dropdown-menu {
+    position: static;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Botones: "Hacerme socio" y "Volver al inicio" a ancho completo y centrados */
+  nav.main-nav a.btn-hacerse-socio,
+  nav.main-nav .nav-personal #nav-socio > a.btn-nav-volver {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% - 12px);
+    height: 42px;
+    margin: 8px 6px;
+    padding: 0 18px;
+    border-bottom: none;
+    animation: none;
+  }
+}

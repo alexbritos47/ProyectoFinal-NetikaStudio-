@@ -80,6 +80,12 @@
 
   function poner() {
     document.querySelectorAll('.main-nav a, .main-nav button, .main-nav li').forEach(el => {
+      if (el.textContent.trim().toLowerCase() === 'sobre nosotros') {
+        (el.closest('li') || el).remove();
+      }
+    });
+
+    document.querySelectorAll('.main-nav a, .main-nav button, .main-nav li').forEach(el => {
       if (el.querySelector('i.ph')) return;
       if (el.children.length > 0 && el.tagName === 'LI') return;
       const clave = el.textContent.trim().toLowerCase();
