@@ -1,18 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ---------- Protección de sesión ----------
-  // Si no hay sesión de admin activa, vuelve al login.
   if (sessionStorage.getItem('sesionActiva') !== 'true' || sessionStorage.getItem('rol') !== 'admin') {
     window.location.href = 'loginadm.html';
     return;
   }
 
   // ---------- API ----------
-  // Con Docker (http://localhost:3000) la API está en el mismo origen.
-  // Si abrís el HTML de otra forma (Live Server, etc.), llama directo al puerto 8080.
   const API_BASE = location.port === '3000' ? '' : 'http://localhost:8080';
 
-  // Traduce las respuestas de error del backend a un mensaje legible.
   function mensajeDeError(data, status) {
     if (data && data.errores) return Object.values(data.errores).join(' ');
     const detalle = (data && data.detalle) || '';
@@ -38,8 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ---------- Datos ----------
-  // "Al día" / "Pendiente" se calcula con los recibos reales del socio:
-  // un socio está Pendiente si tiene algún recibo en estado "pendiente" cuya fecha de vencimiento ya pasó.
   let socios = [];
   let categorias = [];
 
@@ -59,11 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
       email: s.email || '',
       estado: s.estado,
       alDia: vencidos.length === 0,
-      vencidos: vencidos.map(r => ({ id: r.id_recibo, importe: Number(r.importe) }))
+      vencidos: vencidos.map(r => ({ id: r.id_recibo, importe: Number(r.importe) })),
+      raw: s
     };
   }
 
-  // Id del admin logueado (para registrar quién cobró). Si no hay sesión en el servidor, queda null.
   async function idUsuarioActual() {
     try {
       const u = await api('/auth/me');
@@ -120,11 +114,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const tipoDocSocioInput = document.getElementById('tipoDocSocio');
   const nroDocSocioInput = document.getElementById('nroDocSocio');
   const emailSocioInput = document.getElementById('emailSocio');
+  const telefonoSocioInput = document.getElementById('telefonoSocio');
   const categoriaSocioInput = document.getElementById('categoriaSocio');
   const crearAccesoInput = document.getElementById('crearAcceso');
   const bloqueAcceso = document.getElementById('bloqueAcceso');
   const usuarioSocioInput = document.getElementById('usuarioSocio');
   const contrasenaSocioInput = document.getElementById('contrasenaSocio');
+  const btnOjoNueva = document.getElementById('btnOjoNueva');
+
+  // Ficha del socio
+  const modalPerfilFondo = document.getElementById('modalPerfilFondo');
+  const perfilAvatar = document.getElementById('perfilAvatar');
+  const perfilNombre = document.getElementById('perfilNombre');
+  const perfilEstadoCuota = document.getElementById('perfilEstadoCuota');
+  const perfilDatos = document.getElementById('perfilDatos');
+  const btnCerrarPerfil = document.getElementById('btnCerrarPerfil');
 
   const btnLogout = document.getElementById('btnLogout');
 
@@ -133,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return nombre.split(' ').filter(Boolean).slice(0, 2).map(p => p[0].toUpperCase()).join('');
   }
 
-  // Los datos ahora vienen de la base: se escapan antes de insertarlos en el HTML.
   function esc(texto) {
     return String(texto)
       .replace(/&/g, '&amp;')
@@ -176,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fila.innerHTML = `
         <td data-label="Socio">
           <div class="socio-nombre">
-            <span class="socio-avatar">${esc(iniciales(socio.nombre))}</span>
+            <span class="socio-avatar" data-id="${socio.id}" role="button" tabindex="0" title="Ver datos del socio">${esc(iniciales(socio.nombre))}</span>
             ${esc(socio.nombre)}
           </div>
         </td>
@@ -205,6 +208,107 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------- Buscador ----------
   buscarSocio.addEventListener('input', () => render(buscarSocio.value));
 
+  // ---------- Ficha del socio ----------
+  function valor(v) {
+    return (v === undefined || v === null || v === '') ? '—' : v;
+  }
+
+  function fechaLinda(f) {
+    if (!f) return '—';
+    const d = new Date(f);
+    return isNaN(d) ? String(f) : d.toLocaleDateString('es-UY');
+  }
+
+  function campoPerfil(etiqueta, texto, ancho) {
+    return `<div class="perfil-dato${ancho ? ' ancho' : ''}"><span>${esc(etiqueta)}</span><strong>${esc(texto)}</strong></div>`;
+  }
+
+  function campoReset(id) {
+    return `<div class="perfil-dato ancho">
+      <span>Contraseña</span>
+      <div class="perfil-clave">
+        <strong>Encriptada (no se puede ver)</strong>
+        <button type="button" class="btn-fila" id="btnResetClave" data-id="${id}">Restablecer</button>
+      </div>
+    </div>`;
+  }
+
+  function generarClave() {
+    const car = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+    return Array.from({ length: 8 }, () => car[Math.floor(Math.random() * car.length)]).join('');
+  }
+
+  // Restablecer contraseña (genera una nueva y se la muestra al admin)
+  perfilDatos.addEventListener('click', async (e) => {
+    const btn = e.target.closest('#btnResetClave');
+    if (!btn) return;
+    const nueva = generarClave();
+    const ok = await confirmarAccion({
+      title: '¿Restablecer contraseña?',
+      text: 'Se va a generar una contraseña nueva y la anterior deja de funcionar.',
+      confirmButtonText: 'Sí, restablecer'
+    });
+    if (!ok.isConfirmed) return;
+    try {
+      await api('/socios/' + btn.dataset.id + '/contrasena', {
+        method: 'PUT',
+        body: JSON.stringify({ contrasena: nueva })
+      });
+      Swal.fire({
+        title: 'Contraseña nueva',
+        html: 'Pasásela al socio:<br><b style="font-size:22px">' + nueva + '</b>',
+        icon: 'success'
+      });
+    } catch (err) {
+      mostrarToast('No se pudo restablecer', err.message);
+    }
+  });
+
+  async function abrirPerfil(id) {
+    const socio = socios.find(s => s.id === id);
+    if (!socio) return;
+
+    let d = socio.raw || {};
+    try {
+      const detalle = await api('/socios/' + id);
+      if (detalle && typeof detalle === 'object') d = { ...d, ...detalle };
+    } catch (e) { /* se usa lo que ya tenemos */ }
+
+    if (!categorias.length) await cargarCategorias();
+    const cat = categorias.find(c => String(c.id_categoria) === String(d.id_categoria));
+    const categoriaTxt = cat
+      ? cat.nombre + ' ($' + cat.monto_cuota + ')'
+      : valor(d.categoria || d.nombre_categoria);
+
+    perfilAvatar.textContent = iniciales(socio.nombre);
+    perfilNombre.textContent = socio.nombre;
+    perfilEstadoCuota.className = 'estado-admin ' + (socio.alDia ? 'al-dia' : 'pendiente');
+    perfilEstadoCuota.textContent = socio.alDia ? 'Cuota al día' : 'Cuota pendiente';
+
+    perfilDatos.innerHTML =
+      campoPerfil('Nombre', valor(d.nombre)) +
+      campoPerfil('Apellido', valor(d.apellido)) +
+      campoPerfil('Tipo de documento', valor(d.tipo_documento)) +
+      campoPerfil('Número de documento', valor(d.numero_documento)) +
+      campoPerfil('Email', valor(d.email), true) +
+      campoPerfil('Teléfono / celular', valor(d.telefono), true) +
+      campoPerfil('Categoría', categoriaTxt, true) +
+      campoPerfil('N° de socio', valor(d.numero_socio || d.id_socio)) +
+      campoPerfil('Estado', valor(d.estado)) +
+      campoPerfil('Usuario', valor(d.nombre_usuario || d.usuario)) +
+      campoReset(socio.id) +
+      campoPerfil('Fecha de alta', fechaLinda(d.fecha_alta || d.fecha_ingreso || d.created_at)) +
+      campoPerfil('Cuotas vencidas', String(socio.vencidos.length));
+
+    modalPerfilFondo.classList.add('abierto');
+  }
+
+  function cerrarPerfil() { modalPerfilFondo.classList.remove('abierto'); }
+
+  btnCerrarPerfil.addEventListener('click', cerrarPerfil);
+  modalPerfilFondo.addEventListener('click', (e) => { if (e.target === modalPerfilFondo) cerrarPerfil(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarPerfil(); });
+
   // ---------- Modal: agregar socio ----------
   async function abrirModal() {
     modalFondo.classList.add('abierto');
@@ -213,19 +317,28 @@ document.addEventListener('DOMContentLoaded', () => {
     tipoDocSocioInput.value = 'CI';
     nroDocSocioInput.value = '';
     emailSocioInput.value = '';
+    telefonoSocioInput.value = '';
     crearAccesoInput.checked = false;
     bloqueAcceso.classList.remove('visible');
     usuarioSocioInput.value = '';
     contrasenaSocioInput.value = '';
+    contrasenaSocioInput.type = 'password';
+    btnOjoNueva.textContent = '👁';
     nombreSocioInput.focus();
     if (!categorias.length) await cargarCategorias();
   }
   function cerrarModal() { modalFondo.classList.remove('abierto'); }
 
-  // Muestra u oculta los campos de usuario y contraseña.
   crearAccesoInput.addEventListener('change', () => {
     bloqueAcceso.classList.toggle('visible', crearAccesoInput.checked);
     if (crearAccesoInput.checked) usuarioSocioInput.focus();
+  });
+
+  // Ojito del modal: mostrar / ocultar la contraseña que se está escribiendo
+  btnOjoNueva.addEventListener('click', () => {
+    const mostrar = contrasenaSocioInput.type === 'password';
+    contrasenaSocioInput.type = mostrar ? 'text' : 'password';
+    btnOjoNueva.textContent = mostrar ? '🙈' : '👁';
   });
 
   btnAbrirModal.addEventListener('click', abrirModal);
@@ -237,6 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const apellido = apellidoSocioInput.value.trim();
     const numeroDocumento = nroDocSocioInput.value.trim();
     const email = emailSocioInput.value.trim();
+    const telefono = telefonoSocioInput.value.trim();
     const idCategoria = categoriaSocioInput.value;
 
     if (!nombre || !apellido || !numeroDocumento) {
@@ -253,7 +367,16 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Acceso al portal (opcional): si se tilda, hacen falta usuario y contraseña.
+    // Teléfono (opcional): solo números, espacios, +, - y paréntesis; entre 7 y 15 dígitos
+    if (telefono) {
+      const soloCaracteresValidos = /^[\d\s+\-()]+$/.test(telefono);
+      const cantidadDigitos = telefono.replace(/\D/g, '').length;
+      if (!soloCaracteresValidos || cantidadDigitos < 7 || cantidadDigitos > 15) {
+        mostrarToast('Teléfono inválido', 'Ingresá un teléfono o celular válido. Ej: 099 123 456.');
+        return;
+      }
+    }
+
     const crearAcceso = crearAccesoInput.checked;
     const usuario = usuarioSocioInput.value.trim();
     const contrasena = contrasenaSocioInput.value;
@@ -274,9 +397,9 @@ document.addEventListener('DOMContentLoaded', () => {
       tipo_documento: tipoDocSocioInput.value,
       numero_documento: numeroDocumento,
       id_categoria: Number(idCategoria)
-      // estado: no se envía; el backend lo crea como "activo" y así recibe recibos al generarlos.
     };
     if (email) datos.email = email;
+    if (telefono) datos.telefono = telefono;
     if (crearAcceso) {
       datos.nombre_usuario = usuario;
       datos.contrasena = contrasena;
@@ -288,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cerrarModal();
       await cargarSocios();
       const conAcceso = crearAcceso && respuesta && respuesta.id_usuario
-        ? ` Entra al portal con el usuario "${usuario}".`
+        ? ` Usuario: "${usuario}" · Contraseña: "${contrasena}". Anotala, no se vuelve a mostrar.`
         : '';
       mostrarToast('Socio agregado', `${nombre} ${apellido} se sumó al club.${conAcceso}`);
     } catch (err) {
@@ -298,8 +421,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ---------- Acciones de fila: eliminar / marcar pago ----------
+  // ---------- Acciones de fila: ficha / eliminar / marcar pago ----------
+  tablaSocios.addEventListener('keydown', (e) => {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('socio-avatar')) {
+      e.preventDefault();
+      abrirPerfil(Number(e.target.dataset.id));
+    }
+  });
+
   tablaSocios.addEventListener('click', async (e) => {
+    const avatar = e.target.closest('.socio-avatar');
+    if (avatar) {
+      abrirPerfil(Number(avatar.dataset.id));
+      return;
+    }
+
     const boton = e.target.closest('button');
     if (!boton) return;
     const id = Number(boton.dataset.id);
@@ -364,7 +500,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return window.mostrarToast(titulo, detalle);
   }
 
-  // Si venimos de facturas-admin.html tras registrar un pago, mostramos el aviso acá también.
   const avisoPendiente = localStorage.getItem('ccm_ultimo_pago');
   if (avisoPendiente) {
     try {

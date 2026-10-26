@@ -20,12 +20,14 @@
       <span></span><span></span><span></span>
     </button>
 
-    <ul class="nav-personal">
+    <ul class="nav-personal" id="menu-principal">
+      <li class="nav-sobre">
+        <a href="../inicio/inicio.html#sobre-nosotros" aria-label="Sobre nosotros">
+          <i class="ph ph-info"></i>
+          <span class="nav-texto">Sobre nosotros</span>
+        </a>
+      </li>
       <li id="nav-socio"></li>
-    </ul>
-
-    <ul class="nav-links" id="menu-principal">
-      <li><a href="../inicio/inicio.html#sobre-nosotros">Sobre nosotros</a></li>
     </ul>
   `;
 

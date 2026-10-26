@@ -1724,3 +1724,318 @@ video, svg, canvas { max-width: 100%; }
     animation: none;
   }
 }
+
+/* ============================================================
+   ADMIN SOCIOS: modal agregar socio (campos extra) y ficha del socio
+   ============================================================ */
+
+/* Campos extra del modal "agregar socio" (select, doble columna, scroll) */
+.pagina-sociosadmin .modal-caja { max-height: 92vh; overflow-y: auto; max-width: 460px; }
+.pagina-sociosadmin .modal-caja select {
+  width: 100%; padding: 10px 13px; border-radius: 8px; border: 1px solid var(--c-300);
+  background: rgba(144,202,249,.12); font-size: 14px; color: var(--texto);
+}
+.pagina-sociosadmin .modal-caja select:focus { outline: none; border-color: var(--c-500); }
+.pagina-sociosadmin .btn-fila:disabled { opacity: .55; cursor: default; }
+.pagina-sociosadmin .fila-doble { display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px; }
+
+/* Acceso al portal del socio (opcional) */
+.pagina-sociosadmin .modal-caja .fila-acceso { display: flex; align-items: center; gap: 8px; }
+.pagina-sociosadmin .modal-caja .fila-acceso input { width: auto; margin: 0; }
+.pagina-sociosadmin .modal-caja .fila-acceso label { margin: 0; text-transform: none; font-size: 13.5px; cursor: pointer; }
+.pagina-sociosadmin .modal-caja .bloque-acceso { display: none; flex-direction: column; gap: 14px; }
+.pagina-sociosadmin .modal-caja .bloque-acceso.visible { display: flex; }
+.pagina-sociosadmin .modal-caja .ayuda-acceso { font-size: 12px; opacity: .75; margin: 0; }
+
+/* Avatar clickeable */
+.pagina-sociosadmin .socio-avatar { cursor: pointer; transition: transform .2s ease, box-shadow .2s ease; }
+.pagina-sociosadmin .socio-avatar:hover { transform: scale(1.12); box-shadow: 0 0 0 3px rgba(33,150,243,.3); }
+.pagina-sociosadmin .socio-avatar:focus-visible { outline: 3px solid var(--c-500); outline-offset: 2px; }
+
+/* Modal ficha del socio */
+.pagina-sociosadmin .perfil-head { display: flex; align-items: center; gap: 14px; }
+.pagina-sociosadmin .perfil-avatar-grande {
+  width: 60px; height: 60px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--c-500), var(--c-900)); color: var(--c-100);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 800; font-family: 'Poppins', sans-serif;
+}
+.pagina-sociosadmin .perfil-head h3 { margin: 0; }
+.pagina-sociosadmin .perfil-head .estado-admin { margin-top: 4px; }
+.pagina-sociosadmin .perfil-datos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pagina-sociosadmin .perfil-dato {
+  background: rgba(144,202,249,.16); border: 1px solid var(--c-300);
+  border-radius: 8px; padding: 9px 12px; min-width: 0;
+}
+.pagina-sociosadmin .perfil-dato.ancho { grid-column: 1 / -1; }
+.pagina-sociosadmin .perfil-dato span {
+  display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .3px; color: var(--texto-tenue); margin-bottom: 3px;
+}
+.pagina-sociosadmin .perfil-dato strong {
+  font-size: 14px; color: var(--c-900); font-weight: 600; overflow-wrap: anywhere;
+}
+@media (max-width: 480px) {
+  .pagina-sociosadmin .perfil-datos { grid-template-columns: 1fr; }
+}
+
+
+/* Usuario / contraseña en la ficha del socio */
+.pagina-sociosadmin .perfil-clave { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pagina-sociosadmin .perfil-clave strong { letter-spacing: .5px; }
+.pagina-sociosadmin .btn-ojo {
+  flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--c-300); background: var(--c-100); font-size: 16px; line-height: 1;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: background var(--transicion), border-color var(--transicion);
+}
+.pagina-sociosadmin .btn-ojo:hover { background: var(--c-300); border-color: var(--c-500); }
+/* Ojito dentro del modal agregar socio */
+.pagina-sociosadmin .perfil-clave input { flex: 1; min-width: 0; }
+
+
+
+
+/* ============================================================
+   MODO OSCURO (se activa con <html data-tema="oscuro">)
+   Cargar DESPUÉS de global.css / admin.css
+   ============================================================ */
+
+/* ---------- Botón flotante ---------- */
+.btn-tema {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--c-900);
+  color: #fff;
+  border: 2px solid var(--c-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--sombra-lg);
+  z-index: 9998;
+  transition: transform .25s ease, background .25s ease;
+}
+.btn-tema:hover { transform: scale(1.1) rotate(-10deg); background: var(--c-500); }
+.btn-tema:focus-visible { outline: 3px solid var(--c-500); outline-offset: 3px; }
+@media (max-width: 700px) {
+  .btn-tema { width: 42px; height: 42px; left: 14px; bottom: 16px; }
+}
+
+/* Transición suave solo mientras se cambia de tema */
+html.tema-anim *,
+html.tema-anim *::before,
+html.tema-anim *::after {
+  transition: background-color .3s ease, color .3s ease, border-color .3s ease !important;
+}
+
+/* ---------- Variables ---------- */
+html[data-tema="oscuro"] {
+  color-scheme: dark;
+  --o-bg: #0b1220;
+  --o-surf: #131f35;
+  --o-surf2: #1b2d4d;
+  --o-line: #2a3f66;
+  --o-acc: #90caf9;
+
+  --texto: #e3f2fd;
+  --texto-suave: rgba(227, 242, 253, .75);
+  --texto-tenue: rgba(227, 242, 253, .55);
+  --borde: #2a3f66;
+}
+
+/* ---------- Fondos de página ---------- */
+html[data-tema="oscuro"] body.pagina-facturas,
+html[data-tema="oscuro"] body.pagina-perfil,
+html[data-tema="oscuro"] body.pagina-sociosadmin,
+html[data-tema="oscuro"] body.pagina-facturaadmin,
+html[data-tema="oscuro"] body.pagina-perfiladmin {
+  background: var(--o-bg) !important;
+  color: var(--texto) !important;
+}
+html[data-tema="oscuro"] body.pagina-inicio {
+  background: linear-gradient(160deg, #050a14 0%, #0b2a5b 55%, #123a6b 100%);
+}
+
+/* ---------- Inicio ---------- */
+html[data-tema="oscuro"] .pagina-inicio .hero-overlay { background: var(--o-surf) !important; }
+html[data-tema="oscuro"] .pagina-inicio .sobre-nosotros { background: var(--o-surf); }
+html[data-tema="oscuro"] .pagina-inicio .Bienvenida,
+html[data-tema="oscuro"] .pagina-inicio .sobre-nosotros-titulo { color: var(--texto); }
+
+/* ---------- Superficies (tarjetas, tablas, modales) ---------- */
+html[data-tema="oscuro"] .pagina-facturas .tarjeta,
+html[data-tema="oscuro"] .pagina-facturaadmin .tarjeta,
+html[data-tema="oscuro"] .pagina-sociosadmin .tarjeta-admin,
+html[data-tema="oscuro"] .pagina-perfil .perfil-card,
+html[data-tema="oscuro"] .pagina-perfiladmin .perfil-card,
+html[data-tema="oscuro"] .pagina-sociosadmin .modal-caja,
+html[data-tema="oscuro"] .modal-box,
+html[data-tema="oscuro"] table,
+html[data-tema="oscuro"] .skip-link {
+  background: var(--o-surf) !important;
+  border-color: var(--o-line) !important;
+  color: var(--texto);
+}
+
+/* ---------- Tablas ---------- */
+html[data-tema="oscuro"] thead tr { background: var(--o-surf2) !important; }
+html[data-tema="oscuro"] th { color: var(--o-acc) !important; }
+html[data-tema="oscuro"] tbody tr { border-color: var(--o-line) !important; }
+
+@media (max-width: 700px) {
+  html[data-tema="oscuro"] tbody tr {
+    background: var(--o-surf) !important;
+    border-top-color: var(--o-bg) !important;
+  }
+}
+
+/* ---------- Textos que eran azul oscuro ---------- */
+html[data-tema="oscuro"] .monto,
+html[data-tema="oscuro"] .socio-nombre,
+html[data-tema="oscuro"] .tarjeta .num,
+html[data-tema="oscuro"] .tarjeta-admin .num,
+html[data-tema="oscuro"] .perfil-titulo h2,
+html[data-tema="oscuro"] .estado-cuenta,
+html[data-tema="oscuro"] .perfil-dato strong,
+html[data-tema="oscuro"] .modal-caja h3 {
+  color: var(--texto) !important;
+}
+html[data-tema="oscuro"] .campo label,
+html[data-tema="oscuro"] .modal-caja label {
+  color: var(--o-acc) !important;
+}
+html[data-tema="oscuro"] .tarjeta.pendiente .num,
+html[data-tema="oscuro"] .tarjeta-admin.alerta .num { color: #64b5f6 !important; }
+html[data-tema="oscuro"] .tarjeta.paga .num { color: var(--o-acc) !important; }
+html[data-tema="oscuro"] .tarjeta.impaga .num { color: #8fa6c9 !important; }
+
+/* ---------- Etiquetas de estado ---------- */
+html[data-tema="oscuro"] .estado.paga,
+html[data-tema="oscuro"] .estado-admin.al-dia { color: #bbdefb !important; }
+html[data-tema="oscuro"] .estado.impaga { color: #9fb3d6 !important; background: rgba(159, 179, 214, .15) !important; }
+html[data-tema="oscuro"] .estado.pendiente,
+html[data-tema="oscuro"] .estado-admin.pendiente { color: #64b5f6 !important; }
+
+/* ---------- Inputs ---------- */
+html[data-tema="oscuro"] .buscador-admin input,
+html[data-tema="oscuro"] .buscador-factura input,
+html[data-tema="oscuro"] .modal-caja input,
+html[data-tema="oscuro"] .modal-caja select {
+  background: #0f1a2e !important;
+  color: var(--texto) !important;
+  border-color: var(--o-line) !important;
+}
+html[data-tema="oscuro"] .pagina-perfil .dato:not(.dato-fijo) {
+  background: #0f1a2e !important;
+}
+html[data-tema="oscuro"] .pagina-perfil .dato:not(.dato-fijo):hover,
+html[data-tema="oscuro"] .pagina-perfil .dato:not(.dato-fijo):focus-within {
+  background: #0f1a2e !important;
+}
+html[data-tema="oscuro"] ::placeholder { color: rgba(227, 242, 253, .45); }
+
+/* ---------- Botones secundarios ---------- */
+html[data-tema="oscuro"] .filtros button,
+html[data-tema="oscuro"] .btn-fila,
+html[data-tema="oscuro"] .btn-ojo {
+  background: var(--o-surf) !important;
+  color: var(--texto) !important;
+  border-color: var(--o-line) !important;
+}
+html[data-tema="oscuro"] .filtros button.activo {
+  background: var(--c-500) !important;
+  color: #fff !important;
+  border-color: var(--c-500) !important;
+}
+html[data-tema="oscuro"] .btn-fila.eliminar:hover {
+  background: var(--c-900) !important;
+  color: #fff !important;
+}
+html[data-tema="oscuro"] .modal-botones .btn-cancelar {
+  background: var(--o-surf2) !important;
+  color: var(--texto) !important;
+}
+
+/* ---------- Desplegables del navbar ---------- */
+html[data-tema="oscuro"] .dropdown-menu,
+html[data-tema="oscuro"] .dropdown-menu li a,
+html[data-tema="oscuro"] nav.main-nav .nav-personal #nav-socio > .dropdown-menu > li > a {
+  background: var(--o-surf) !important;
+  color: var(--texto) !important;
+}
+html[data-tema="oscuro"] .dropdown-menu li a:hover,
+html[data-tema="oscuro"] nav.main-nav .nav-personal #nav-socio > .dropdown-menu > li > a:hover {
+  background: var(--o-surf2) !important;
+}
+
+/* ---------- SweetAlert2 ---------- */
+html[data-tema="oscuro"] .swal2-popup {
+  background: var(--o-surf) !important;
+  color: var(--texto) !important;
+}
+html[data-tema="oscuro"] .swal2-title,
+html[data-tema="oscuro"] .swal2-html-container {
+  color: var(--texto) !important;
+}
+
+/* ============================================================
+   Scroll suave al ir a "Sobre nosotros"
+   ============================================================ */
+html { scroll-behavior: smooth; }
+
+/* ============================================================
+   "Sobre nosotros": botón de ícono al lado de "Soy socio".
+   El texto aparece al pasar el cursor.
+   ============================================================ */
+.nav-texto { white-space: nowrap; }
+
+/* Celular / tablet (menú hamburguesa): ícono + texto siempre visibles */
+@media (max-width: 900px) {
+  nav.main-nav .nav-sobre { order: 2; }   /* queda debajo de "Soy socio" */
+  nav.main-nav .nav-sobre > a {
+    justify-content: flex-start;
+    gap: .6rem;
+    width: 100%;
+    height: auto;
+    padding: 14px 6px;
+  }
+}
+
+@media (min-width: 901px) {
+
+  /* El botón hereda el estilo de ".nav-personal > li > a" (igual que "Soy socio"):
+     mismo color, altura, espaciado y resaltado al pasar el cursor.
+     Acá solo se agrega el ícono y el texto que aparece al hacer hover. */
+  nav.main-nav .nav-sobre > a { gap: 0; }
+
+  nav.main-nav .nav-sobre > a i { font-size: 1.35em; flex-shrink: 0; }
+
+  /* Texto escondido por defecto */
+  nav.main-nav .nav-sobre > a .nav-texto {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-left: 0;
+    transition: max-width .35s ease, opacity .25s ease, margin-left .3s ease;
+  }
+
+  /* Al pasar el cursor (o enfocar con teclado) aparece */
+  nav.main-nav .nav-sobre > a:hover .nav-texto,
+  nav.main-nav .nav-sobre > a:focus-visible .nav-texto {
+    max-width: 180px;
+    opacity: 1;
+    margin-left: 8px;
+  }
+
+  nav.main-nav .nav-sobre > a:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: -3px;
+  }
+}
