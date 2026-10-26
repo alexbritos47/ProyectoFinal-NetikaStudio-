@@ -114,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const tipoDocSocioInput = document.getElementById('tipoDocSocio');
   const nroDocSocioInput = document.getElementById('nroDocSocio');
   const emailSocioInput = document.getElementById('emailSocio');
+  const telefonoSocioInput = document.getElementById('telefonoSocio');
   const categoriaSocioInput = document.getElementById('categoriaSocio');
   const crearAccesoInput = document.getElementById('crearAcceso');
   const bloqueAcceso = document.getElementById('bloqueAcceso');
@@ -276,6 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
       campoPerfil('Tipo de documento', valor(d.tipo_documento)) +
       campoPerfil('Número de documento', valor(d.numero_documento)) +
       campoPerfil('Email', valor(d.email), true) +
+      campoPerfil('Teléfono / celular', valor(d.telefono), true) +
       campoPerfil('Categoría', categoriaTxt, true) +
       campoPerfil('N° de socio', valor(d.numero_socio || d.id_socio)) +
       campoPerfil('Estado', valor(d.estado)) +
@@ -301,6 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tipoDocSocioInput.value = 'CI';
     nroDocSocioInput.value = '';
     emailSocioInput.value = '';
+    telefonoSocioInput.value = '';
     crearAccesoInput.checked = false;
     bloqueAcceso.classList.remove('visible');
     usuarioSocioInput.value = '';
@@ -333,6 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const apellido = apellidoSocioInput.value.trim();
     const numeroDocumento = nroDocSocioInput.value.trim();
     const email = emailSocioInput.value.trim();
+    const telefono = telefonoSocioInput.value.trim();
     const idCategoria = categoriaSocioInput.value;
 
     if (!nombre || !apellido || !numeroDocumento) {
@@ -342,6 +346,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!idCategoria) {
       mostrarToast('Falta la categoría', 'Primero tiene que haber al menos una categoría de socio cargada.');
       return;
+    }
+
+    // Teléfono (opcional): solo números, espacios, +, - y paréntesis; entre 7 y 15 dígitos
+    if (telefono) {
+      const soloCaracteresValidos = /^[\d\s+\-()]+$/.test(telefono);
+      const cantidadDigitos = telefono.replace(/\D/g, '').length;
+      if (!soloCaracteresValidos || cantidadDigitos < 7 || cantidadDigitos > 15) {
+        mostrarToast('Teléfono inválido', 'Ingresá un teléfono o celular válido. Ej: 099 123 456.');
+        return;
+      }
     }
 
     const crearAcceso = crearAccesoInput.checked;
@@ -366,6 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
       id_categoria: Number(idCategoria)
     };
     if (email) datos.email = email;
+    if (telefono) datos.telefono = telefono;
     if (crearAcceso) {
       datos.nombre_usuario = usuario;
       datos.contrasena = contrasena;
