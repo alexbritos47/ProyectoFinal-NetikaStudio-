@@ -1984,3 +1984,58 @@ html[data-tema="oscuro"] .swal2-title,
 html[data-tema="oscuro"] .swal2-html-container {
   color: var(--texto) !important;
 }
+
+/* ============================================================
+   Scroll suave al ir a "Sobre nosotros"
+   ============================================================ */
+html { scroll-behavior: smooth; }
+
+/* ============================================================
+   "Sobre nosotros": botón de ícono al lado de "Soy socio".
+   El texto aparece al pasar el cursor.
+   ============================================================ */
+.nav-texto { white-space: nowrap; }
+
+/* Celular / tablet (menú hamburguesa): ícono + texto siempre visibles */
+@media (max-width: 900px) {
+  nav.main-nav .nav-sobre { order: 2; }   /* queda debajo de "Soy socio" */
+  nav.main-nav .nav-sobre > a {
+    justify-content: flex-start;
+    gap: .6rem;
+    width: 100%;
+    height: auto;
+    padding: 14px 6px;
+  }
+}
+
+@media (min-width: 901px) {
+
+  /* El botón hereda el estilo de ".nav-personal > li > a" (igual que "Soy socio"):
+     mismo color, altura, espaciado y resaltado al pasar el cursor.
+     Acá solo se agrega el ícono y el texto que aparece al hacer hover. */
+  nav.main-nav .nav-sobre > a { gap: 0; }
+
+  nav.main-nav .nav-sobre > a i { font-size: 1.35em; flex-shrink: 0; }
+
+  /* Texto escondido por defecto */
+  nav.main-nav .nav-sobre > a .nav-texto {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-left: 0;
+    transition: max-width .35s ease, opacity .25s ease, margin-left .3s ease;
+  }
+
+  /* Al pasar el cursor (o enfocar con teclado) aparece */
+  nav.main-nav .nav-sobre > a:hover .nav-texto,
+  nav.main-nav .nav-sobre > a:focus-visible .nav-texto {
+    max-width: 180px;
+    opacity: 1;
+    margin-left: 8px;
+  }
+
+  nav.main-nav .nav-sobre > a:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: -3px;
+  }
+}
