@@ -31,13 +31,23 @@ class SocioValidator
             $errores['apellido'] = 'El apellido es obligatorio.';
         }
 
-        // Comprueba si se recibió el tipo de documento.
-        if (empty($datos['tipo_documento'])) {
+        // Comprueba si se recibió un tipo de documento permitido.
+        $tipoDocumento = $datos['tipo_documento'] ?? null;
+
+        if (empty($tipoDocumento)) {
 
             // Si no se recibió,
             // guarda un mensaje de error.
             $errores['tipo_documento'] =
                 'El tipo de documento es obligatorio.';
+
+        } elseif (
+            !is_string($tipoDocumento) ||
+            !in_array($tipoDocumento, ['CI', 'Pasaporte'], true)
+        ) {
+
+            $errores['tipo_documento'] =
+                'El tipo de documento debe ser CI o Pasaporte.';
         }
 
         // Comprueba si se recibió el número de documento.
@@ -49,7 +59,7 @@ class SocioValidator
                 'El número de documento es obligatorio.';
 
         } elseif (
-            ($datos['tipo_documento'] ?? '') === 'CI' &&
+            $tipoDocumento === 'CI' &&
             !$this->esCedulaUruguaya($datos['numero_documento'])
         ) {
 
