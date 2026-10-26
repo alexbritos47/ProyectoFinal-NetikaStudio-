@@ -23,10 +23,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function api(ruta, opciones = {}) {
-    const res = await fetch(API_BASE + '/api' + ruta, {
-      headers: { 'Content-Type': 'application/json' },
-      ...opciones
-    });
+    let res;
+    try {
+      res = await fetch(API_BASE + '/api' + ruta, {
+        headers: { 'Content-Type': 'application/json' },
+        ...opciones
+      });
+    } catch (e) {
+      // El navegador no llegó al servidor (apagado, bloqueado o dirección equivocada)
+      throw new Error(
+        'No se pudo conectar con ' + (API_BASE || location.origin) + '/api' + ruta +
+        ' — estás entrando desde ' + location.origin +
+        '. Tiene que ser http://localhost:3000 y Docker tiene que estar levantado.'
+      );
+    }
     let data = null;
     try { data = await res.json(); } catch (e) { /* respuesta sin JSON */ }
     if (!res.ok) throw new Error(mensajeDeError(data, res.status));
@@ -144,20 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
-  }
-
-  function esCedulaUruguaya(documento) {
-    const limpio = documento.trim();
-    if (!/^(?:\d{8}|\d{7}-\d|\d\.\d{3}\.\d{3}-\d)$/.test(limpio)) return false;
-
-    const digitos = limpio.replace(/\D/g, '');
-    const pesos = [2, 9, 8, 7, 6, 3, 4];
-    const suma = pesos.reduce((total, peso, indice) =>
-      total + Number(digitos[indice]) * peso, 0
-    );
-    const verificador = (10 - (suma % 10)) % 10;
-
-    return Number(digitos[7]) === verificador;
   }
 
   // ---------- Render ----------
@@ -355,11 +351,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!nombre || !apellido || !numeroDocumento) {
       mostrarToast('Faltan datos', 'Completá nombre, apellido y documento.');
-      return;
-    }
-    if (tipoDocSocioInput.value === 'CI' && !esCedulaUruguaya(numeroDocumento)) {
-      mostrarToast('Cédula inválida', 'Ingresá una cédula uruguaya válida. Ejemplo: 1.234.567-2.');
-      nroDocSocioInput.focus();
       return;
     }
     if (!idCategoria) {
