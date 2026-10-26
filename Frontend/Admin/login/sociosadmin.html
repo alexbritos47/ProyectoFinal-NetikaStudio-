@@ -6,24 +6,6 @@
   <title>Panel Admin · Club Ciclista Maragato</title>
   <link rel="stylesheet" href="../../cssglobal/global.css">
   <link rel="stylesheet" href="admin.css">
-  <style>
-    /* Campos extra del modal "agregar socio" (select, doble columna, scroll) */
-    .pagina-sociosadmin .modal-caja { max-height: 92vh; overflow-y: auto; max-width: 460px; }
-    .pagina-sociosadmin .modal-caja select {
-      width: 100%; padding: 10px 13px; border-radius: 8px; border: 1px solid var(--c-300);
-      background: rgba(144,202,249,.12); font-size: 14px; color: var(--texto);
-    }
-    .pagina-sociosadmin .modal-caja select:focus { outline: none; border-color: var(--c-500); }
-    .pagina-sociosadmin .btn-fila:disabled { opacity: .55; cursor: default; }
-    .pagina-sociosadmin .fila-doble { display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px; }
-    /* Acceso al portal del socio (opcional) */
-    .pagina-sociosadmin .modal-caja .fila-acceso { display: flex; align-items: center; gap: 8px; }
-    .pagina-sociosadmin .modal-caja .fila-acceso input { width: auto; margin: 0; }
-    .pagina-sociosadmin .modal-caja .fila-acceso label { margin: 0; text-transform: none; font-size: 13.5px; cursor: pointer; }
-    .pagina-sociosadmin .modal-caja .bloque-acceso { display: none; flex-direction: column; gap: 14px; }
-    .pagina-sociosadmin .modal-caja .bloque-acceso.visible { display: flex; }
-    .pagina-sociosadmin .modal-caja .ayuda-acceso { font-size: 12px; opacity: .75; margin: 0; }
-  </style>
 </head>
 <body class="pagina-sociosadmin">
 
@@ -124,13 +106,33 @@
         </div>
         <div>
           <label for="contrasenaSocio">Contraseña</label>
-          <input type="password" id="contrasenaSocio" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+          <div class="perfil-clave">
+            <input type="password" id="contrasenaSocio" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+            <button type="button" class="btn-ojo" id="btnOjoNueva" aria-label="Mostrar contraseña">👁</button>
+          </div>
         </div>
         <p class="ayuda-acceso">Con este usuario y contraseña el socio podrá entrar al portal.</p>
       </div>
       <div class="modal-botones">
         <button class="btn-cancelar" id="btnCancelarModal">Cancelar</button>
         <button class="btn-confirmar" id="btnConfirmarModal">Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal ficha del socio -->
+  <div class="modal-fondo" id="modalPerfilFondo">
+    <div class="modal-caja">
+      <div class="perfil-head">
+        <div class="perfil-avatar-grande" id="perfilAvatar"></div>
+        <div>
+          <h3 id="perfilNombre"></h3>
+          <span class="estado-admin" id="perfilEstadoCuota"></span>
+        </div>
+      </div>
+      <div class="perfil-datos" id="perfilDatos"></div>
+      <div class="modal-botones">
+        <button class="btn-cancelar" id="btnCerrarPerfil">Cerrar</button>
       </div>
     </div>
   </div>

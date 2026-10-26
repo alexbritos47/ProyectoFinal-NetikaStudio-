@@ -1724,3 +1724,71 @@ video, svg, canvas { max-width: 100%; }
     animation: none;
   }
 }
+
+/* ============================================================
+   ADMIN SOCIOS: modal agregar socio (campos extra) y ficha del socio
+   ============================================================ */
+
+/* Campos extra del modal "agregar socio" (select, doble columna, scroll) */
+.pagina-sociosadmin .modal-caja { max-height: 92vh; overflow-y: auto; max-width: 460px; }
+.pagina-sociosadmin .modal-caja select {
+  width: 100%; padding: 10px 13px; border-radius: 8px; border: 1px solid var(--c-300);
+  background: rgba(144,202,249,.12); font-size: 14px; color: var(--texto);
+}
+.pagina-sociosadmin .modal-caja select:focus { outline: none; border-color: var(--c-500); }
+.pagina-sociosadmin .btn-fila:disabled { opacity: .55; cursor: default; }
+.pagina-sociosadmin .fila-doble { display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px; }
+
+/* Acceso al portal del socio (opcional) */
+.pagina-sociosadmin .modal-caja .fila-acceso { display: flex; align-items: center; gap: 8px; }
+.pagina-sociosadmin .modal-caja .fila-acceso input { width: auto; margin: 0; }
+.pagina-sociosadmin .modal-caja .fila-acceso label { margin: 0; text-transform: none; font-size: 13.5px; cursor: pointer; }
+.pagina-sociosadmin .modal-caja .bloque-acceso { display: none; flex-direction: column; gap: 14px; }
+.pagina-sociosadmin .modal-caja .bloque-acceso.visible { display: flex; }
+.pagina-sociosadmin .modal-caja .ayuda-acceso { font-size: 12px; opacity: .75; margin: 0; }
+
+/* Avatar clickeable */
+.pagina-sociosadmin .socio-avatar { cursor: pointer; transition: transform .2s ease, box-shadow .2s ease; }
+.pagina-sociosadmin .socio-avatar:hover { transform: scale(1.12); box-shadow: 0 0 0 3px rgba(33,150,243,.3); }
+.pagina-sociosadmin .socio-avatar:focus-visible { outline: 3px solid var(--c-500); outline-offset: 2px; }
+
+/* Modal ficha del socio */
+.pagina-sociosadmin .perfil-head { display: flex; align-items: center; gap: 14px; }
+.pagina-sociosadmin .perfil-avatar-grande {
+  width: 60px; height: 60px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--c-500), var(--c-900)); color: var(--c-100);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 800; font-family: 'Poppins', sans-serif;
+}
+.pagina-sociosadmin .perfil-head h3 { margin: 0; }
+.pagina-sociosadmin .perfil-head .estado-admin { margin-top: 4px; }
+.pagina-sociosadmin .perfil-datos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pagina-sociosadmin .perfil-dato {
+  background: rgba(144,202,249,.16); border: 1px solid var(--c-300);
+  border-radius: 8px; padding: 9px 12px; min-width: 0;
+}
+.pagina-sociosadmin .perfil-dato.ancho { grid-column: 1 / -1; }
+.pagina-sociosadmin .perfil-dato span {
+  display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .3px; color: var(--texto-tenue); margin-bottom: 3px;
+}
+.pagina-sociosadmin .perfil-dato strong {
+  font-size: 14px; color: var(--c-900); font-weight: 600; overflow-wrap: anywhere;
+}
+@media (max-width: 480px) {
+  .pagina-sociosadmin .perfil-datos { grid-template-columns: 1fr; }
+}
+
+
+/* Usuario / contraseña en la ficha del socio */
+.pagina-sociosadmin .perfil-clave { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pagina-sociosadmin .perfil-clave strong { letter-spacing: .5px; }
+.pagina-sociosadmin .btn-ojo {
+  flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--c-300); background: var(--c-100); font-size: 16px; line-height: 1;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: background var(--transicion), border-color var(--transicion);
+}
+.pagina-sociosadmin .btn-ojo:hover { background: var(--c-300); border-color: var(--c-500); }
+/* Ojito dentro del modal agregar socio */
+.pagina-sociosadmin .perfil-clave input { flex: 1; min-width: 0; }
