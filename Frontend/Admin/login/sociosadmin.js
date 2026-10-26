@@ -143,6 +143,20 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/'/g, '&#39;');
   }
 
+  function esCedulaUruguaya(documento) {
+    const limpio = documento.trim();
+    if (!/^(?:\d{8}|\d{7}-\d|\d\.\d{3}\.\d{3}-\d)$/.test(limpio)) return false;
+
+    const digitos = limpio.replace(/\D/g, '');
+    const pesos = [2, 9, 8, 7, 6, 3, 4];
+    const suma = pesos.reduce((total, peso, indice) =>
+      total + Number(digitos[indice]) * peso, 0
+    );
+    const verificador = (10 - (suma % 10)) % 10;
+
+    return Number(digitos[7]) === verificador;
+  }
+
   // ---------- Render ----------
   function renderResumen() {
     totalSociosEl.textContent = socios.length;
@@ -227,6 +241,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!nombre || !apellido || !numeroDocumento) {
       mostrarToast('Faltan datos', 'Completá nombre, apellido y documento.');
+      return;
+    }
+    if (tipoDocSocioInput.value === 'CI' && !esCedulaUruguaya(numeroDocumento)) {
+      mostrarToast('Cédula inválida', 'Ingresá una cédula uruguaya válida. Ejemplo: 1.234.567-2.');
+      nroDocSocioInput.focus();
       return;
     }
     if (!idCategoria) {

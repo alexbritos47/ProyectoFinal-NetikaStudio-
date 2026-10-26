@@ -122,9 +122,14 @@ header('Content-Type: application/json; charset=utf-8');
 // Permite que los frontends puedan comunicarse
 // con el backend aunque estén en otro origen
 // durante el desarrollo.
-header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Origin: *');
 
-$allowedOrigins = [ 'http://localhost:3000'];
+$allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:8080',
+    'http://localhost:3307',
+    'http://localhost:3306',
+];
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
