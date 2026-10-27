@@ -163,9 +163,33 @@ document.addEventListener('DOMContentLoaded', () => {
     sociosPendientesEl.textContent = socios.filter(s => !s.alDia).length;
   }
 
-  function renderTabla(filtro = '') {
-    const texto = filtro.trim().toLowerCase();
-    const filtrados = socios.filter(s => s.nombre.toLowerCase().includes(texto));
+  
+function renderTabla(filtro = '') {
+  // Convierte lo escrito en minúsculas para facilitar la búsqueda.
+  const texto = filtro.trim().toLowerCase();
+
+  // Busca por nombre, apellido, documento o número de socio.
+  const filtrados = socios.filter(s => {
+    // Obtiene los datos originales que vienen de la API.
+    const datos = s.raw || {};
+
+    // Obtiene el documento del socio.
+    const documento = String(datos.numero_documento || '').toLowerCase();
+
+    // Obtiene el tipo de documento, por ejemplo CI o Pasaporte.
+    const tipoDocumento = String(datos.tipo_documento || '').toLowerCase();
+
+    // Obtiene el número de socio.
+    const numeroSocio = String(datos.numero_socio || '').toLowerCase();
+
+    // Comprueba si coincide cualquiera de los campos.
+    return (
+      s.nombre.toLowerCase().includes(texto) ||
+      documento.includes(texto) ||
+      tipoDocumento.includes(texto) ||
+      numeroSocio.includes(texto)
+    );
+  });
 
     tablaSocios.innerHTML = '';
     mensajeVacio.style.display = filtrados.length ? 'none' : 'block';
