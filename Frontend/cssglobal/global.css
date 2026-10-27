@@ -2039,3 +2039,145 @@ html { scroll-behavior: smooth; }
     outline-offset: -3px;
   }
 }
+
+
+/* ============================================================
+   AJUSTES RESPONSIVE (final de global.css)
+   ============================================================ */
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+
+/* ---------- INICIO: el texto de bienvenida pasa ABAJO de la foto en celular ---------- */
+@media (max-width: 800px) {
+  .pagina-inicio .hero-overlay {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+    padding: 1rem 1rem .5rem !important;
+  }
+  .pagina-inicio .hero-overlay img {
+    height: clamp(180px, 50vw, 300px) !important;
+  }
+  .pagina-inicio .hero-overlay .Bienvenida { margin: 1.25rem .5rem .75rem; }
+  .pagina-inicio .hero-overlay .titulodescripcion { margin: 0 .5rem; }
+  .pagina-inicio .hero-overlay .descripcion { margin: .75rem .5rem 1.25rem; }
+}
+
+
+/* ---------- INICIO: carruseles ---------- */
+.pagina-inicio .carousel { touch-action: pan-y; }
+.pagina-inicio .carousel-slide img {
+  height: auto;
+  aspect-ratio: 16 / 9;
+  max-height: 420px;
+}
+@media (max-width: 600px) {
+  .pagina-inicio .carousel-slide img { aspect-ratio: 4 / 3; max-height: none; }
+}
+@media (hover: none), (max-width: 700px) {
+  .pagina-inicio .carousel-dot { position: relative; }
+  .pagina-inicio .carousel-dot::after { content: ""; position: absolute; inset: -9px; }
+  .pagina-inicio .carousel-dots { gap: 12px; }
+}
+
+
+/* ---------- LOGIN ---------- */
+body.pagina-login {
+  height: auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-attachment: scroll;
+}
+.pagina-login .body { position: fixed; }
+.pagina-login .authWrapper {
+  position: relative;
+  top: auto; left: auto;
+  transform: none;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  justify-content: center;
+  padding: 24px 14px 100px;
+}
+.pagina-login .header { max-width: 100%; }
+.pagina-login .login,
+.pagina-login .register { width: 100%; max-width: 350px; }
+
+.modal-box { max-height: 85vh; max-height: 85dvh; }
+
+@media (max-width: 700px) {
+  .pagina-login .login input[type=text],
+  .pagina-login .login input[type=password] { height: 44px; }
+  .pagina-login .login > button { height: 46px; }
+  .pagina-login .terminos-check { font-size: 14px; }
+  .pagina-login .terminos-check input { width: 20px; height: 20px; flex-shrink: 0; }
+
+  .contacto-flotante {
+    flex-direction: row;
+    align-items: center;
+    right: auto;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+  }
+  .social-label { display: none; }
+}
+@media (max-width: 480px) {
+  .pagina-login .header { padding: 14px 18px; }
+  .pagina-login .header div { font-size: 23px; }
+}
+
+
+/* ---------- PERFIL ---------- */
+@media (max-width: 700px) {
+  .pagina-perfil .acciones,
+  .pagina-perfiladmin .acciones { flex-direction: column; }
+}
+
+
+/* ---------- HAMBURGUESA (tablet y celular) ---------- */
+@media (max-width: 900px) {
+
+  nav.main-nav .nav-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    margin-left: auto;
+    order: 3;
+    border-radius: 8px;
+    z-index: 20;
+  }
+  nav.main-nav .nav-toggle span { width: 26px; }
+
+  nav.main-nav .nav-links,
+  nav.main-nav .nav-personal {
+    display: flex;
+    visibility: hidden;
+    transition: max-height .35s ease, padding .35s ease, visibility 0s linear .35s;
+  }
+  nav.main-nav.nav-open .nav-links,
+  nav.main-nav.nav-open .nav-personal {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  nav.main-nav.nav-open {
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  nav.main-nav .nav-links > li.dropdown.open > a::after,
+  nav.main-nav .nav-personal #nav-socio.dropdown.open > a::after {
+    transform: rotate(180deg);
+  }
+}

@@ -99,6 +99,23 @@ function initCarousels() {
       }
     });
 
+    // Deslizar con el dedo (celular)
+    let startX = 0, startY = 0, tracking = false;
+    carousel.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      tracking = true;
+    }, { passive: true });
+    carousel.addEventListener("touchend", (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+        goToSlide(currentIndex + (dx < 0 ? 1 : -1));
+      }
+    }, { passive: true });
+
     startAutoplay();
   });
 }
@@ -142,3 +159,15 @@ document.addEventListener("DOMContentLoaded", initCarousels);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 })();
+
+// ===== Cerrar el menú hamburguesa al tocar un enlace con ancla (#beneficios, #contactos...) =====
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('nav.main-nav a[href^="#"]:not([href="#"])');
+  if (!link) return;
+  if (link.parentElement && link.parentElement.classList.contains('dropdown')) return;
+  const nav = document.querySelector('nav.main-nav');
+  if (!nav) return;
+  nav.classList.remove('nav-open');
+  const toggle = nav.querySelector('.nav-toggle');
+  if (toggle) toggle.setAttribute('aria-expanded', 'false');
+});
