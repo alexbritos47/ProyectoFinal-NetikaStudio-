@@ -87,7 +87,6 @@ function renderizar(filtro) {
       <td data-label="Vencimiento">${formatoFecha(f.vencimiento)}</td>
       <td data-label="Monto" class="monto">${formatoMonto(f.monto)}</td>
       <td data-label="Estado"><span class="estado ${f.estado}">${nombreEstado[f.estado]}</span></td>
-      <td data-label="">${f.estado !== "paga" ? '<a class="accion" href="#">Pagar</a>' : ''}</td>
     `;
     cuerpoTabla.appendChild(fila);
   });
