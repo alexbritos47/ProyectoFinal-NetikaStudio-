@@ -135,13 +135,117 @@ class SocioService
             );
         }
 
+        // MySQL no avisa si el UPDATE no encontró el socio, así que se comprueba antes.
+        if (!$this->repository->obtenerPorId($id)) {
+
+            throw new OutOfBoundsException('El socio no existe.');
+        }
+
         return $this->repository->cambiarEstado($id, $estado);
     }
 
-    // Elimina un socio.
-    public function eliminarSocio(int $id): bool
+    // Arma el historial de un socio para la pantalla del administrador:
+    // recibos, pagos y visitas de cobranza, más un resumen con totales.
+    // Lanza OutOfBoundsException si el socio no existe (404).
+    public function obtenerHistorial(int $id): array
     {
-        return $this->repository->eliminar($id);
+        if (!$this->repository->obtenerPorId($id)) {
+
+            throw new OutOfBoundsException('El socio no existe.');
+        }
+
+        $historial = $this->repository->historial($id);
+
+        $recibos = $historial['recibos'];
+        $pagos   = $historial['pagos'];
+        $visitas = $historial['visitas'];
+
+        $pendientes = 0;
+        $pagados = 0;
+
+        foreach ($recibos as $recibo) {
+
+            if ($recibo['estado'] === 'pendiente') {
+                $pendientes++;
+            }
+
+            if ($recibo['estado'] === 'pagado') {
+                $pagados++;
+            }
+        }
+
+        // Los pagos anulados no suman al total cobrado.
+        $totalCobrado = 0.0;
+
+        foreach ($pagos as $pago) {
+
+            if ((int) $pago['anulado'] === 0) {
+                $totalCobrado += (float) $pago['monto_total'];
+            }
+        }
+
+        return [
+            'recibos' => $recibos,
+            'pagos'   => $pagos,
+            'visitas' => $visitas,
+            'resumen' => [
+                'recibos_pendientes' => $pendientes,
+                'recibos_pagados'    => $pagados,
+                'total_cobrado'      => $totalCobrado,
+                'cantidad_pagos'     => count($pagos),
+                'cantidad_visitas'   => count($visitas),
+            ],
+            // Misma regla que usa eliminarSocio().
+            'puede_eliminarse' => !$this->repository->tieneMovimientos($id),
+        ];
+    }
+
+
+    // Elimina un socio.
+    //
+    // Al dar de alta un socio activo se le generan recibos automáticos, y la
+    // base no deja borrar un socio que tenga recibos. Por eso se hace todo en
+    // UNA transacción:
+    //   1. Si el socio ya tiene pagos, visitas de cobranza o recibos pagados,
+    //      NO se borra (es historial contable): se avisa que lo pase a inactivo.
+    //   2. Si no, se borran sus recibos sin cobrar, el socio y su usuario
+    //      del portal (para que no quede un login huérfano).
+    //
+    // Lanza OutOfBoundsException si el socio no existe (404) y
+    // RuntimeException si tiene historial (409).
+    public function eliminarSocio(int $id): void
+    {
+        $socio = $this->repository->obtenerPorId($id);
+
+        if (!$socio) {
+
+            throw new OutOfBoundsException('El socio no existe.');
+        }
+
+        $this->repository->transaccion(function () use ($id, $socio) {
+
+            if ($this->repository->tieneMovimientos($id)) {
+
+                throw new RuntimeException(
+                    'No se puede eliminar: el socio tiene pagos o cobranzas registrados. '
+                    . 'Para conservar el historial, pasalo a estado inactivo.'
+                );
+            }
+
+            $this->repository->eliminarRecibos($id);
+            $this->repository->eliminar($id);
+
+            // Borra también el usuario del portal, pero solo si tiene rol socio.
+            if (!empty($socio['id_usuario']) && $this->usuarioRepository !== null) {
+
+                $usuario = $this->usuarioRepository->obtenerPorId((int) $socio['id_usuario']);
+
+                if ($usuario && $usuario['rol'] === 'socio') {
+
+                    $this->usuarioRepository->eliminar((int) $socio['id_usuario']);
+                }
+            }
+        });
     }
 
     // Crea el usuario del portal para un socio nuevo y devuelve su ID.

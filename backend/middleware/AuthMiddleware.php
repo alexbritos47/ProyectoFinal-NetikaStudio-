@@ -99,6 +99,13 @@ final class AuthMiddleware
             return $permitido;
         }
 
+        // El historial completo de un socio (incluye las visitas de todos los
+        // cobradores) lo ve solo el administrador. Se corta acá porque el
+        // cobrador puede hacer GET en /socios y llegaría a esta ruta.
+        if ($recurso === 'socios' && $sub2 === 'historial') {
+            return self::respuesta(403, 'No tenés permiso para esta acción.');
+        }
+
         if ($rol === 'cobrador') {
             return self::reglasCobrador(
                 $method, $recurso, $sub1, $usuario, $cuerpo, $permitido

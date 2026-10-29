@@ -245,7 +245,24 @@ class SocioController
 
         // Llama al Service para cambiar el estado del socio.
         // Le pasa el ID del socio y el nuevo estado.
-        $this->service->cambiarEstado($id, $datos['estado']);
+        try {
+
+            $this->service->cambiarEstado($id, $datos['estado']);
+
+        // Estado que no existe (solo se aceptan activo, inactivo y moroso): 400.
+        } catch (InvalidArgumentException $e) {
+
+            http_response_code(400);
+            echo json_encode(["mensaje" => $e->getMessage()]);
+            return;
+
+        // El socio no existe: 404.
+        } catch (OutOfBoundsException $e) {
+
+            http_response_code(404);
+            echo json_encode(["mensaje" => $e->getMessage()]);
+            return;
+        }
 
         // Devuelve un mensaje indicando que el estado fue actualizado.
         echo json_encode([
@@ -258,28 +275,59 @@ class SocioController
     // Función que elimina un socio.
     // Recibe el ID del socio que se quiere eliminar.
     {
-        // Llama al Service para eliminar el socio.
-        // Si el socio ya tiene recibos, pagos o cobranzas, la base de datos
-        // no deja borrarlo (clave foránea): se responde con un mensaje claro.
         try {
 
             $this->service->eliminarSocio($id);
 
+        // El socio no existe: 404.
+        } catch (OutOfBoundsException $e) {
+
+            http_response_code(404);
+            echo json_encode(["mensaje" => $e->getMessage()]);
+            return;
+
+        // OJO: PDOException va ANTES que RuntimeException porque es un
+        // tipo de RuntimeException; si no, nunca se llegaría a este bloque.
         } catch (PDOException $e) {
 
+            // 23000 = la base no deja borrar por una clave foránea.
             if ($e->getCode() === '23000') {
 
                 http_response_code(409);
                 echo json_encode([
-                    "mensaje" => "No se puede eliminar: el socio tiene recibos, pagos o cobranzas registrados."
+                    "mensaje" => "No se puede eliminar: el socio tiene datos relacionados registrados."
                 ]);
                 return;
             }
 
             throw $e;
+
+        // El socio tiene historial (pagos, cobranzas): 409 con el mensaje del Service.
+        } catch (RuntimeException $e) {
+
+            http_response_code(409);
+            echo json_encode(["mensaje" => $e->getMessage()]);
+            return;
         }
 
         // Devuelve un mensaje indicando que fue eliminado correctamente.
         echo json_encode(["mensaje" => "Socio eliminado correctamente"]);
+    }
+
+
+    public function historial(int $id): void
+    // Función que devuelve el historial de un socio:
+    // recibos, pagos y visitas de cobranza.
+    // Solo la usa el administrador (lo controla el AuthMiddleware).
+    {
+        try {
+
+            echo json_encode($this->service->obtenerHistorial($id));
+
+        } catch (OutOfBoundsException $e) {
+
+            http_response_code(404);
+            echo json_encode(["mensaje" => $e->getMessage()]);
+        }
     }
 }

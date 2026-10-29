@@ -208,10 +208,13 @@ function renderTabla(filtro = '') {
           <span class="estado-admin ${socio.alDia ? 'al-dia' : 'pendiente'}">
             ${socio.alDia ? 'Al día' : 'Pendiente'}
           </span>
+          ${socio.estado && socio.estado !== 'activo' ? `<span class="estado-admin ${esc(socio.estado)}">${esc(capitalizar(socio.estado))}</span>` : ''}
         </td>
         <td data-label="Acciones">
           <div class="acciones-fila">
             <button class="btn-fila marcar" data-id="${socio.id}" ${socio.alDia ? 'disabled' : ''}>${socio.alDia ? 'Al día' : 'Marcar pago' + (socio.vencidos.length > 1 ? ' (' + socio.vencidos.length + ')' : '')}</button>
+            <button class="btn-fila historial" data-id="${socio.id}">Historial</button>
+            <button class="btn-fila estado" data-id="${socio.id}">${socio.estado === 'inactivo' ? 'Reactivar' : 'Pasar a inactivo'}</button>
             <button class="btn-fila eliminar" data-id="${socio.id}">Eliminar</button>
           </div>
         </td>
@@ -288,6 +291,7 @@ function renderTabla(filtro = '') {
     const socio = socios.find(s => s.id === id);
     if (!socio) return;
 
+    perfilSocioId = id;
     let d = socio.raw || {};
     try {
       const detalle = await api('/socios/' + id);
@@ -327,7 +331,9 @@ function renderTabla(filtro = '') {
 
   btnCerrarPerfil.addEventListener('click', cerrarPerfil);
   modalPerfilFondo.addEventListener('click', (e) => { if (e.target === modalPerfilFondo) cerrarPerfil(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarPerfil(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { cerrarPerfil(); cerrarHistorial(); }
+  });
 
   // ---------- Modal: agregar socio ----------
   async function abrirModal() {
@@ -436,6 +442,176 @@ function renderTabla(filtro = '') {
     }
   });
 
+  // ---------- Historial del socio ----------
+  const modalHistorialFondo = document.getElementById('modalHistorialFondo');
+  const historialNombre = document.getElementById('historialNombre');
+  const historialResumen = document.getElementById('historialResumen');
+  const historialAviso = document.getElementById('historialAviso');
+  const historialTabs = document.getElementById('historialTabs');
+  const historialContenido = document.getElementById('historialContenido');
+  const btnCerrarHistorial = document.getElementById('btnCerrarHistorial');
+  const btnVerHistorial = document.getElementById('btnVerHistorial');
+
+  let perfilSocioId = null;       // socio abierto en la ficha
+  let historial = null;           // última respuesta de /socios/{id}/historial
+  let pestanaHistorial = 'recibos';
+
+  const RESULTADOS_VISITA = {
+    no_estaba: 'No estaba',
+    no_quiso_pagar: 'No quiso pagar',
+    direccion_incorrecta: 'Dirección incorrecta',
+    volver_a_visitar: 'Volver a visitar',
+    cobro_realizado: 'Cobro realizado'
+  };
+
+  function dinero(n) {
+    const num = Number(n || 0);
+    const formato = Number.isInteger(num)
+      ? { maximumFractionDigits: 0 }
+      : { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+    return '$ ' + num.toLocaleString('es-UY', formato);
+  }
+
+  // Las fechas se arman a mano con el texto que manda la API (AAAA-MM-DD o
+  // AAAA-MM-DD HH:MM:SS). Con new Date('2026-09-10') el navegador la toma como
+  // UTC y en Uruguay mostraría el día anterior.
+  function fechaHist(f) {
+    if (!f) return '—';
+    const m = String(f).match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}))?/);
+    if (!m) return String(f);
+    const fecha = m[3] + '/' + m[2] + '/' + m[1];
+    return m[4] ? fecha + ' ' + m[4] + ':' + m[5] : fecha;
+  }
+
+  function periodoHist(p) {
+    const m = String(p || '').match(/^(\d{4})-(\d{2})$/);
+    return m ? m[2] + '/' + m[1] : valor(p);
+  }
+
+  function capitalizar(t) {
+    t = String(t || '');
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  }
+
+  function chipHistorial(etiqueta, texto) {
+    return `<div class="historial-chip"><span>${esc(etiqueta)}</span><strong>${esc(texto)}</strong></div>`;
+  }
+
+  // Las celdas llegan ya escapadas (o con HTML propio, como el estado).
+  function tablaHistorial(columnas, filas, textoVacio) {
+    if (!filas.length) return `<div class="vacio">${esc(textoVacio)}</div>`;
+    const cabecera = columnas.map(c => `<th>${esc(c)}</th>`).join('');
+    const cuerpo = filas.map(fila =>
+      '<tr>' + fila.map((celda, i) => `<td data-label="${esc(columnas[i])}">${celda}</td>`).join('') + '</tr>'
+    ).join('');
+    return `<div class="historial-tabla"><table><thead><tr>${cabecera}</tr></thead><tbody>${cuerpo}</tbody></table></div>`;
+  }
+
+  function renderHistorial() {
+    const h = historial;
+    const r = h.resumen;
+
+    historialResumen.innerHTML =
+      chipHistorial('Recibos pendientes', r.recibos_pendientes) +
+      chipHistorial('Recibos pagados', r.recibos_pagados) +
+      chipHistorial('Total cobrado', dinero(r.total_cobrado)) +
+      chipHistorial('Visitas de cobranza', r.cantidad_visitas);
+
+    historialAviso.className = 'historial-aviso' + (h.puede_eliminarse ? '' : ' bloqueado');
+    historialAviso.textContent = h.puede_eliminarse
+      ? 'Este socio no tiene pagos ni visitas registradas: se puede eliminar.'
+      : 'Este socio tiene pagos o visitas registradas, por eso no se puede eliminar. Para conservar el historial, pasalo a inactivo.';
+
+    const pestanas = [
+      ['recibos', 'Recibos', h.recibos.length],
+      ['pagos', 'Pagos', h.pagos.length],
+      ['visitas', 'Visitas', h.visitas.length]
+    ];
+    historialTabs.innerHTML = pestanas.map(([clave, texto, cantidad]) =>
+      `<button type="button" class="btn-fila historial-tab${clave === pestanaHistorial ? ' activa' : ''}" data-tab="${clave}">${texto} (${cantidad})</button>`
+    ).join('');
+
+    if (pestanaHistorial === 'recibos') {
+      historialContenido.innerHTML = tablaHistorial(
+        ['Recibo', 'Período', 'Importe', 'Vence', 'Estado', 'Fecha de pago'],
+        h.recibos.map(x => [
+          esc(x.numero_recibo),
+          esc(periodoHist(x.periodo)),
+          esc(dinero(x.importe)),
+          esc(fechaHist(x.fecha_vencimiento)),
+          `<span class="estado-admin ${x.estado === 'pagado' ? 'al-dia' : (x.estado === 'pendiente' ? 'pendiente' : '')}">${esc(capitalizar(x.estado))}</span>`,
+          esc(fechaHist(x.fecha_pago))
+        ]),
+        'Este socio no tiene recibos.'
+      );
+    } else if (pestanaHistorial === 'pagos') {
+      historialContenido.innerHTML = tablaHistorial(
+        ['N°', 'Fecha', 'Monto', 'Método', 'Registrado por', 'Estado'],
+        h.pagos.map(x => [
+          esc('#' + x.id_pago),
+          esc(fechaHist(x.fecha_pago)),
+          esc(dinero(x.monto_total)),
+          esc(capitalizar(valor(x.metodo_pago))),
+          esc(valor(x.registrado_por)),
+          esc(Number(x.anulado) === 1 ? 'Anulado' : 'Vigente')
+        ]),
+        'Este socio no tiene pagos registrados.'
+      );
+    } else {
+      historialContenido.innerHTML = tablaHistorial(
+        ['Fecha', 'Cobrador', 'Resultado', 'Observación'],
+        h.visitas.map(x => [
+          esc(fechaHist(x.fecha_visita)),
+          esc(valor(x.cobrador)),
+          esc(RESULTADOS_VISITA[x.resultado] || valor(x.resultado)),
+          esc(valor(x.observacion))
+        ]),
+        'Este socio no tiene visitas de cobranza registradas.'
+      );
+    }
+  }
+
+  async function abrirHistorial(id) {
+    const socio = socios.find(s => s.id === id);
+    if (!socio) return;
+
+    historialNombre.textContent = 'Historial de ' + socio.nombre;
+    historialResumen.innerHTML = '';
+    historialAviso.className = 'historial-aviso';
+    historialAviso.textContent = '';
+    historialTabs.innerHTML = '';
+    historialContenido.innerHTML = '<div class="vacio">Cargando…</div>';
+    pestanaHistorial = 'recibos';
+    historial = null;
+    modalHistorialFondo.classList.add('abierto');
+
+    try {
+      historial = await api('/socios/' + id + '/historial');
+      renderHistorial();
+    } catch (err) {
+      cerrarHistorial();
+      mostrarToast('No se pudo cargar el historial', err.message);
+    }
+  }
+
+  function cerrarHistorial() { modalHistorialFondo.classList.remove('abierto'); }
+
+  historialTabs.addEventListener('click', (e) => {
+    const boton = e.target.closest('[data-tab]');
+    if (!boton || !historial) return;
+    pestanaHistorial = boton.dataset.tab;
+    renderHistorial();
+  });
+  btnCerrarHistorial.addEventListener('click', cerrarHistorial);
+  modalHistorialFondo.addEventListener('click', (e) => { if (e.target === modalHistorialFondo) cerrarHistorial(); });
+  btnVerHistorial.addEventListener('click', () => {
+    if (perfilSocioId === null) return;
+    const id = perfilSocioId;
+    cerrarPerfil();
+    abrirHistorial(id);
+  });
+
+
   // ---------- Acciones de fila: ficha / eliminar / marcar pago ----------
   tablaSocios.addEventListener('keydown', (e) => {
     if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('socio-avatar')) {
@@ -456,6 +632,43 @@ function renderTabla(filtro = '') {
     const id = Number(boton.dataset.id);
     const socio = socios.find(s => s.id === id);
     if (!socio) return;
+
+    if (boton.classList.contains('historial')) {
+      abrirHistorial(id);
+      return;
+    }
+
+    if (boton.classList.contains('estado')) {
+      // Un socio inactivo vuelve a activo; cualquier otro (activo o moroso) pasa a inactivo.
+      const nuevoEstado = socio.estado === 'inactivo' ? 'activo' : 'inactivo';
+      const aInactivo = nuevoEstado === 'inactivo';
+      const confirmacion = await confirmarAccion({
+        title: aInactivo ? '¿Pasar a inactivo?' : '¿Reactivar socio?',
+        text: aInactivo
+          ? `${socio.nombre} no va a recibir recibos nuevos. Sus recibos y pagos se conservan.`
+          : `${socio.nombre} vuelve a estar activo y se le van a generar recibos nuevos.`,
+        confirmButtonText: aInactivo ? 'Sí, pasar a inactivo' : 'Sí, reactivar'
+      });
+      if (!confirmacion.isConfirmed) return;
+      boton.disabled = true;
+      try {
+        await api('/socios/' + id + '/estado', {
+          method: 'PATCH',
+          body: JSON.stringify({ estado: nuevoEstado })
+        });
+        socio.estado = nuevoEstado;
+        if (socio.raw) socio.raw.estado = nuevoEstado;
+        render(buscarSocio.value);
+        mostrarToast(
+          aInactivo ? 'Socio inactivo' : 'Socio reactivado',
+          aInactivo ? `${socio.nombre} pasó a inactivo.` : `${socio.nombre} volvió a estar activo.`
+        );
+      } catch (err) {
+        boton.disabled = false;
+        mostrarToast('No se pudo cambiar el estado', err.message);
+      }
+      return;
+    }
 
     if (boton.classList.contains('eliminar')) {
       const confirmacion = await confirmarAccion({

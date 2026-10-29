@@ -273,16 +273,96 @@ class SocioRepository
 
 
     // Elimina un socio de la base de datos.
+    // Devuelve true solo si realmente se borró una fila
+    // (false significa que ese socio no existía).
     public function eliminar(int $id): bool
     {
-        // Prepara la consulta DELETE.
         $stmt = $this->conexion->prepare(
             "DELETE FROM SOCIO WHERE id_socio = :id"
         );
 
-        // Envía el ID del socio a eliminar.
-        // Devuelve true si se ejecuta correctamente.
-        return $stmt->execute(['id' => $id]);
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+
+    // Devuelve el historial completo de un socio para la pantalla del admin:
+    // sus recibos, sus pagos (con quién los registró) y sus visitas de cobranza.
+    // Cada lista viene ordenada de lo más nuevo a lo más viejo.
+    public function historial(int $id): array
+    {
+        $stmt = $this->conexion->prepare(
+            "SELECT id_recibo, numero_recibo, periodo, importe,
+                    fecha_vencimiento, estado, fecha_pago
+             FROM RECIBO
+             WHERE id_socio = :id
+             ORDER BY periodo DESC"
+        );
+        $stmt->execute(['id' => $id]);
+        $recibos = $stmt->fetchAll();
+
+        // LEFT JOIN porque id_usuario puede ser NULL (ON DELETE SET NULL).
+        $stmt = $this->conexion->prepare(
+            "SELECT p.id_pago, p.monto_total, p.metodo_pago, p.fecha_pago,
+                    p.anulado, u.nombre_completo AS registrado_por
+             FROM PAGO p
+             LEFT JOIN USUARIO u ON u.id_usuario = p.id_usuario
+             WHERE p.id_socio = :id
+             ORDER BY p.fecha_pago DESC, p.id_pago DESC"
+        );
+        $stmt->execute(['id' => $id]);
+        $pagos = $stmt->fetchAll();
+
+        $stmt = $this->conexion->prepare(
+            "SELECT v.id_visita, v.fecha_visita, v.resultado, v.observacion,
+                    u.nombre_completo AS cobrador
+             FROM COBRANZA_VISITA v
+             INNER JOIN USUARIO u ON u.id_usuario = v.id_cobrador
+             WHERE v.id_socio = :id
+             ORDER BY v.fecha_visita DESC, v.id_visita DESC"
+        );
+        $stmt->execute(['id' => $id]);
+        $visitas = $stmt->fetchAll();
+
+        return [
+            'recibos' => $recibos,
+            'pagos'   => $pagos,
+            'visitas' => $visitas,
+        ];
+    }
+
+
+    // Indica si el socio tiene historial que NO se puede borrar:
+    // pagos (aunque estén anulados), visitas de cobranza o recibos pagados.
+    //
+    // OJO: con ATTR_EMULATE_PREPARES = false no se puede repetir el mismo
+    // parámetro con nombre en una consulta, por eso son :id1, :id2 y :id3.
+    public function tieneMovimientos(int $id): bool
+    {
+        $stmt = $this->conexion->prepare(
+            "SELECT
+                (SELECT COUNT(*) FROM PAGO            WHERE id_socio = :id1)
+              + (SELECT COUNT(*) FROM COBRANZA_VISITA WHERE id_socio = :id2)
+              + (SELECT COUNT(*) FROM RECIBO          WHERE id_socio = :id3 AND estado = 'pagado')"
+        );
+
+        $stmt->execute(['id1' => $id, 'id2' => $id, 'id3' => $id]);
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
+
+    // Borra todos los recibos de un socio.
+    // Solo se llama cuando el socio no tiene pagos (ver tieneMovimientos),
+    // o sea que son recibos pendientes o anulados que nadie cobró.
+    public function eliminarRecibos(int $id): void
+    {
+        $stmt = $this->conexion->prepare(
+            "DELETE FROM RECIBO WHERE id_socio = :id"
+        );
+
+        $stmt->execute(['id' => $id]);
     }
 
 

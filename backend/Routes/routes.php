@@ -226,6 +226,18 @@ function manejarRutas(string $method, string $uri, array $controladores): void
 
 
             // Comprueba la ruta:
+            // GET /api/socios/{id}/historial
+            // Devuelve los recibos, pagos y visitas de cobranza del socio.
+            if ($id !== null && $sub2 === 'historial' && $method === 'GET') {
+
+                $socios->historial($id);
+
+                // Termina la función.
+                return;
+            }
+
+
+            // Comprueba la ruta:
             // PATCH /api/socios/{id}/estado
             if ($id !== null && $sub2 === 'estado' && $method === 'PATCH') {
 
@@ -604,4 +616,3 @@ function responderMetodoNoPermitido(): void
     // Devuelve una respuesta JSON indicando que el método no está permitido.
     echo json_encode(["mensaje" => "Método HTTP no permitido"]);
 }
-

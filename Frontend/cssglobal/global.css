@@ -524,40 +524,18 @@ body.pagina-inicio { background: linear-gradient(160deg, var(--c-900) 0%, var(--
   text-align: center; letter-spacing: .5px; text-shadow: 0 4px 16px rgba(13,71,161,.5);
 }
 .pagina-inicio .beneficios-lista { display: flex; flex-direction: column; gap: 3rem; margin: 2rem; padding-bottom: 1.5rem; }
-.pagina-inicio .beneficio-item { max-width: 900px; margin: 0 auto; width: 100%; min-width: 0; }
+.pagina-inicio .beneficio-item { max-width: 900px; margin: 0 auto; width: 100%; }
 .pagina-inicio .beneficio-titulo { font-size: 23px; font-weight: 600; color: var(--c-100); text-align: center; margin-bottom: 1.1rem; text-shadow: 0 1px 6px rgba(13,71,161,.5); }
 
-/* --- Carrusel ---
-   El SLIDE define la proporción (aspect-ratio) y la IMAGEN lo rellena
-   (position:absolute + object-fit:cover). Así ninguna foto, sea cual sea
-   su tamaño original, cambia la altura del carrusel ni se desborda. */
+/* --- Carrusel --- */
 .pagina-inicio .carousel {
-  position: relative; width: 100%; max-width: 100%; overflow: hidden; border-radius: var(--radio-lg);
+  position: relative; width: 100%; overflow: hidden; border-radius: var(--radio-lg);
   border: 1px solid rgba(144,202,249,.55); background: var(--c-900); box-shadow: var(--sombra-lg);
-  touch-action: pan-y;
 }
-.pagina-inicio .carousel-track { display: flex; width: 100%; transition: transform .5s cubic-bezier(.4,0,.2,1); }
+.pagina-inicio .carousel-track { display: flex; transition: transform .5s cubic-bezier(.4,0,.2,1); }
 @media (prefers-reduced-motion: reduce) { .pagina-inicio .carousel-track { transition: none; } }
-.pagina-inicio .carousel-slide {
-  position: relative;
-  flex: 0 0 100%;
-  min-width: 100%;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  max-height: 460px;
-  overflow: hidden;
-  line-height: 0;
-}
-.pagina-inicio .carousel-slide img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  object-fit: cover;
-  object-position: center 25%;   /* prioriza las caras (parte alta de la foto) */
-  display: block;
-}
+.pagina-inicio .carousel-slide { min-width: 100%; flex-shrink: 0; line-height: 0; }
+.pagina-inicio .carousel-slide img { width: 100%; height: 420px; object-fit: cover; display: block; }
 .pagina-inicio .carousel-btn {
   position: absolute; top: 50%; transform: translateY(-50%); background: rgba(13,71,161,.6);
   backdrop-filter: blur(4px); color: var(--c-100); width: 40px; height: 40px; border-radius: 50%;
@@ -576,28 +554,6 @@ body.pagina-inicio { background: linear-gradient(160deg, var(--c-900) 0%, var(--
   align-items: center; justify-content: center; z-index: 5; border: 1px solid rgba(227,242,253,.25); transition: background var(--transicion);
 }
 .pagina-inicio .carousel-pause:hover { background: var(--c-500); }
-
-/* Tablet */
-@media (max-width: 900px) {
-  .pagina-inicio .carousel-slide { aspect-ratio: 3 / 2; max-height: none; }
-}
-
-/* Celular */
-@media (max-width: 600px) {
-  .pagina-inicio .carousel-slide { aspect-ratio: 4 / 3; }
-  .pagina-inicio .carousel-btn { width: 34px; height: 34px; }
-  .pagina-inicio .carousel-prev { left: 8px; }
-  .pagina-inicio .carousel-next { right: 8px; }
-  .pagina-inicio .carousel-pause { top: 8px; right: 8px; width: 30px; height: 30px; }
-  .pagina-inicio .carousel-dots { bottom: 10px; }
-}
-
-/* Puntos más fáciles de tocar en pantallas táctiles */
-@media (hover: none), (max-width: 700px) {
-  .pagina-inicio .carousel-dot { position: relative; }
-  .pagina-inicio .carousel-dot::after { content: ""; position: absolute; inset: -9px; }
-  .pagina-inicio .carousel-dots { gap: 12px; }
-}
 
 /* --- Sobre nosotros --- */
 .pagina-inicio .sobre-nosotros {
@@ -625,6 +581,7 @@ body.pagina-inicio { background: linear-gradient(160deg, var(--c-900) 0%, var(--
 .pagina-inicio .social-btn:hover { transform: translateY(-3px); box-shadow: var(--sombra-sm); background: var(--c-300); }
 .pagina-inicio .social-whatsapp, .pagina-inicio .social-facebook, .pagina-inicio .social-instagram { background: var(--c-100); color: var(--c-900); }
 .pagina-inicio .footer-copy { text-align: center; color: rgba(227,242,253,.75); font-size: 13px; margin-top: 1.6rem; }
+@media (max-width: 600px) { .pagina-inicio .carousel-slide img { height: 240px; } }
 
 /* ============================================================
    PÁGINA: LOGIN (usuario)  (body.pagina-login)
@@ -1519,6 +1476,7 @@ video, svg, canvas { max-width: 100%; }
 @media (max-width: 1100px) {
   .nav-links > li > a,
   .nav-personal > li > a { padding: 0 .8rem; font-size: 13px; }
+  .pagina-inicio .carousel-slide img { height: 360px; }
 }
 
 /* ---------- Tablet (hasta 900px) ---------- */
@@ -1553,6 +1511,7 @@ video, svg, canvas { max-width: 100%; }
   .pagina-inicio .titulodescripcion { margin: 0 1.25rem; }
   .pagina-inicio .descripcion { margin: 1rem 1.25rem 1.5rem; font-size: 18px; }
   .pagina-inicio .beneficios-lista { margin: 1.5rem 1.25rem; gap: 2.2rem; }
+  .pagina-inicio .carousel-slide img { height: 300px; }
   .pagina-inicio .sobre-nosotros { padding: 2.5rem 1.25rem; }
 
   /* Admin */
@@ -1651,6 +1610,8 @@ video, svg, canvas { max-width: 100%; }
 
   /* ----- INICIO ----- */
   .pagina-inicio .beneficio-titulo { font-size: 19px; }
+  .pagina-inicio .carousel-slide img { height: 220px; }
+  .pagina-inicio .carousel-btn { width: 34px; height: 34px; }
   .pagina-inicio .sobre-nosotros-contenido p { font-size: 16px; }
   .pagina-inicio .footer { padding: 1.6rem 1rem; }
   .pagina-inicio .footer-content { flex-direction: column; }
@@ -1677,6 +1638,7 @@ video, svg, canvas { max-width: 100%; }
 
   .pagina-inicio .Bienvenida { font-size: 28px; }
   .pagina-inicio .descripcion { font-size: 16px; }
+  .pagina-inicio .carousel-slide img { height: 190px; }
 }
 
 /* ---------- Pantallas bajas (celular horizontal) ---------- */
@@ -1814,6 +1776,36 @@ video, svg, canvas { max-width: 100%; }
 @media (max-width: 480px) {
   .pagina-sociosadmin .perfil-datos { grid-template-columns: 1fr; }
 }
+
+/* Modal historial del socio */
+.pagina-sociosadmin #modalHistorialFondo .modal-caja { max-width: 780px; }
+.pagina-sociosadmin .historial-resumen { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.pagina-sociosadmin .historial-chip {
+  background: rgba(144,202,249,.16); border: 1px solid var(--c-300);
+  border-radius: 8px; padding: 9px 12px; min-width: 0;
+}
+.pagina-sociosadmin .historial-chip span {
+  display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .3px; color: var(--texto-tenue); margin-bottom: 3px;
+}
+.pagina-sociosadmin .historial-chip strong { font-size: 16px; color: var(--c-900); font-weight: 700; }
+.pagina-sociosadmin .historial-aviso {
+  margin: 0; font-size: 13px; padding: 9px 12px; border-radius: 8px;
+  border: 1px solid var(--c-300); background: rgba(33,150,243,.10); color: var(--c-900);
+}
+.pagina-sociosadmin .historial-aviso.bloqueado { background: rgba(33,150,243,.18); border-color: var(--c-500); }
+.pagina-sociosadmin .historial-aviso:empty { display: none; }
+.pagina-sociosadmin .historial-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.pagina-sociosadmin .historial-tab.activa { background: var(--c-500); border-color: var(--c-500); color: var(--c-100); }
+.pagina-sociosadmin .historial-tabla { overflow-x: auto; }
+@media (max-width: 600px) {
+  .pagina-sociosadmin .historial-resumen { grid-template-columns: 1fr 1fr; }
+}
+
+/* Estado del socio (activo / inactivo / moroso) y botones de la fila */
+.pagina-sociosadmin .acciones-fila { flex-wrap: wrap; }
+.pagina-sociosadmin .estado-admin.inactivo { background: rgba(120,120,120,.2); color: var(--texto-suave); margin-left: 6px; }
+.pagina-sociosadmin .estado-admin.moroso { background: rgba(13,71,161,.16); color: var(--c-900); margin-left: 6px; }
 
 
 /* Usuario / contraseña en la ficha del socio */
@@ -2097,6 +2089,23 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   .pagina-inicio .hero-overlay .Bienvenida { margin: 1.25rem .5rem .75rem; }
   .pagina-inicio .hero-overlay .titulodescripcion { margin: 0 .5rem; }
   .pagina-inicio .hero-overlay .descripcion { margin: .75rem .5rem 1.25rem; }
+}
+
+
+/* ---------- INICIO: carruseles ---------- */
+.pagina-inicio .carousel { touch-action: pan-y; }
+.pagina-inicio .carousel-slide img {
+  height: auto;
+  aspect-ratio: 16 / 9;
+  max-height: 420px;
+}
+@media (max-width: 600px) {
+  .pagina-inicio .carousel-slide img { aspect-ratio: 4 / 3; max-height: none; }
+}
+@media (hover: none), (max-width: 700px) {
+  .pagina-inicio .carousel-dot { position: relative; }
+  .pagina-inicio .carousel-dot::after { content: ""; position: absolute; inset: -9px; }
+  .pagina-inicio .carousel-dots { gap: 12px; }
 }
 
 
