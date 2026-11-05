@@ -6,7 +6,7 @@
 
 Proyecto educativo desarrollado por **Netika Studio** para crear un sistema digital que facilite la gestión de socios y cuotas del Club Ciclista Maragato.
 
-El sistema busca mejorar la organización de la información y facilitar el control de socios y pagos.
+El sistema busca mejorar la organización de la información y facilitar el control de socios y pagos mediante una plataforma sencilla, organizada y fácil de utilizar.
 
 ## Objetivos
 
@@ -17,56 +17,64 @@ El sistema busca mejorar la organización de la información y facilitar el cont
 
 ## Estado del proyecto
 
-El proyecto se encuentra actualmente en **desarrollo**.
+**Proyecto finalizado.**
 
-Se realizó el relevamiento y análisis de las necesidades del club y actualmente se está trabajando en la implementación del sistema, incluyendo el desarrollo del **backend** y la integración con la base de datos.
+Se completó el desarrollo del sistema, incluyendo la implementación del frontend, el backend y la integración con la base de datos.
+
+También se realizaron las pruebas correspondientes, las correcciones y los ajustes necesarios para completar el proyecto y dejar una versión final funcional.
 
 ## Tecnologías utilizadas
-
-Por el momento, el proyecto utiliza:
 
 - **HTML** — Estructura de las páginas web.
 - **CSS** — Diseño y estilos de la interfaz.
 - **JavaScript** — Interactividad del sistema.
 - **PHP** — Desarrollo del backend y procesamiento de datos.
 - **MySQL** — Gestión y almacenamiento de la base de datos.
-- **Docker** — Configuración y ejecución de los servicios del proyecto mediante contenedores.
+- **Docker** — Configuración y ejecución de los servicios mediante contenedores.
 - **XAMPP** — Entorno de desarrollo local para ejecutar PHP y administrar MySQL.
 
 ## Ejecutar con Docker
 
 Requisitos: Docker Desktop con Docker Compose habilitado.
 
-Desde la carpeta raíz del proyecto, ejecuta:
+Desde la carpeta raíz del proyecto, ejecutar:
 
 ```bash
 docker compose up --build
 ```
 
-Cuando los servicios estén listos, abre:
+Cuando los servicios estén listos, acceder a:
 
 - Aplicación web: http://localhost:3000
 - API: http://localhost:8080/api
 - MySQL desde el equipo: puerto `3307`
 
-Para detener los servicios, pulsa `Ctrl+C` y ejecuta `docker compose down`. Los datos de MySQL se conservan en el volumen `db_data`. Para eliminar también esos datos y volver a inicializar la base, ejecuta `docker compose down -v`.
+Para detener los servicios, ejecutar:
+
+```bash
+docker compose down
+```
+
+Los datos de MySQL se conservan en el volumen `db_data`.
+
+Para eliminar también esos datos y volver a inicializar la base de datos:
+
+```bash
+docker compose down -v
+```
 
 El esquema y los datos iniciales se cargan automáticamente solo al crear el volumen por primera vez.
 
-## Próximas etapas
+## Resultado final
 
-- Continuar implementando el backend.
-- Integrar y completar las funcionalidades de la base de datos.
-- Continuar con el desarrollo del sistema.
-- Realizar pruebas.
-- Corregir errores.
-- Finalizar el proyecto.
-- Presentar el proyecto.
+El proyecto permitió desarrollar una solución informática orientada a las necesidades del Club Ciclista Maragato, aplicando conocimientos de programación, bases de datos, desarrollo web, infraestructura con Docker y ciberseguridad.
+
+Se da por finalizada la etapa de desarrollo y se presenta el sistema como resultado del trabajo realizado durante el año 2026.
 
 ## Integrantes
 
-- **Alex Britos** — Coordinador
-- **Nahuel Alba** — Subcoordinador
+- **Alex Britos** — Coordinador del proyecto.
+- **Nahuel Alba** — Subcoordinador.
 - **Jonathan López**
 - **Santiago Vilar**
 - **Bruno Méndez**
@@ -74,3 +82,5 @@ El esquema y los datos iniciales se cargan automáticamente solo al crear el vol
 ## Proyecto educativo
 
 Proyecto realizado con fines educativos como trabajo final de **Netika Studio — 2026**.
+
+**Estado: FINALIZADO.**
